@@ -36,7 +36,7 @@ function renderAutomaton(containerId, automatonData, options = {}) {
         layout: getAutomatonLayout(automatonData.states.length),
         minZoom: 0.3,
         maxZoom: 3,
-        wheelSensitivity: 0.2,
+        wheelSensitivity: 0.1,
         boxSelectionEnabled: false,
         selectionType: 'single'
     });
@@ -242,11 +242,11 @@ function getAutomatonStyle() {
             selector: 'edge.self-loop',
             style: {
                 'curve-style': 'loop',
-                'loop-direction': '0deg',
-                'loop-sweep': '45deg',
-                'control-point-distance': 50,
-                'source-endpoint': '45deg',
-                'target-endpoint': '-45deg'
+                'loop-direction': 'auto',
+                'loop-sweep': '60deg',
+                'control-point-distance': 60,
+                'source-endpoint': 'outside-to-node',
+                'target-endpoint': 'outside-to-node'
             }
         },
         
