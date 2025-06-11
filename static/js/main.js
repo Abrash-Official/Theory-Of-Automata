@@ -304,18 +304,6 @@ function insertSymbol(inputId, symbol) {
     }
 }
 
-function showLoading() {
-    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
-    loadingModal.show();
-}
-
-function hideLoading() {
-    const loadingModal = bootstrap.Modal.getInstance(document.getElementById('loadingModal'));
-    if (loadingModal) {
-        loadingModal.hide();
-    }
-}
-
 function showError(containerId, message) {
     const errorContainer = document.getElementById(containerId);
     const errorMessage = document.getElementById(containerId + 'Message');
@@ -345,7 +333,6 @@ async function convertRegexToDfa() {
     }
     
     hideError('regexError');
-    showLoading();
     
     try {
         const response = await fetch('/api/convert/regex-to-dfa', {
@@ -370,8 +357,6 @@ async function convertRegexToDfa() {
     } catch (error) {
         console.error('Conversion error:', error);
         showError('regexError', 'Network error during conversion');
-    } finally {
-        hideLoading();
     }
 }
 
@@ -384,7 +369,6 @@ async function convertNfaToDfa() {
     }
     
     hideError('nfaError');
-    showLoading();
     
     try {
         const response = await fetch('/api/convert/nfa-to-dfa', {
@@ -409,8 +393,6 @@ async function convertNfaToDfa() {
     } catch (error) {
         console.error('Conversion error:', error);
         showError('nfaError', 'Network error during conversion');
-    } finally {
-        hideLoading();
     }
 }
 
@@ -423,7 +405,6 @@ async function convertDfaToRegex() {
     }
     
     hideError('dfaError');
-    showLoading();
     
     try {
         const response = await fetch('/api/convert/dfa-to-regex', {
@@ -448,8 +429,6 @@ async function convertDfaToRegex() {
     } catch (error) {
         console.error('Conversion error:', error);
         showError('dfaError', 'Network error during conversion');
-    } finally {
-        hideLoading();
     }
 }
 
@@ -470,7 +449,6 @@ async function convertNfaExample() {
     
     if (exampleData && exampleData.nfa) {
         hideError('nfaError');
-        showLoading();
         
         try {
             const response = await fetch('/api/convert/nfa-to-dfa', {
@@ -495,8 +473,6 @@ async function convertNfaExample() {
         } catch (error) {
             console.error('Conversion error:', error);
             showError('nfaError', 'Network error during conversion');
-        } finally {
-            hideLoading();
         }
     }
 }
@@ -518,7 +494,6 @@ async function convertDfaExample() {
     
     if (exampleData && exampleData.dfa) {
         hideError('dfaError');
-        showLoading();
         
         try {
             const response = await fetch('/api/convert/dfa-to-regex', {
@@ -543,56 +518,6 @@ async function convertDfaExample() {
         } catch (error) {
             console.error('Conversion error:', error);
             showError('dfaError', 'Network error during conversion');
-        } finally {
-            hideLoading();
-        }
-    }
-}
-
-async function convertDfaExample() {
-    // Implementation for converting selected DFA example
-    const selectElement = document.getElementById('dfaExampleSelect');
-    const selectedIndex = selectElement.value;
-    
-    if (!selectedIndex) {
-        showError('dfaError', 'Please select an example');
-        return;
-    }
-    
-    // Get example data and convert
-    const examples = window.AutomataEdu.examples['dfa-to-regex'];
-    const allExamples = [...examples.simple, ...examples.complex];
-    const exampleData = allExamples[parseInt(selectedIndex)];
-    
-    if (exampleData && exampleData.dfa) {
-        hideError('dfaError');
-        showLoading();
-        
-        try {
-            const response = await fetch('/api/convert/dfa-to-regex', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ dfa: exampleData.dfa })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                window.AutomataEdu.conversionData = result;
-                window.AutomataEdu.currentStep = 0;
-                window.AutomataEdu.totalSteps = result.steps.length;
-                
-                displayDfaResults(result);
-            } else {
-                showError('dfaError', result.error || 'Conversion failed');
-            }
-        } catch (error) {
-            console.error('Conversion error:', error);
-            showError('dfaError', 'Network error during conversion');
-        } finally {
-            hideLoading();
         }
     }
 }
@@ -679,7 +604,7 @@ function displayRegexResults(result) {
     
     // Initialize visualization
     if (result.dfa) {
-        renderAutomaton('regexGraph', result.dfa);
+        renderAutomaton('regexVisualization', result.dfa);
     }
     
     // Show first step
@@ -1206,12 +1131,12 @@ function toggleTransitionTable(type) {
 
 // Data collection functions
 function collectNfaData() {
-    const states = document.getElementById('nfaStates').value.trim();
-    const alphabet = document.getElementById('nfaAlphabet').value.trim();
-    const startStates = document.getElementById('nfaStartStates').value.trim();
-    const finalStates = document.getElementById('nfaFinalStates').value.trim();
+    const states = document.getElementById('nfaStates').value.split(',').map(s => s.trim()).filter(s => s);
+    const alphabet = document.getElementById('nfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
+    const startStates = document.getElementById('nfaStartStates').value.split(',').map(s => s.trim()).filter(s => s);
+    const finalStates = document.getElementById('nfaFinalStates').value.split(',').map(s => s.trim()).filter(s => s);
     
-    if (!states || !alphabet || !startStates) {
+    if (states.length === 0 || alphabet.length === 0 || startStates.length === 0) {
         return null;
     }
     
@@ -1257,12 +1182,12 @@ function collectNfaData() {
 }
 
 function collectDfaData() {
-    const states = document.getElementById('dfaStates').value.trim();
-    const alphabet = document.getElementById('dfaAlphabet').value.trim();
-    const startState = document.getElementById('dfaStartState').value.trim();
-    const finalStates = document.getElementById('dfaFinalStates').value.trim();
+    const states = document.getElementById('dfaStates').value.split(',').map(s => s.trim()).filter(s => s);
+    const alphabet = document.getElementById('dfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
+    const startState = document.getElementById('dfaStartState').value;
+    const finalStates = document.getElementById('dfaFinalStates').value.split(',').map(s => s.trim()).filter(s => s);
     
-    if (!states || !alphabet || !startState) {
+    if (states.length === 0 || alphabet.length === 0 || !startState) {
         return null;
     }
     
@@ -1332,7 +1257,7 @@ function addTransitionRow(type) {
     // Update transition options for new row
     if (type === 'nfa') {
         updateNfaTransitionOptions();
-    } else if (type === 'dfa') {
+    } else {
         updateDfaTransitionOptions();
     }
     
@@ -1343,8 +1268,8 @@ function addTransitionRow(type) {
 }
 
 function updateNfaTransitionOptions() {
-    const states = document.getElementById('nfaStates').value.trim();
-    const alphabet = document.getElementById('nfaAlphabet').value.trim();
+    const states = document.getElementById('nfaStates').value.split(',').map(s => s.trim()).filter(s => s);
+    const alphabet = document.getElementById('nfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
     
     const stateList = states ? states.split(',').map(s => s.trim()).filter(s => s) : [];
     const alphabetList = alphabet ? alphabet.split(',').map(s => s.trim()).filter(s => s) : [];
@@ -1367,8 +1292,8 @@ function updateNfaTransitionOptions() {
 }
 
 function updateDfaTransitionOptions() {
-    const states = document.getElementById('dfaStates').value.trim();
-    const alphabet = document.getElementById('dfaAlphabet').value.trim();
+    const states = document.getElementById('dfaStates').value.split(',').map(s => s.trim()).filter(s => s);
+    const alphabet = document.getElementById('dfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
     
     const stateList = states ? states.split(',').map(s => s.trim()).filter(s => s) : [];
     const alphabetList = alphabet ? alphabet.split(',').map(s => s.trim()).filter(s => s) : [];
