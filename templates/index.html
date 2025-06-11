@@ -1,0 +1,573 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <!-- Sidebar with Navigation Tabs -->
+    <div class="col-lg-3 col-md-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i data-feather="layers" class="me-2"></i>
+                    Conversion Tools
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link active text-start" id="regex-to-dfa-tab" data-bs-toggle="pill" 
+                            data-bs-target="#regex-to-dfa" type="button" role="tab">
+                        <i data-feather="arrow-right" class="me-2"></i>
+                        RegEx → DFA
+                        <small class="d-block text-muted">Regular Expression to DFA</small>
+                    </button>
+                    <button class="nav-link text-start" id="nfa-to-dfa-tab" data-bs-toggle="pill" 
+                            data-bs-target="#nfa-to-dfa" type="button" role="tab">
+                        <i data-feather="arrow-right" class="me-2"></i>
+                        NFA → DFA
+                        <small class="d-block text-muted">NFA to DFA Conversion</small>
+                    </button>
+                    <button class="nav-link text-start" id="dfa-to-regex-tab" data-bs-toggle="pill" 
+                            data-bs-target="#dfa-to-regex" type="button" role="tab">
+                        <i data-feather="arrow-left" class="me-2"></i>
+                        DFA → RegEx
+                        <small class="d-block text-muted">DFA to Regular Expression</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="col-lg-9 col-md-8">
+        <div class="tab-content" id="v-pills-tabContent">
+            
+            <!-- Regular Expression to DFA Tab -->
+            <div class="tab-pane fade show active" id="regex-to-dfa" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">
+                            <i data-feather="code" class="me-2"></i>
+                            Regular Expression to DFA Conversion
+                        </h4>
+                        <p class="card-text mb-0">Convert regular expressions to deterministic finite automata using direct construction</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Input Section -->
+                        <div class="row mb-4">
+                            <div class="col-md-8">
+                                <label for="regexInput" class="form-label">Regular Expression</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="regexInput" 
+                                           placeholder="Enter regular expression (e.g., (a|b)*abb)" 
+                                           autocomplete="off">
+                                    <button class="btn btn-primary" type="button" id="convertRegexBtn">
+                                        <i data-feather="play" class="me-2"></i>Convert
+                                    </button>
+                                </div>
+                                <div class="form-text">Supported operators: *, |, (), ε, ∅</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Quick Insert</label>
+                                <div class="btn-group-vertical w-100" role="group">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="insertSymbol('regexInput', 'ε')">ε (epsilon)</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="insertSymbol('regexInput', '∅')">∅ (empty set)</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="insertSymbol('regexInput', '*')">* (Kleene star)</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="insertSymbol('regexInput', '|')">| (union)</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Examples Section -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">Choose an example:</label>
+                                <select class="form-select" id="regexExampleSelect">
+                                    <option value="">Select an example...</option>
+                                    <optgroup label="Simple Examples">
+                                        {% for example in examples['regex-to-dfa']['simple'] %}
+                                        <option value="{{ example.regex }}" data-description="{{ example.description }}">
+                                            {{ example.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup label="Complex Examples">
+                                        {% for example in examples['regex-to-dfa']['complex'] %}
+                                        <option value="{{ example.regex }}" data-description="{{ example.description }}">
+                                            {{ example.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="regexResults" class="d-none">
+                            <!-- Navigation Controls -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-primary" id="regexPrevStep">
+                                        <i data-feather="chevron-left"></i> Previous
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary" id="regexNextStep">
+                                        Next <i data-feather="chevron-right"></i>
+                                    </button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-secondary" id="regexShowTable">
+                                        <i data-feather="table"></i> Show Table
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="regexExport">
+                                        <i data-feather="download"></i> Export
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="regexReset">
+                                        <i data-feather="refresh-cw"></i> Reset
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div class="progress mb-3">
+                                <div class="progress-bar" id="regexProgress" role="progressbar" style="width: 0%"></div>
+                            </div>
+
+                            <!-- Visualization and Explanation -->
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">DFA Visualization</h6>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div id="regexGraph" class="cytoscape-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0" id="regexStepTitle">Step Explanation</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="regexStepContent">
+                                                <p class="text-muted">Select a step to see detailed explanation</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Transition Table -->
+                            <div class="card mt-3 d-none" id="regexTableCard">
+                                <div class="card-header">
+                                    <h6 class="card-title mb-0">Transition Table</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="regexTransitionTable"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error Display -->
+                        <div id="regexError" class="alert alert-danger d-none" role="alert">
+                            <i data-feather="alert-circle" class="me-2"></i>
+                            <span id="regexErrorMessage"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NFA to DFA Tab -->
+            <div class="tab-pane fade" id="nfa-to-dfa" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">
+                            <i data-feather="shuffle" class="me-2"></i>
+                            NFA to DFA Conversion
+                        </h4>
+                        <p class="card-text mb-0">Convert nondeterministic finite automata to deterministic using subset construction</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Input Mode Selection -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">Input Mode</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="nfaInputMode" id="nfaVisualMode" value="visual" checked>
+                                    <label class="btn btn-outline-primary" for="nfaVisualMode">Visual Editor</label>
+                                    
+                                    <input type="radio" class="btn-check" name="nfaInputMode" id="nfaExampleMode" value="example">
+                                    <label class="btn btn-outline-primary" for="nfaExampleMode">Choose Example</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual Input Mode -->
+                        <div id="nfaVisualInput">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="nfaStates" class="form-label">States (comma-separated)</label>
+                                    <input type="text" class="form-control" id="nfaStates" placeholder="q0, q1, q2" autocomplete="off">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nfaAlphabet" class="form-label">Alphabet (comma-separated)</label>
+                                    <input type="text" class="form-control" id="nfaAlphabet" placeholder="a, b" autocomplete="off">
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="nfaStartStates" class="form-label">Start States</label>
+                                    <input type="text" class="form-control" id="nfaStartStates" placeholder="q0" autocomplete="off">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nfaFinalStates" class="form-label">Final States</label>
+                                    <input type="text" class="form-control" id="nfaFinalStates" placeholder="q2" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <!-- Transitions Input -->
+                            <div class="mb-3">
+                                <label class="form-label">Transitions</label>
+                                <div id="nfaTransitionsContainer">
+                                    <div class="row g-2 mb-2 nfa-transition-row">
+                                        <div class="col-3">
+                                            <select class="form-select nfa-from-state">
+                                                <option value="">From State</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <select class="form-select nfa-symbol">
+                                                <option value="">Symbol</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <select class="form-select nfa-to-state">
+                                                <option value="">To State</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-outline-danger btn-sm remove-transition">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary btn-sm" id="addNfaTransition">
+                                    <i data-feather="plus"></i> Add Transition
+                                </button>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary" type="button" id="convertNfaBtn">
+                                    <i data-feather="play" class="me-2"></i>Convert NFA to DFA
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Example Input Mode -->
+                        <div id="nfaExampleInput" class="d-none">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <label class="form-label">Choose an example:</label>
+                                    <select class="form-select" id="nfaExampleSelect">
+                                        <option value="">Select an example...</option>
+                                        <optgroup label="Simple Examples">
+                                            {% for example in examples['nfa-to-dfa']['simple'] %}
+                                            <option value="{{ loop.index0 }}" data-description="{{ example.description }}">
+                                                {{ example.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </optgroup>
+                                        <optgroup label="Complex Examples">
+                                            {% for example in examples['nfa-to-dfa']['complex'] %}
+                                            <option value="{{ loop.index0 + 10 }}" data-description="{{ example.description }}">
+                                                {{ example.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary" type="button" id="convertNfaExampleBtn">
+                                    <i data-feather="play" class="me-2"></i>Convert Selected NFA
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="nfaResults" class="d-none">
+                            <!-- Similar structure as regex results -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-primary" id="nfaPrevStep">
+                                        <i data-feather="chevron-left"></i> Previous
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary" id="nfaNextStep">
+                                        Next <i data-feather="chevron-right"></i>
+                                    </button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-secondary" id="nfaShowTable">
+                                        <i data-feather="table"></i> Show Table
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="nfaExport">
+                                        <i data-feather="download"></i> Export
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="nfaReset">
+                                        <i data-feather="refresh-cw"></i> Reset
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="progress mb-3">
+                                <div class="progress-bar" id="nfaProgress" role="progressbar" style="width: 0%"></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">DFA Visualization</h6>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div id="nfaGraph" class="cytoscape-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0" id="nfaStepTitle">Step Explanation</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="nfaStepContent">
+                                                <p class="text-muted">Select a step to see detailed explanation</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mt-3 d-none" id="nfaTableCard">
+                                <div class="card-header">
+                                    <h6 class="card-title mb-0">Transition Table</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="nfaTransitionTable"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error Display -->
+                        <div id="nfaError" class="alert alert-danger d-none" role="alert">
+                            <i data-feather="alert-circle" class="me-2"></i>
+                            <span id="nfaErrorMessage"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DFA to Regular Expression Tab -->
+            <div class="tab-pane fade" id="dfa-to-regex" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">
+                            <i data-feather="arrow-left" class="me-2"></i>
+                            DFA to Regular Expression Conversion
+                        </h4>
+                        <p class="card-text mb-0">Extract regular expressions from deterministic finite automata using state elimination</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Input Mode Selection -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">Input Mode</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="dfaInputMode" id="dfaVisualMode" value="visual" checked>
+                                    <label class="btn btn-outline-primary" for="dfaVisualMode">Visual Editor</label>
+                                    
+                                    <input type="radio" class="btn-check" name="dfaInputMode" id="dfaExampleMode" value="example">
+                                    <label class="btn btn-outline-primary" for="dfaExampleMode">Choose Example</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual Input Mode -->
+                        <div id="dfaVisualInput">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="dfaStates" class="form-label">States (comma-separated)</label>
+                                    <input type="text" class="form-control" id="dfaStates" placeholder="q0, q1, q2" autocomplete="off">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="dfaAlphabet" class="form-label">Alphabet (comma-separated)</label>
+                                    <input type="text" class="form-control" id="dfaAlphabet" placeholder="a, b" autocomplete="off">
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="dfaStartState" class="form-label">Start State</label>
+                                    <select class="form-select" id="dfaStartState">
+                                        <option value="">Select start state</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="dfaFinalStates" class="form-label">Final States</label>
+                                    <input type="text" class="form-control" id="dfaFinalStates" placeholder="q2" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <!-- Transitions Input -->
+                            <div class="mb-3">
+                                <label class="form-label">Transitions</label>
+                                <div id="dfaTransitionsContainer">
+                                    <div class="row g-2 mb-2 dfa-transition-row">
+                                        <div class="col-3">
+                                            <select class="form-select dfa-from-state">
+                                                <option value="">From State</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <select class="form-select dfa-symbol">
+                                                <option value="">Symbol</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <select class="form-select dfa-to-state">
+                                                <option value="">To State</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-outline-danger btn-sm remove-transition">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary btn-sm" id="addDfaTransition">
+                                    <i data-feather="plus"></i> Add Transition
+                                </button>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary" type="button" id="convertDfaBtn">
+                                    <i data-feather="play" class="me-2"></i>Convert DFA to RegEx
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Example Input Mode -->
+                        <div id="dfaExampleInput" class="d-none">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <label class="form-label">Choose an example:</label>
+                                    <select class="form-select" id="dfaExampleSelect">
+                                        <option value="">Select an example...</option>
+                                        <optgroup label="Simple Examples">
+                                            {% for example in examples['dfa-to-regex']['simple'] %}
+                                            <option value="{{ loop.index0 }}" data-description="{{ example.description }}">
+                                                {{ example.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </optgroup>
+                                        <optgroup label="Complex Examples">
+                                            {% for example in examples['dfa-to-regex']['complex'] %}
+                                            <option value="{{ loop.index0 + 10 }}" data-description="{{ example.description }}">
+                                                {{ example.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary" type="button" id="convertDfaExampleBtn">
+                                    <i data-feather="play" class="me-2"></i>Convert Selected DFA
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="dfaResults" class="d-none">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-primary" id="dfaPrevStep">
+                                        <i data-feather="chevron-left"></i> Previous
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary" id="dfaNextStep">
+                                        Next <i data-feather="chevron-right"></i>
+                                    </button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-secondary" id="dfaShowTable">
+                                        <i data-feather="table"></i> Show Table
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="dfaExport">
+                                        <i data-feather="download"></i> Export
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="dfaReset">
+                                        <i data-feather="refresh-cw"></i> Reset
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="progress mb-3">
+                                <div class="progress-bar" id="dfaProgress" role="progressbar" style="width: 0%"></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">Regular Expression Result</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="alert alert-success" id="dfaRegexResult">
+                                                <h5 class="alert-heading">Generated Regular Expression:</h5>
+                                                <p class="mb-0 font-monospace fs-4" id="dfaRegexText"></p>
+                                            </div>
+                                            <div id="dfaGraph" class="cytoscape-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0" id="dfaStepTitle">Step Explanation</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="dfaStepContent">
+                                                <p class="text-muted">Select a step to see detailed explanation</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error Display -->
+                        <div id="dfaError" class="alert alert-danger d-none" role="alert">
+                            <i data-feather="alert-circle" class="me-2"></i>
+                            <span id="dfaErrorMessage"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden data for JavaScript -->
+<script type="application/json" id="examples-data">{{ examples | tojsonpretty | safe }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Make examples data available globally
+window.EXAMPLES_DATA = JSON.parse(document.getElementById('examples-data').textContent);
+</script>
+{% endblock %}
