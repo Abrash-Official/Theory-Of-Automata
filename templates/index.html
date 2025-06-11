@@ -562,7 +562,7 @@
 </div>
 
 <!-- Hidden data for JavaScript -->
-<script type="application/json" id="examples-data">{{ examples | tojsonpretty | safe }}</script>
+<script type="application/json" id="examples-data">{{ examples | tojson | safe }}</script>
 {% endblock %}
 
 {% block scripts %}
