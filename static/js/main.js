@@ -549,6 +549,54 @@ async function convertDfaExample() {
     }
 }
 
+async function convertDfaExample() {
+    // Implementation for converting selected DFA example
+    const selectElement = document.getElementById('dfaExampleSelect');
+    const selectedIndex = selectElement.value;
+    
+    if (!selectedIndex) {
+        showError('dfaError', 'Please select an example');
+        return;
+    }
+    
+    // Get example data and convert
+    const examples = window.AutomataEdu.examples['dfa-to-regex'];
+    const allExamples = [...examples.simple, ...examples.complex];
+    const exampleData = allExamples[parseInt(selectedIndex)];
+    
+    if (exampleData && exampleData.dfa) {
+        hideError('dfaError');
+        showLoading();
+        
+        try {
+            const response = await fetch('/api/convert/dfa-to-regex', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ dfa: exampleData.dfa })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                window.AutomataEdu.conversionData = result;
+                window.AutomataEdu.currentStep = 0;
+                window.AutomataEdu.totalSteps = result.steps.length;
+                
+                displayDfaResults(result);
+            } else {
+                showError('dfaError', result.error || 'Conversion failed');
+            }
+        } catch (error) {
+            console.error('Conversion error:', error);
+            showError('dfaError', 'Network error during conversion');
+        } finally {
+            hideLoading();
+        }
+    }
+}
+
 // Data collection functions
 function collectNfaData() {
     const states = document.getElementById('nfaStates').value.split(',').map(s => s.trim()).filter(s => s);
@@ -974,6 +1022,392 @@ function resetConversion(type) {
     window.AutomataEdu.conversionData = null;
     window.AutomataEdu.currentStep = 0;
     window.AutomataEdu.totalSteps = 0;
+}
+
+// Display functions for conversion results
+function displayRegexResults(result) {
+    const resultsContainer = document.getElementById('regexResults');
+    if (!resultsContainer) return;
+    
+    // Show results container
+    resultsContainer.classList.remove('d-none');
+    
+    // Update step display
+    updateStepDisplay('regex', result);
+    
+    // Render visualization
+    if (result.dfa && window.renderAutomaton) {
+        renderAutomaton('regexVisualization', result.dfa);
+    }
+    
+    // Update navigation buttons
+    updateNavigationButtons('regex');
+}
+
+function displayNfaResults(result) {
+    const resultsContainer = document.getElementById('nfaResults');
+    if (!resultsContainer) return;
+    
+    // Show results container
+    resultsContainer.classList.remove('d-none');
+    
+    // Update step display
+    updateStepDisplay('nfa', result);
+    
+    // Render visualization
+    if (result.dfa && window.renderAutomaton) {
+        renderAutomaton('nfaVisualization', result.dfa);
+    }
+    
+    // Update navigation buttons
+    updateNavigationButtons('nfa');
+}
+
+function displayDfaResults(result) {
+    const resultsContainer = document.getElementById('dfaResults');
+    if (!resultsContainer) return;
+    
+    // Show results container
+    resultsContainer.classList.remove('d-none');
+    
+    // Update step display
+    updateStepDisplay('dfa', result);
+    
+    // Display regex result
+    if (result.regex) {
+        const regexDisplay = document.getElementById('dfaRegexResult');
+        if (regexDisplay) {
+            regexDisplay.textContent = result.regex;
+        }
+    }
+    
+    // Render visualization if available
+    if (result.originalDfa && window.renderAutomaton) {
+        renderAutomaton('dfaVisualization', result.originalDfa);
+    }
+    
+    // Update navigation buttons
+    updateNavigationButtons('dfa');
+}
+
+function updateStepDisplay(type, result) {
+    const stepInfo = document.getElementById(`${type}StepInfo`);
+    const stepContent = document.getElementById(`${type}StepContent`);
+    
+    if (!stepInfo || !stepContent) return;
+    
+    const currentStep = window.AutomataEdu.currentStep;
+    const totalSteps = result.steps.length;
+    
+    // Update step counter
+    stepInfo.textContent = `Step ${currentStep + 1} of ${totalSteps}`;
+    
+    // Update step content
+    if (result.steps[currentStep]) {
+        const step = result.steps[currentStep];
+        stepContent.innerHTML = `
+            <h5>${step.title}</h5>
+            <p>${step.description}</p>
+            ${formatStepData(step)}
+        `;
+    }
+}
+
+function formatStepData(step) {
+    if (!step.data) return '';
+    
+    let html = '<div class="step-data">';
+    
+    // Format different types of step data
+    switch (step.type) {
+        case 'augment':
+            if (step.data.originalRegex && step.data.augmentedRegex) {
+                html += `<p><strong>Original:</strong> <code>${step.data.originalRegex}</code></p>`;
+                html += `<p><strong>Augmented:</strong> <code>${step.data.augmentedRegex}</code></p>`;
+            }
+            break;
+            
+        case 'syntax_tree':
+            html += '<p><strong>Syntax tree constructed</strong></p>';
+            break;
+            
+        case 'functions':
+            html += '<p><strong>Node functions calculated</strong></p>';
+            break;
+            
+        case 'followpos':
+            if (step.data.followposTable) {
+                html += '<p><strong>Followpos table:</strong></p>';
+                html += '<table class="table table-sm">';
+                html += '<thead><tr><th>Position</th><th>Followpos</th></tr></thead><tbody>';
+                for (const [pos, follow] of Object.entries(step.data.followposTable)) {
+                    html += `<tr><td>${pos}</td><td>{${follow.join(', ')}}</td></tr>`;
+                }
+                html += '</tbody></table>';
+            }
+            break;
+            
+        case 'construct_dfa':
+            html += '<p><strong>DFA construction completed</strong></p>';
+            break;
+            
+        case 'subset_construction':
+            if (step.data.stateMapping) {
+                html += '<p><strong>New DFA state created</strong></p>';
+            }
+            break;
+            
+        case 'state_elimination':
+            if (step.data.eliminatedState) {
+                html += `<p><strong>Eliminated state:</strong> ${step.data.eliminatedState}</p>`;
+            }
+            break;
+            
+        default:
+            if (typeof step.data === 'object') {
+                html += `<pre>${JSON.stringify(step.data, null, 2)}</pre>`;
+            }
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+function updateNavigationButtons(type) {
+    const prevBtn = document.getElementById(`${type}PrevStep`);
+    const nextBtn = document.getElementById(`${type}NextStep`);
+    
+    if (!prevBtn || !nextBtn) return;
+    
+    const currentStep = window.AutomataEdu.currentStep;
+    const totalSteps = window.AutomataEdu.totalSteps;
+    
+    // Update button states
+    prevBtn.disabled = currentStep === 0;
+    nextBtn.disabled = currentStep === totalSteps - 1;
+}
+
+function navigateStep(type, direction) {
+    const currentStep = window.AutomataEdu.currentStep;
+    const totalSteps = window.AutomataEdu.totalSteps;
+    const newStep = currentStep + direction;
+    
+    if (newStep >= 0 && newStep < totalSteps) {
+        window.AutomataEdu.currentStep = newStep;
+        updateStepDisplay(type, window.AutomataEdu.conversionData);
+        updateNavigationButtons(type);
+    }
+}
+
+function toggleTransitionTable(type) {
+    // Implementation for showing transition table
+    console.log(`Toggle transition table for ${type}`);
+}
+
+// Data collection functions
+function collectNfaData() {
+    const states = document.getElementById('nfaStates').value.trim();
+    const alphabet = document.getElementById('nfaAlphabet').value.trim();
+    const startStates = document.getElementById('nfaStartStates').value.trim();
+    const finalStates = document.getElementById('nfaFinalStates').value.trim();
+    
+    if (!states || !alphabet || !startStates) {
+        return null;
+    }
+    
+    // Parse states and alphabet
+    const stateList = states.split(',').map(s => s.trim()).filter(s => s);
+    const alphabetList = alphabet.split(',').map(s => s.trim()).filter(s => s);
+    const startStateList = startStates.split(',').map(s => s.trim()).filter(s => s);
+    const finalStateList = finalStates ? finalStates.split(',').map(s => s.trim()).filter(s => s) : [];
+    
+    // Collect transitions
+    const transitions = [];
+    const transitionRows = document.querySelectorAll('#nfaTransitionsContainer .nfa-transition-row');
+    
+    transitionRows.forEach(row => {
+        const fromState = row.querySelector('.nfa-from-state').value;
+        const symbol = row.querySelector('.nfa-symbol').value;
+        const toStates = row.querySelector('.nfa-to-states').value.trim();
+        
+        if (fromState && symbol && toStates) {
+            const toStateList = toStates.split(',').map(s => s.trim()).filter(s => s);
+            toStateList.forEach(toState => {
+                transitions.push({
+                    from: fromState,
+                    to: toState,
+                    symbol: symbol
+                });
+            });
+        }
+    });
+    
+    return {
+        states: stateList.map(id => ({
+            id: id,
+            label: id,
+            isStart: startStateList.includes(id),
+            isFinal: finalStateList.includes(id)
+        })),
+        transitions: transitions,
+        alphabet: alphabetList,
+        startStates: startStateList,
+        finalStates: finalStateList
+    };
+}
+
+function collectDfaData() {
+    const states = document.getElementById('dfaStates').value.trim();
+    const alphabet = document.getElementById('dfaAlphabet').value.trim();
+    const startState = document.getElementById('dfaStartState').value.trim();
+    const finalStates = document.getElementById('dfaFinalStates').value.trim();
+    
+    if (!states || !alphabet || !startState) {
+        return null;
+    }
+    
+    // Parse states and alphabet
+    const stateList = states.split(',').map(s => s.trim()).filter(s => s);
+    const alphabetList = alphabet.split(',').map(s => s.trim()).filter(s => s);
+    const finalStateList = finalStates ? finalStates.split(',').map(s => s.trim()).filter(s => s) : [];
+    
+    // Collect transitions
+    const transitions = [];
+    const transitionRows = document.querySelectorAll('#dfaTransitionsContainer .dfa-transition-row');
+    
+    transitionRows.forEach(row => {
+        const fromState = row.querySelector('.dfa-from-state').value;
+        const symbol = row.querySelector('.dfa-symbol').value;
+        const toState = row.querySelector('.dfa-to-state').value;
+        
+        if (fromState && symbol && toState) {
+            transitions.push({
+                from: fromState,
+                to: toState,
+                symbol: symbol
+            });
+        }
+    });
+    
+    return {
+        states: stateList.map(id => ({
+            id: id,
+            label: id,
+            isStart: id === startState,
+            isFinal: finalStateList.includes(id)
+        })),
+        transitions: transitions,
+        alphabet: alphabetList,
+        startState: startState,
+        finalStates: finalStateList
+    };
+}
+
+function addTransitionRow(type) {
+    const container = document.getElementById(`${type}TransitionsContainer`);
+    if (!container) return;
+    
+    const existingRow = container.querySelector(`.${type}-transition-row`);
+    if (!existingRow) return;
+    
+    const newRow = existingRow.cloneNode(true);
+    
+    // Clear values in new row
+    newRow.querySelectorAll('select').forEach(select => {
+        select.value = '';
+    });
+    
+    // Add remove button if not present
+    const removeBtn = newRow.querySelector('.remove-transition');
+    if (!removeBtn) {
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'btn btn-outline-danger btn-sm remove-transition';
+        removeButton.innerHTML = '<i data-feather="x"></i>';
+        newRow.appendChild(removeButton);
+    }
+    
+    container.appendChild(newRow);
+    
+    // Update transition options for new row
+    if (type === 'nfa') {
+        updateNfaTransitionOptions();
+    } else if (type === 'dfa') {
+        updateDfaTransitionOptions();
+    }
+    
+    // Re-render icons
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+}
+
+function updateNfaTransitionOptions() {
+    const states = document.getElementById('nfaStates').value.trim();
+    const alphabet = document.getElementById('nfaAlphabet').value.trim();
+    
+    const stateList = states ? states.split(',').map(s => s.trim()).filter(s => s) : [];
+    const alphabetList = alphabet ? alphabet.split(',').map(s => s.trim()).filter(s => s) : [];
+    
+    // Add epsilon transition option
+    const symbolList = ['ε'].concat(alphabetList);
+    
+    const transitionRows = document.querySelectorAll('#nfaTransitionsContainer .nfa-transition-row');
+    
+    transitionRows.forEach(row => {
+        const fromSelect = row.querySelector('.nfa-from-state');
+        const symbolSelect = row.querySelector('.nfa-symbol');
+        
+        // Update from state options
+        updateSelectOptions(fromSelect, stateList);
+        
+        // Update symbol options
+        updateSelectOptions(symbolSelect, symbolList);
+    });
+}
+
+function updateDfaTransitionOptions() {
+    const states = document.getElementById('dfaStates').value.trim();
+    const alphabet = document.getElementById('dfaAlphabet').value.trim();
+    
+    const stateList = states ? states.split(',').map(s => s.trim()).filter(s => s) : [];
+    const alphabetList = alphabet ? alphabet.split(',').map(s => s.trim()).filter(s => s) : [];
+    
+    const transitionRows = document.querySelectorAll('#dfaTransitionsContainer .dfa-transition-row');
+    
+    transitionRows.forEach(row => {
+        const fromSelect = row.querySelector('.dfa-from-state');
+        const symbolSelect = row.querySelector('.dfa-symbol');
+        const toSelect = row.querySelector('.dfa-to-state');
+        
+        // Update options
+        updateSelectOptions(fromSelect, stateList);
+        updateSelectOptions(symbolSelect, alphabetList);
+        updateSelectOptions(toSelect, stateList);
+    });
+    
+    // Update start state select
+    const startStateSelect = document.getElementById('dfaStartState');
+    if (startStateSelect) {
+        updateSelectOptions(startStateSelect, stateList);
+    }
+}
+
+function updateSelectOptions(selectElement, options) {
+    if (!selectElement) return;
+    
+    const currentValue = selectElement.value;
+    selectElement.innerHTML = '<option value="">Select...</option>';
+    
+    options.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option;
+        optionElement.textContent = option;
+        if (option === currentValue) {
+            optionElement.selected = true;
+        }
+        selectElement.appendChild(optionElement);
+    });
 }
 
 // Add event listener for remove transition buttons
