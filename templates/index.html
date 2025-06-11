@@ -145,11 +145,13 @@
                                 <div class="col-lg-4">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h6 class="card-title mb-0" id="regexStepTitle">Step Explanation</h6>
+                                            <h6 class="card-title mb-0">
+                                                <span id="regexStepInfo">Step Explanation</span>
+                                            </h6>
                                         </div>
                                         <div class="card-body">
                                             <div id="regexStepContent">
-                                                <p class="text-muted">Select a step to see detailed explanation</p>
+                                                <p class="text-muted">Enter a regular expression and click Convert to begin</p>
                                             </div>
                                         </div>
                                     </div>
@@ -332,18 +334,20 @@
                                             <h6 class="card-title mb-0">DFA Visualization</h6>
                                         </div>
                                         <div class="card-body p-0">
-                                            <div id="nfaGraph" class="cytoscape-container"></div>
+                                            <div id="nfaVisualization" class="cytoscape-container"></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h6 class="card-title mb-0" id="nfaStepTitle">Step Explanation</h6>
+                                            <h6 class="card-title mb-0">
+                                                <span id="nfaStepInfo">Step Explanation</span>
+                                            </h6>
                                         </div>
                                         <div class="card-body">
                                             <div id="nfaStepContent">
-                                                <p class="text-muted">Select a step to see detailed explanation</p>
+                                                <p class="text-muted">Define NFA and click Convert to begin</p>
                                             </div>
                                         </div>
                                     </div>
@@ -530,18 +534,20 @@
                                                 <h5 class="alert-heading">Generated Regular Expression:</h5>
                                                 <p class="mb-0 font-monospace fs-4" id="dfaRegexText"></p>
                                             </div>
-                                            <div id="dfaGraph" class="cytoscape-container"></div>
+                                            <div id="dfaVisualization" class="cytoscape-container"></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h6 class="card-title mb-0" id="dfaStepTitle">Step Explanation</h6>
+                                            <h6 class="card-title mb-0">
+                                                <span id="dfaStepInfo">Step Explanation</span>
+                                            </h6>
                                         </div>
                                         <div class="card-body">
                                             <div id="dfaStepContent">
-                                                <p class="text-muted">Select a step to see detailed explanation</p>
+                                                <p class="text-muted">Define DFA and click Convert to begin</p>
                                             </div>
                                         </div>
                                     </div>
