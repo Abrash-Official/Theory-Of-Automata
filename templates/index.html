@@ -499,8 +499,21 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-12">
                                     <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">Regular Expression Result</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="alert alert-success" id="dfaRegexResult">
+                                                <h5 class="alert-heading">Generated Regular Expression:</h5>
+                                                <p class="mb-0 font-monospace fs-4" id="dfaRegexText"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="card mt-3">
                                         <div class="card-header">
                                             <h6 class="card-title mb-0">DFA Visualization (Original)</h6>
                                         </div>
@@ -514,19 +527,6 @@
                                         </div>
                                         <div class="card-body">
                                             <div id="dfaOriginalTransitionTable"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h6 class="card-title mb-0">Regular Expression Result</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="alert alert-success" id="dfaRegexResult">
-                                                <h5 class="alert-heading">Generated Regular Expression:</h5>
-                                                <p class="mb-0 font-monospace fs-4" id="dfaRegexText"></p>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
