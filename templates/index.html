@@ -288,14 +288,14 @@
                         <div id="nfaResults" class="d-none">
                             <!-- Similar structure as regex results -->
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="btn-group" role="group">
+                                {/* <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-outline-primary" id="nfaPrevStep">
                                         <i data-feather="chevron-left"></i> Previous
                                     </button>
                                     <button type="button" class="btn btn-outline-primary" id="nfaNextStep">
                                         Next <i data-feather="chevron-right"></i>
                                     </button>
-                                </div>
+                                </div> */}
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-outline-secondary" id="nfaShowTable">
                                         <i data-feather="table"></i> Show Table
@@ -309,29 +309,46 @@
                                 </div>
                             </div>
 
-                            <div class="progress mb-3">
+                            <div class="progress mb-3 d-none">
                                 <div class="progress-bar" id="nfaProgress" role="progressbar" style="width: 0%"></div>
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h6 class="card-title mb-0">DFA Visualization</h6>
+                                            <h6 class="card-title mb-0">NFA Visualization (Original)</h6>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div id="nfaOriginalVisualization" class="cytoscape-container"></div>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-3" id="nfaOriginalTableCard">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">NFA Transition Table (Original)</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="nfaOriginalTransitionTable"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">DFA Visualization (Converted)</h6>
                                         </div>
                                         <div class="card-body p-0">
                                             <div id="nfaVisualization" class="cytoscape-container"></div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="card mt-3 d-none" id="nfaTableCard">
-                                <div class="card-header">
-                                    <h6 class="card-title mb-0">Transition Table</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div id="nfaTransitionTable"></div>
+                                    <div class="card mt-3" id="nfaConvertedTableCard">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">DFA Transition Table (Converted)</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="nfaConvertedTransitionTable"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -491,12 +508,30 @@
                                 </div>
                             </div>
 
-                            <div class="progress mb-3">
+                            <div class="progress mb-3 d-none">
                                 <div class="progress-bar" id="dfaProgress" role="progressbar" style="width: 0%"></div>
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">DFA Visualization (Original)</h6>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div id="dfaOriginalVisualization" class="cytoscape-container"></div>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-3" id="dfaOriginalTableCard">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">DFA Transition Table (Original)</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="dfaOriginalTransitionTable"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
                                     <div class="card">
                                         <div class="card-header">
                                             <h6 class="card-title mb-0">Regular Expression Result</h6>
@@ -506,16 +541,6 @@
                                                 <h5 class="alert-heading">Generated Regular Expression:</h5>
                                                 <p class="mb-0 font-monospace fs-4" id="dfaRegexText"></p>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="card mt-3">
-                                        <div class="card-header">
-                                            <h6 class="card-title mb-0">DFA Visualization</h6>
-                                        </div>
-                                        <div class="card-body p-0">
-                                            <div id="dfaVisualization" class="cytoscape-container"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -544,3 +569,5 @@
 window.EXAMPLES_DATA = JSON.parse(document.getElementById('examples-data').textContent);
 </script>
 {% endblock %}
+
+

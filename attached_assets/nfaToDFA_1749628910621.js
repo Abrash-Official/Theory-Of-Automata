@@ -326,13 +326,18 @@ export class NFABuilder {
     });
 
     // Create states
+    const numStates = Array.from(stateIds).length;
+    const positions = AutomataUtils.generateStatePositions(numStates, 200, 150, 100); // Generate positions
+    let i = 0;
     Array.from(stateIds).forEach(stateId => {
-      states.push(new State(
+      const state = new State(
         stateId,
         stateId,
         stateId === startState,
         finalStates.includes(stateId)
-      ));
+      );
+      state.position = positions[i++]; // Assign generated position
+      states.push(state);
     });
 
     // Create transitions

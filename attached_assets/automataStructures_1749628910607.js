@@ -157,6 +157,17 @@ export class DFA extends FiniteAutomaton {
     
     return trace;
   }
+
+  toJSON() {
+    return {
+      states: Array.from(this.states.values()),
+      transitions: Array.from(this.transitions.values()),
+      alphabet: Array.from(this.alphabet),
+      startState: this.startState,
+      finalStates: Array.from(this.finalStates),
+      type: 'DFA'
+    };
+  }
 }
 
 /**
@@ -212,6 +223,17 @@ export class NFA extends FiniteAutomaton {
     }
     
     return currentStates.some(state => this.finalStates.has(state));
+  }
+
+  toJSON() {
+    return {
+      states: Array.from(this.states.values()),
+      transitions: Array.from(this.transitions.values()),
+      alphabet: Array.from(this.alphabet),
+      startStates: Array.from(this.startStates),
+      finalStates: Array.from(this.finalStates),
+      type: 'NFA'
+    };
   }
 }
 
@@ -272,21 +294,70 @@ export const AutomataUtils = {
   validateAutomaton: (automaton) => {
     const errors = [];
     
-    // Check if there's at least one start state
-    if (automaton.startStates.size === 0) {
-      errors.push('No start state defined');
+    if (!automaton || !automaton.states || !automaton.transitions || !automaton.alphabet) {
+      errors.push('Automaton object is incomplete (missing states, transitions, or alphabet).');
+      return errors;
     }
-    
-    // Check if all transition endpoints exist
-    for (const transition of automaton.transitions.values()) {
+
+    if (automaton.states.size === 0) {
+      errors.push('Automaton must have at least one state.');
+    }
+
+    if (automaton.alphabet.size === 0) {
+      errors.push('Automaton must have at least one symbol in its alphabet (excluding epsilon).');
+    }
+
+    // Check if all transitions refer to existing states and valid symbols
+    automaton.transitions.forEach(transition => {
       if (!automaton.states.has(transition.from)) {
-        errors.push(`Transition references non-existent state: ${transition.from}`);
+        errors.push(`Transition from non-existent state: ${transition.from}`);
       }
       if (!automaton.states.has(transition.to)) {
-        errors.push(`Transition references non-existent state: ${transition.to}`);
+        errors.push(`Transition to non-existent state: ${transition.to}`);
+      }
+      if (transition.symbol !== 'ε' && !automaton.alphabet.has(transition.symbol)) {
+        errors.push(`Transition uses unknown symbol '${transition.symbol}'.`);
+      }
+    });
+
+    // Check for start and final states
+    if (automaton instanceof DFA) {
+      if (!automaton.startState || !automaton.states.has(automaton.startState)) {
+        errors.push('DFA must have exactly one valid start state.');
+      }
+    } else if (automaton instanceof NFA) {
+      if (automaton.startStates.size === 0) {
+        errors.push('NFA must have at least one start state.');
       }
     }
-    
+
+    automaton.finalStates.forEach(stateId => {
+      if (!automaton.states.has(stateId)) {
+        errors.push(`Final state '${stateId}' is not defined in states.`);
+      }
+    });
+
+    // Check for duplicate states or transitions (by ID)
+    const stateIds = new Set();
+    automaton.states.forEach(state => {
+      if (stateIds.has(state.id)) {
+        errors.push(`Duplicate state ID: ${state.id}`);
+      }
+      stateIds.add(state.id);
+    });
+
+    const transitionIds = new Set();
+    automaton.transitions.forEach(transition => {
+      // For transitions, we might allow multiple transitions between same states with different symbols
+      // But duplicate exact transitions should be flagged
+      const uniqueTransitionId = `${transition.from}-${transition.to}-${transition.symbol}`;
+      if (transitionIds.has(uniqueTransitionId)) {
+        // This might not be a strict error for NFA, but good to note for DFA
+        // errors.push(`Duplicate transition: ${uniqueTransitionId}`);
+      }
+      transitionIds.add(uniqueTransitionId);
+    });
+
     return errors;
   },
 
@@ -364,6 +435,27 @@ export const AutomataUtils = {
     });
     
     return new FiniteAutomaton(states, transitions, Array.from(alphabet), startStates, finalStates);
+  },
+
+  /**
+   * Generates positions for states in a circular layout.
+   * @param {number} numStates - The total number of states.
+   * @param {number} centerX - The X coordinate of the center of the circle.
+   * @param {number} centerY - The Y coordinate of the center of the circle.
+   * @param {number} radius - The radius of the circle.
+   * @returns {Array<Object>} An array of {x, y} position objects for each state.
+   */
+  generateStatePositions: (numStates, centerX = 200, centerY = 150, radius = 100) => {
+    const positions = [];
+    if (numStates === 0) return positions;
+
+    for (let i = 0; i < numStates; i++) {
+      const angle = (i / numStates) * 2 * Math.PI;
+      const x = centerX + radius * Math.cos(angle);
+      const y = centerY + radius * Math.sin(angle);
+      positions.push({ x, y });
+    }
+    return positions;
   }
 };
 

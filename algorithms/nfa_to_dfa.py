@@ -52,7 +52,8 @@ class NFAToDFAConverter:
                 'success': True,
                 'dfa': minimized_dfa.to_dict(),
                 'steps': self.steps,
-                'stateMapping': self.state_mapping
+                'stateMapping': self.state_mapping,
+                'nfa': self.nfa.to_dict()
             }
             
         except Exception as e:
@@ -60,7 +61,8 @@ class NFAToDFAConverter:
             return {
                 'success': False,
                 'error': str(e),
-                'steps': self.steps
+                'steps': self.steps,
+                'nfa': self.nfa.to_dict()
             }
     
     def validate_nfa(self):

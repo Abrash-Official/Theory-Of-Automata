@@ -163,7 +163,8 @@ class DFAToRegexConverter:
             return {
                 'success': True,
                 'regex': simplified_regex,
-                'steps': self.steps
+                'steps': self.steps,
+                'originalDfa': self.dfa.to_dict()
             }
             
         except Exception as e:
@@ -171,7 +172,8 @@ class DFAToRegexConverter:
             return {
                 'success': False,
                 'error': str(e),
-                'steps': self.steps
+                'steps': self.steps,
+                'originalDfa': self.dfa.to_dict()
             }
     
     def validate_dfa(self):

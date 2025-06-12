@@ -742,41 +742,98 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Results display functions
+// Display functions for conversion results
 function displayRegexResults(result) {
     const resultsContainer = document.getElementById('regexResults');
+    if (!resultsContainer) return;
+    
+    // Show results container
     resultsContainer.classList.remove('d-none');
     
-    // Initialize visualization
-    if (result.dfa) {
+    // Remove Step Display and Progress Bar, as requested (similar to NFA -> DFA)
+    const regexStepInfo = document.getElementById('regexStepInfo');
+    const regexStepContent = document.getElementById('regexStepContent');
+    const regexProgress = document.getElementById('regexProgress');
+    if (regexStepInfo) regexStepInfo.parentElement.classList.add('d-none');
+    if (regexStepContent) regexStepContent.parentElement.classList.add('d-none');
+    if (regexProgress) regexProgress.classList.add('d-none');
+
+    // Render the DFA visualization (result of Regex to DFA)
+    if (result.dfa && window.renderAutomaton) {
+        console.log("DFA data for Regex to DFA rendering:", result.dfa);
         renderAutomaton('regexVisualization', result.dfa);
     }
-    
-    // Show first step
-    if (result.steps.length > 0) {
-        displayStep('regex', result.steps[0]);
-        updateProgress('regex');
+
+    // Show and populate the DFA transition table for Regex to DFA
+    const regexTableCard = document.getElementById('regexTableCard');
+    if (regexTableCard) {
+        regexTableCard.classList.remove('d-none');
+        if (result.dfa) {
+            console.log("DFA data for Regex to DFA table:", result.dfa);
+            generateTransitionTable('regex', result.dfa);
+        }
     }
+
+    // Update navigation buttons
+    updateNavigationButtons('regex');
 }
 
 function displayNfaResults(result) {
     const resultsContainer = document.getElementById('nfaResults');
+    if (!resultsContainer) return;
+    
+    // Show results container
     resultsContainer.classList.remove('d-none');
     
-    // Initialize visualization
-    if (result.dfa) {
-        renderAutomaton('nfaGraph', result.dfa);
+    // Remove Step Display and Progress Bar, as requested
+    const nfaStepInfo = document.getElementById('nfaStepInfo');
+    const nfaStepContent = document.getElementById('nfaStepContent');
+    const nfaProgress = document.getElementById('nfaProgress');
+    if (nfaStepInfo) nfaStepInfo.parentElement.classList.add('d-none');
+    if (nfaStepContent) nfaStepContent.parentElement.classList.add('d-none');
+    if (nfaProgress) nfaProgress.classList.add('d-none');
+
+    // Render original NFA visualization
+    if (result.nfa && window.renderAutomaton) {
+        console.log("NFA data for rendering:", result.nfa);
+        renderAutomaton('nfaOriginalVisualization', result.nfa);
+    }
+
+    // Render converted DFA visualization
+    if (result.dfa && window.renderAutomaton) {
+        console.log("DFA data for rendering:", result.dfa);
+        renderAutomaton('nfaVisualization', result.dfa);
+    }
+
+    // Show and populate original NFA transition table
+    const nfaOriginalTableCard = document.getElementById('nfaOriginalTableCard');
+    if (nfaOriginalTableCard) {
+        nfaOriginalTableCard.classList.remove('d-none');
+        if (result.nfa) {
+            console.log("NFA data for original table:", result.nfa);
+            generateTransitionTable('nfaOriginal', result.nfa);
+        }
+    }
+
+    // Show and populate converted DFA transition table
+    const nfaConvertedTableCard = document.getElementById('nfaConvertedTableCard');
+    if (nfaConvertedTableCard) {
+        nfaConvertedTableCard.classList.remove('d-none');
+        if (result.dfa) {
+            console.log("DFA data for converted table:", result.dfa);
+            generateTransitionTable('nfaConverted', result.dfa);
+        }
     }
     
-    // Show first step
-    if (result.steps.length > 0) {
-        displayStep('nfa', result.steps[0]);
-        updateProgress('nfa');
-    }
+    // Update navigation buttons (now removed, but keeping the call for completeness if they were to be re-added later)
+    updateNavigationButtons('nfa');
 }
 
 function displayDfaResults(result) {
     const resultsContainer = document.getElementById('dfaResults');
+    if (!resultsContainer) return;
+    
+    // Show results container
     resultsContainer.classList.remove('d-none');
     
     // Display regex result
@@ -784,12 +841,33 @@ function displayDfaResults(result) {
     if (regexText && result.regex) {
         regexText.textContent = result.regex;
     }
-    
-    // Show first step
-    if (result.steps.length > 0) {
-        displayStep('dfa', result.steps[0]);
-        updateProgress('dfa');
+
+    // Render original DFA visualization
+    if (result.originalDfa && window.renderAutomaton) {
+        console.log("DFA data for rendering:", result.originalDfa);
+        renderAutomaton('dfaOriginalVisualization', result.originalDfa);
     }
+
+    // Show and populate original DFA transition table
+    const dfaOriginalTableCard = document.getElementById('dfaOriginalTableCard');
+    if (dfaOriginalTableCard) {
+        dfaOriginalTableCard.classList.remove('d-none');
+        if (result.originalDfa) {
+            console.log("DFA data for original table:", result.originalDfa);
+            generateTransitionTable('dfaOriginal', result.originalDfa);
+        }
+    }
+    
+    // Remove Step Display and Progress Bar, as requested
+    const dfaStepInfo = document.getElementById('dfaStepInfo');
+    const dfaStepContent = document.getElementById('dfaStepContent');
+    const dfaProgress = document.getElementById('dfaProgress');
+    if (dfaStepInfo) dfaStepInfo.parentElement.classList.add('d-none');
+    if (dfaStepContent) dfaStepContent.parentElement.classList.add('d-none');
+    if (dfaProgress) dfaProgress.classList.add('d-none');
+
+    // Update navigation buttons
+    updateNavigationButtons('dfa');
 }
 
 // Step navigation
@@ -859,13 +937,11 @@ function toggleTransitionTable(type) {
     }
 }
 
-function generateTransitionTable(type) {
+function generateTransitionTable(type, automaton) {
     const tableContainer = document.getElementById(`${type}TransitionTable`);
-    const data = window.AutomataEdu.conversionData;
     
-    if (!tableContainer || !data) return;
+    if (!tableContainer || !automaton) return;
 
-    const automaton = (type === 'dfa' && data.originalDfa) ? data.originalDfa : data.dfa; // Use originalDfa for DFA to RegEx
     console.log("Automaton data for table generation:", automaton);
     if (!automaton) return;
     
@@ -999,72 +1075,6 @@ function resetConversion(type) {
     window.AutomataEdu.conversionData = null;
     window.AutomataEdu.currentStep = 0;
     window.AutomataEdu.totalSteps = 0;
-}
-
-// Display functions for conversion results
-function displayRegexResults(result) {
-    const resultsContainer = document.getElementById('regexResults');
-    if (!resultsContainer) return;
-    
-    // Show results container
-    resultsContainer.classList.remove('d-none');
-    
-    // Update step display
-    updateStepDisplay('regex', result);
-    
-    // Render visualization
-    if (result.dfa && window.renderAutomaton) {
-        renderAutomaton('regexVisualization', result.dfa);
-    }
-    
-    // Update navigation buttons
-    updateNavigationButtons('regex');
-}
-
-function displayNfaResults(result) {
-    const resultsContainer = document.getElementById('nfaResults');
-    if (!resultsContainer) return;
-    
-    // Show results container
-    resultsContainer.classList.remove('d-none');
-    
-    // Update step display
-    updateStepDisplay('nfa', result);
-    
-    // Render visualization
-    if (result.dfa && window.renderAutomaton) {
-        renderAutomaton('nfaVisualization', result.dfa);
-    }
-    
-    // Update navigation buttons
-    updateNavigationButtons('nfa');
-}
-
-function displayDfaResults(result) {
-    const resultsContainer = document.getElementById('dfaResults');
-    if (!resultsContainer) return;
-    
-    // Show results container
-    resultsContainer.classList.remove('d-none');
-    
-    // Update step display
-    updateStepDisplay('dfa', result);
-    
-    // Display regex result
-    if (result.regex) {
-        const regexDisplay = document.getElementById('dfaRegexResult');
-        if (regexDisplay) {
-            regexDisplay.textContent = result.regex;
-        }
-    }
-    
-    // Render visualization if available
-    if (result.originalDfa && window.renderAutomaton) {
-        renderAutomaton('dfaVisualization', result.originalDfa);
-    }
-    
-    // Update navigation buttons
-    updateNavigationButtons('dfa');
 }
 
 function updateStepDisplay(type, result) {
