@@ -76,7 +76,7 @@ def convert_dfa_to_regex():
         
         if not dfa_data:
             return jsonify({'success': False, 'error': 'DFA data is required'})
-        
+
         # Build DFA from input data
         dfa = build_dfa_from_data(dfa_data)
         converter = DFAToRegexConverter(dfa)
@@ -151,7 +151,15 @@ def build_dfa_from_data(dfa_data):
             state_data.get('isFinal', False)
         )
         states.append(state)
-    
+
+    start_state_id = dfa_data.get('startState')
+    if not start_state_id:
+        raise ValueError("DFA data must contain a start state.")
+
+    # Ensure the designated start state actually exists in the provided states
+    if not any(s.id == start_state_id for s in states):
+        raise ValueError(f"Start state '{start_state_id}' not found in provided states.")
+
     # Create transitions
     for trans_data in dfa_data.get('transitions', []):
         transition = Transition(
@@ -162,10 +170,13 @@ def build_dfa_from_data(dfa_data):
         transitions.append(transition)
     
     alphabet = dfa_data.get('alphabet', [])
-    start_state = dfa_data.get('startState')
     final_states = dfa_data.get('finalStates', [])
-    
-    return DFA(states, transitions, alphabet, start_state, final_states)
+
+    # Debugging print statements
+    print(f"DEBUG: dfa_data in build_dfa_from_data: {dfa_data}")
+    print(f"DEBUG: start_state_id extracted: {start_state_id}")
+
+    return DFA(states, transitions, alphabet, start_state_id, final_states)
 
 @app.errorhandler(404)
 def not_found(error):

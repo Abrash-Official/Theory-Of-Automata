@@ -17,6 +17,40 @@ class GeneralizedNFA:
         self.start_state = None
         self.final_state = None
     
+    def _concatenate_regex(self, r1: str, r2: str) -> str:
+        """Helper to concatenate regexes with proper handling of ∅ and ε."""
+        if r1 == '∅' or r2 == '∅':
+            return '∅'
+        if r1 == 'ε':
+            return r2
+        if r2 == 'ε':
+            return r1
+
+        # Add parentheses if the regex contains union and is part of a concatenation
+        if '|' in r1 and len(r1) > 1 and not (r1.startswith('(') and r1.endswith(')')):
+            r1 = f"({r1})"
+        if '|' in r2 and len(r2) > 1 and not (r2.startswith('(') and r2.endswith(')')):
+            r2 = f"({r2})"
+
+        return r1 + r2
+    
+    def _union_regex(self, r1: str, r2: str) -> str:
+        """Helper to union regexes with proper handling of ∅ and ε."""
+        if r1 == '∅':
+            return r2
+        if r2 == '∅':
+            return r1
+        if r1 == 'ε' and r2 == 'ε': # Redundant, but explicit
+            return 'ε'
+        if r1 == r2:
+            return r1 # Avoid redundant union like a|a
+
+        # Canonicalize order for consistent representation
+        if r1 > r2:
+            r1, r2 = r2, r1
+
+        return f"({r1}|{r2})"
+    
     def add_state(self, state_id: str):
         """Add state to GNFA"""
         self.states.add(state_id)
@@ -25,16 +59,13 @@ class GeneralizedNFA:
         """Add transition with regex label"""
         key = (from_state, to_state)
         if key in self.transitions:
-            # Combine with existing transition using union
-            existing = self.transitions[key]
-            if existing != regex:  # Avoid redundant unions
-                self.transitions[key] = f"({existing})|({regex})"
+            self.transitions[key] = self._union_regex(self.transitions[key], regex)
         else:
             self.transitions[key] = regex
     
     def get_transition(self, from_state: str, to_state: str) -> Optional[str]:
         """Get transition regex between states"""
-        return self.transitions.get((from_state, to_state))
+        return self.transitions.get((from_state, to_state), '∅')
     
     def remove_state(self, state_id: str):
         """Remove state and reroute transitions through it"""
@@ -54,13 +85,18 @@ class GeneralizedNFA:
         # Create new transitions bypassing the eliminated state
         for from_state, in_regex in incoming_transitions:
             for to_state, out_regex in outgoing_transitions:
-                new_regex = in_regex
-                
+                # New transition from 'from_state' to 'to_state' is 'in_regex (self_loop*) out_regex'
+                # This corresponds to R_ik R_kk* R_kj
+
+                # Handle the self-loop part (R_kk*)
+                self_loop_term = 'ε'  # Default to epsilon if no self-loop
                 if self_loop:
-                    new_regex += f"({self_loop})*"
-                
-                new_regex += out_regex
-                
+                    self_loop_term = f"({self_loop})*"  # Apply Kleene star
+
+                # Concatenate in_regex, self_loop_term, and out_regex
+                temp_regex = self._concatenate_regex(in_regex, self_loop_term)
+                new_regex = self._concatenate_regex(temp_regex, out_regex)
+
                 self.add_transition(from_state, to_state, new_regex)
         
         # Remove all transitions involving the eliminated state
@@ -175,13 +211,6 @@ class DFAToRegexConverter:
         for transition in self.dfa.transitions.values():
             gnfa.add_transition(transition.from_state, transition.to_state, transition.symbol)
         
-        # Add empty transitions between all pairs of states that don't have transitions
-        all_states = gnfa.get_states()
-        for from_state in all_states:
-            for to_state in all_states:
-                if from_state != to_state and not gnfa.get_transition(from_state, to_state):
-                    gnfa.add_transition(from_state, to_state, '∅')  # Empty set
-        
         return gnfa
     
     def eliminate_states(self) -> str:
@@ -200,10 +229,15 @@ class DFAToRegexConverter:
             
             self.add_step('after_elimination', f'After Eliminating {state_to_eliminate}',
                          f'GNFA state after eliminating {state_to_eliminate}',
-                         {'gnfaAfter': self.gnfa.to_dict()})
-        
+                         {
+                             'gnfaAfter': self.gnfa.to_dict()
+                         })
+
+            print(f"DEBUG: After eliminating {state_to_eliminate}, GNFA: {self.gnfa.to_dict()}")
+
         # The final regex is the transition from start to final state
         final_regex = self.gnfa.get_transition(self.gnfa.start_state, self.gnfa.final_state)
+        print(f"DEBUG: Final regex from GNFA: {final_regex}")
         return final_regex or '∅'
     
     def determine_elimination_order(self) -> List[str]:
