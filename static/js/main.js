@@ -935,16 +935,41 @@ function updateProgress(type) {
 }
 
 // Control functions
-function toggleTransitionTable(type) {
-    const tableCard = document.getElementById(`${type}TableCard`);
-    if (tableCard) {
-        tableCard.classList.toggle('d-none');
-        
-        if (!tableCard.classList.contains('d-none')) {
-            generateTransitionTable(type);
-            console.log("Conversion Data for table:", window.AutomataEdu.conversionData);
-        }
+function toggleTransitionTable(conversionType) {
+    const conversionData = window.AutomataEdu.conversionData;
+    if (!conversionData) {
+        console.warn('No conversion data available to show table.');
+        return;
     }
+
+    let tableCards = [];
+
+    switch (conversionType) {
+        case 'regex':
+            tableCards.push({ id: 'regexTableCard', data: conversionData.dfa });
+            break;
+        case 'nfa':
+            tableCards.push({ id: 'nfaOriginalTableCard', data: conversionData.originalNfa });
+            tableCards.push({ id: 'nfaConvertedTableCard', data: conversionData.dfa });
+            break;
+        case 'dfa':
+            tableCards.push({ id: 'dfaOriginalTableCard', data: conversionData.originalDfa });
+            break;
+    }
+
+    tableCards.forEach(item => {
+        const tableCard = document.getElementById(item.id);
+        if (tableCard) {
+            tableCard.classList.toggle('d-none');
+            if (!tableCard.classList.contains('d-none')) {
+                // If table is now visible, generate its content
+                const typeForGenerate = item.id.replace('TableCard', ''); // e.g., 'nfaOriginal'
+                generateTransitionTable(typeForGenerate, item.data);
+                console.log(`Generated table for: ${typeForGenerate}`, item.data);
+            }
+        }
+    });
+    console.log("Conversion Data for table:", conversionData);
 }
 
 function generateTransitionTable(type, automaton) {
