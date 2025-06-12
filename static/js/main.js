@@ -864,8 +864,9 @@ function generateTransitionTable(type) {
     const data = window.AutomataEdu.conversionData;
     
     if (!tableContainer || !data) return;
-    
-    const automaton = type === 'dfa' ? data.dfa : data.dfa; // Both result in DFA
+
+    const automaton = (type === 'dfa' && data.originalDfa) ? data.originalDfa : data.dfa; // Use originalDfa for DFA to RegEx
+    console.log("Automaton data for table generation:", automaton);
     if (!automaton) return;
     
     let html = '<div class="table-responsive"><table class="table table-sm table-bordered">';
