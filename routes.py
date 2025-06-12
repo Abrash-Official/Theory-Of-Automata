@@ -85,6 +85,7 @@ def convert_dfa_to_regex():
         return jsonify({
             'success': result['success'],
             'regex': result.get('regex'),
+            'originalDfa': dfa.to_dict(),
             'steps': result.get('steps', []),
             'error': result.get('error')
         })
