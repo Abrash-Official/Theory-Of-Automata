@@ -804,9 +804,9 @@ function displayNfaResults(result) {
     if (nfaProgress) nfaProgress.classList.add('d-none');
 
     // Render original NFA visualization
-    if (result.nfa && window.renderAutomaton) {
-        console.log("NFA data for rendering:", result.nfa);
-        renderAutomaton('nfaOriginalVisualization', result.nfa);
+    if (result.originalNfa && window.renderAutomaton) {
+        console.log("NFA data for rendering:", result.originalNfa);
+        renderAutomaton('nfaOriginalVisualization', result.originalNfa);
     }
 
     // Render converted DFA visualization
@@ -819,9 +819,9 @@ function displayNfaResults(result) {
     const nfaOriginalTableCard = document.getElementById('nfaOriginalTableCard');
     if (nfaOriginalTableCard) {
         nfaOriginalTableCard.classList.remove('d-none');
-        if (result.nfa) {
-            console.log("NFA data for original table:", result.nfa);
-            generateTransitionTable('nfaOriginal', result.nfa);
+        if (result.originalNfa) {
+            console.log("NFA data for original table:", result.originalNfa);
+            generateTransitionTable('nfaOriginal', result.originalNfa);
         }
     }
 

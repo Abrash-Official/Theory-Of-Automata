@@ -57,6 +57,7 @@ def convert_nfa_to_dfa():
         
         return jsonify({
             'success': result['success'],
+            'originalNfa': nfa.to_dict(),
             'dfa': result.get('dfa'),
             'steps': result.get('steps', []),
             'stateMapping': result.get('stateMapping', {}),
