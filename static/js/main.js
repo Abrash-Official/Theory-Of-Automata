@@ -533,19 +533,44 @@ function collectNfaData() {
         return null;
     }
     
-    const transitions = collectTransitions('nfa');
+    // Parse states and alphabet
+    const stateList = states.split(',').map(s => s.trim()).filter(s => s);
+    const alphabetList = alphabet.split(',').map(s => s.trim()).filter(s => s);
+    const startStateList = startStates.split(',').map(s => s.trim()).filter(s => s);
+    const finalStateList = finalStates ? finalStates.split(',').map(s => s.trim()).filter(s => s) : [];
+    
+    // Collect transitions
+    const transitions = [];
+    const transitionRows = document.querySelectorAll('#nfaTransitionsContainer .nfa-transition-row');
+    
+    transitionRows.forEach(row => {
+        const fromState = row.querySelector('.nfa-from-state').value;
+        const symbol = row.querySelector('.nfa-symbol').value;
+        const toStates = row.querySelector('.nfa-to-states').value.trim();
+        
+        if (fromState && symbol && toStates) {
+            const toStateList = toStates.split(',').map(s => s.trim()).filter(s => s);
+            toStateList.forEach(toState => {
+                transitions.push({
+                    from: fromState,
+                    to: toState,
+                    symbol: symbol
+                });
+            });
+        }
+    });
     
     return {
-        states: states.map(id => ({
+        states: stateList.map(id => ({
             id: id,
             label: id,
-            isStart: startStates.includes(id),
-            isFinal: finalStates.includes(id)
+            isStart: startStateList.includes(id),
+            isFinal: finalStateList.includes(id)
         })),
         transitions: transitions,
-        alphabet: alphabet,
-        startStates: startStates,
-        finalStates: finalStates
+        alphabet: alphabetList,
+        startStates: startStateList,
+        finalStates: finalStateList
     };
 }
 
@@ -559,31 +584,19 @@ function collectDfaData() {
         return null;
     }
     
-    const transitions = collectTransitions('dfa');
+    // Parse states and alphabet
+    const stateList = states.split(',').map(s => s.trim()).filter(s => s);
+    const alphabetList = alphabet.split(',').map(s => s.trim()).filter(s => s);
+    const finalStateList = finalStates ? finalStates.split(',').map(s => s.trim()).filter(s => s) : [];
     
-    return {
-        states: states.map(id => ({
-            id: id,
-            label: id,
-            isStart: id === startState,
-            isFinal: finalStates.includes(id)
-        })),
-        transitions: transitions,
-        alphabet: alphabet,
-        startState: startState,
-        finalStates: finalStates
-    };
-}
-
-function collectTransitions(type) {
-    const container = document.getElementById(`${type}TransitionsContainer`);
-    const rows = container.querySelectorAll(`.${type}-transition-row`);
+    // Collect transitions
     const transitions = [];
+    const transitionRows = document.querySelectorAll('#dfaTransitionsContainer .dfa-transition-row');
     
-    rows.forEach(row => {
-        const fromState = row.querySelector(`.${type}-from-state`).value;
-        const symbol = row.querySelector(`.${type}-symbol`).value;
-        const toState = row.querySelector(`.${type}-to-state`).value;
+    transitionRows.forEach(row => {
+        const fromState = row.querySelector('.dfa-from-state').value;
+        const symbol = row.querySelector('.dfa-symbol').value;
+        const toState = row.querySelector('.dfa-to-state').value;
         
         if (fromState && symbol && toState) {
             transitions.push({
@@ -594,8 +607,140 @@ function collectTransitions(type) {
         }
     });
     
-    return transitions;
+    return {
+        states: stateList.map(id => ({
+            id: id,
+            label: id,
+            isStart: id === startState,
+            isFinal: finalStateList.includes(id)
+        })),
+        transitions: transitions,
+        alphabet: alphabetList,
+        startState: startState,
+        finalStates: finalStateList
+    };
 }
+
+function addTransitionRow(type) {
+    const container = document.getElementById(`${type}TransitionsContainer`);
+    if (!container) return;
+    
+    const existingRow = container.querySelector(`.${type}-transition-row`);
+    if (!existingRow) return;
+    
+    const newRow = existingRow.cloneNode(true);
+    
+    // Clear values in new row
+    newRow.querySelectorAll('select').forEach(select => {
+        select.value = '';
+    });
+    
+    // Add remove button if not present
+    const removeBtn = newRow.querySelector('.remove-transition');
+    if (!removeBtn) {
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'btn btn-outline-danger btn-sm remove-transition';
+        removeButton.innerHTML = '<i data-feather="x"></i>';
+        newRow.appendChild(removeButton);
+    }
+    
+    container.appendChild(newRow);
+    
+    // Update transition options for new row
+    if (type === 'nfa') {
+        updateNfaTransitionOptions();
+    } else {
+        updateDfaTransitionOptions();
+    }
+    
+    // Re-render icons
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+}
+
+function updateNfaTransitionOptions() {
+    const states = document.getElementById('nfaStates').value.split(',').map(s => s.trim()).filter(s => s);
+    const alphabet = document.getElementById('nfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
+    
+    const stateList = states ? states.split(',').map(s => s.trim()).filter(s => s) : [];
+    const alphabetList = alphabet ? alphabet.split(',').map(s => s.trim()).filter(s => s) : [];
+    
+    // Add epsilon transition option
+    const symbolList = ['ε'].concat(alphabetList);
+    
+    const transitionRows = document.querySelectorAll('#nfaTransitionsContainer .nfa-transition-row');
+    
+    transitionRows.forEach(row => {
+        const fromSelect = row.querySelector('.nfa-from-state');
+        const symbolSelect = row.querySelector('.nfa-symbol');
+        
+        // Update from state options
+        updateSelectOptions(fromSelect, stateList);
+        
+        // Update symbol options
+        updateSelectOptions(symbolSelect, symbolList);
+    });
+}
+
+function updateDfaTransitionOptions() {
+    const states = document.getElementById('dfaStates').value.split(',').map(s => s.trim()).filter(s => s);
+    const alphabet = document.getElementById('dfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
+    
+    const stateList = states ? states.split(',').map(s => s.trim()).filter(s => s) : [];
+    const alphabetList = alphabet ? alphabet.split(',').map(s => s.trim()).filter(s => s) : [];
+    
+    const transitionRows = document.querySelectorAll('#dfaTransitionsContainer .dfa-transition-row');
+    
+    transitionRows.forEach(row => {
+        const fromSelect = row.querySelector('.dfa-from-state');
+        const symbolSelect = row.querySelector('.dfa-symbol');
+        const toSelect = row.querySelector('.dfa-to-state');
+        
+        // Update options
+        updateSelectOptions(fromSelect, stateList);
+        updateSelectOptions(symbolSelect, alphabetList);
+        updateSelectOptions(toSelect, stateList);
+    });
+    
+    // Update start state select
+    const startStateSelect = document.getElementById('dfaStartState');
+    if (startStateSelect) {
+        updateSelectOptions(startStateSelect, stateList);
+    }
+}
+
+function updateSelectOptions(selectElement, options) {
+    if (!selectElement) return;
+    
+    const currentValue = selectElement.value;
+    selectElement.innerHTML = '<option value="">Select...</option>';
+    
+    options.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option;
+        optionElement.textContent = option;
+        if (option === currentValue) {
+            optionElement.selected = true;
+        }
+        selectElement.appendChild(optionElement);
+    });
+}
+
+// Add event listener for remove transition buttons
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.remove-transition')) {
+        const button = e.target.closest('.remove-transition');
+        const row = button.closest('.nfa-transition-row, .dfa-transition-row');
+        const container = row.parentElement;
+        
+        // Only remove if there's more than one row
+        if (container.children.length > 1) {
+            row.remove();
+        }
+    }
+});
 
 // Results display functions
 function displayRegexResults(result) {
@@ -649,15 +794,14 @@ function displayDfaResults(result) {
 
 // Step navigation
 function navigateStep(type, direction) {
-    const data = window.AutomataEdu.conversionData;
-    if (!data || !data.steps) return;
+    const currentStep = window.AutomataEdu.currentStep;
+    const totalSteps = window.AutomataEdu.totalSteps;
+    const newStep = currentStep + direction;
     
-    const newStep = window.AutomataEdu.currentStep + direction;
-    
-    if (newStep >= 0 && newStep < data.steps.length) {
+    if (newStep >= 0 && newStep < totalSteps) {
         window.AutomataEdu.currentStep = newStep;
-        displayStep(type, data.steps[newStep]);
-        updateProgress(type);
+        updateStepDisplay(type, window.AutomataEdu.conversionData);
+        updateNavigationButtons(type);
     }
 }
 
@@ -702,100 +846,6 @@ function updateProgress(type) {
     }
 }
 
-// Transition management
-function addTransitionRow(type) {
-    const container = document.getElementById(`${type}TransitionsContainer`);
-    const template = container.querySelector(`.${type}-transition-row`);
-    const newRow = template.cloneNode(true);
-    
-    // Clear values
-    newRow.querySelectorAll('select').forEach(select => select.value = '');
-    
-    // Add remove event listener
-    const removeBtn = newRow.querySelector('.remove-transition');
-    removeBtn.addEventListener('click', () => {
-        if (container.querySelectorAll(`.${type}-transition-row`).length > 1) {
-            newRow.remove();
-        }
-    });
-    
-    container.appendChild(newRow);
-    
-    // Update options for the new row
-    if (type === 'nfa') {
-        updateNfaTransitionOptions();
-    } else {
-        updateDfaTransitionOptions();
-    }
-    
-    feather.replace();
-}
-
-function updateNfaTransitionOptions() {
-    const states = document.getElementById('nfaStates').value.split(',').map(s => s.trim()).filter(s => s);
-    const alphabet = document.getElementById('nfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
-    
-    // Add epsilon to alphabet for NFA
-    const symbols = ['ε', ...alphabet];
-    
-    updateTransitionSelects('nfa', states, symbols);
-}
-
-function updateDfaTransitionOptions() {
-    const states = document.getElementById('dfaStates').value.split(',').map(s => s.trim()).filter(s => s);
-    const alphabet = document.getElementById('dfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
-    
-    updateTransitionSelects('dfa', states, alphabet);
-    
-    // Update start state dropdown
-    const startStateSelect = document.getElementById('dfaStartState');
-    if (startStateSelect) {
-        const currentValue = startStateSelect.value;
-        startStateSelect.innerHTML = '<option value="">Select start state</option>';
-        states.forEach(state => {
-            const option = document.createElement('option');
-            option.value = state;
-            option.textContent = state;
-            if (state === currentValue) option.selected = true;
-            startStateSelect.appendChild(option);
-        });
-    }
-}
-
-function updateTransitionSelects(type, states, symbols) {
-    const rows = document.querySelectorAll(`.${type}-transition-row`);
-    
-    rows.forEach(row => {
-        const fromSelect = row.querySelector(`.${type}-from-state`);
-        const symbolSelect = row.querySelector(`.${type}-symbol`);
-        const toSelect = row.querySelector(`.${type}-to-state`);
-        
-        // Update state selects
-        [fromSelect, toSelect].forEach(select => {
-            const currentValue = select.value;
-            select.innerHTML = '<option value="">Select state</option>';
-            states.forEach(state => {
-                const option = document.createElement('option');
-                option.value = state;
-                option.textContent = state;
-                if (state === currentValue) option.selected = true;
-                select.appendChild(option);
-            });
-        });
-        
-        // Update symbol select
-        const currentSymbol = symbolSelect.value;
-        symbolSelect.innerHTML = '<option value="">Select symbol</option>';
-        symbols.forEach(symbol => {
-            const option = document.createElement('option');
-            option.value = symbol;
-            option.textContent = symbol;
-            if (symbol === currentSymbol) option.selected = true;
-            symbolSelect.appendChild(option);
-        });
-    });
-}
-
 // Control functions
 function toggleTransitionTable(type) {
     const tableCard = document.getElementById(`${type}TableCard`);
@@ -804,6 +854,7 @@ function toggleTransitionTable(type) {
         
         if (!tableCard.classList.contains('d-none')) {
             generateTransitionTable(type);
+            console.log("Conversion Data for table:", window.AutomataEdu.conversionData);
         }
     }
 }
@@ -1111,240 +1162,3 @@ function updateNavigationButtons(type) {
     prevBtn.disabled = currentStep === 0;
     nextBtn.disabled = currentStep === totalSteps - 1;
 }
-
-function navigateStep(type, direction) {
-    const currentStep = window.AutomataEdu.currentStep;
-    const totalSteps = window.AutomataEdu.totalSteps;
-    const newStep = currentStep + direction;
-    
-    if (newStep >= 0 && newStep < totalSteps) {
-        window.AutomataEdu.currentStep = newStep;
-        updateStepDisplay(type, window.AutomataEdu.conversionData);
-        updateNavigationButtons(type);
-    }
-}
-
-function toggleTransitionTable(type) {
-    // Implementation for showing transition table
-    console.log(`Toggle transition table for ${type}`);
-}
-
-// Data collection functions
-function collectNfaData() {
-    const states = document.getElementById('nfaStates').value.split(',').map(s => s.trim()).filter(s => s);
-    const alphabet = document.getElementById('nfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
-    const startStates = document.getElementById('nfaStartStates').value.split(',').map(s => s.trim()).filter(s => s);
-    const finalStates = document.getElementById('nfaFinalStates').value.split(',').map(s => s.trim()).filter(s => s);
-    
-    if (states.length === 0 || alphabet.length === 0 || startStates.length === 0) {
-        return null;
-    }
-    
-    // Parse states and alphabet
-    const stateList = states.split(',').map(s => s.trim()).filter(s => s);
-    const alphabetList = alphabet.split(',').map(s => s.trim()).filter(s => s);
-    const startStateList = startStates.split(',').map(s => s.trim()).filter(s => s);
-    const finalStateList = finalStates ? finalStates.split(',').map(s => s.trim()).filter(s => s) : [];
-    
-    // Collect transitions
-    const transitions = [];
-    const transitionRows = document.querySelectorAll('#nfaTransitionsContainer .nfa-transition-row');
-    
-    transitionRows.forEach(row => {
-        const fromState = row.querySelector('.nfa-from-state').value;
-        const symbol = row.querySelector('.nfa-symbol').value;
-        const toStates = row.querySelector('.nfa-to-states').value.trim();
-        
-        if (fromState && symbol && toStates) {
-            const toStateList = toStates.split(',').map(s => s.trim()).filter(s => s);
-            toStateList.forEach(toState => {
-                transitions.push({
-                    from: fromState,
-                    to: toState,
-                    symbol: symbol
-                });
-            });
-        }
-    });
-    
-    return {
-        states: stateList.map(id => ({
-            id: id,
-            label: id,
-            isStart: startStateList.includes(id),
-            isFinal: finalStateList.includes(id)
-        })),
-        transitions: transitions,
-        alphabet: alphabetList,
-        startStates: startStateList,
-        finalStates: finalStateList
-    };
-}
-
-function collectDfaData() {
-    const states = document.getElementById('dfaStates').value.split(',').map(s => s.trim()).filter(s => s);
-    const alphabet = document.getElementById('dfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
-    const startState = document.getElementById('dfaStartState').value;
-    const finalStates = document.getElementById('dfaFinalStates').value.split(',').map(s => s.trim()).filter(s => s);
-    
-    if (states.length === 0 || alphabet.length === 0 || !startState) {
-        return null;
-    }
-    
-    // Parse states and alphabet
-    const stateList = states.split(',').map(s => s.trim()).filter(s => s);
-    const alphabetList = alphabet.split(',').map(s => s.trim()).filter(s => s);
-    const finalStateList = finalStates ? finalStates.split(',').map(s => s.trim()).filter(s => s) : [];
-    
-    // Collect transitions
-    const transitions = [];
-    const transitionRows = document.querySelectorAll('#dfaTransitionsContainer .dfa-transition-row');
-    
-    transitionRows.forEach(row => {
-        const fromState = row.querySelector('.dfa-from-state').value;
-        const symbol = row.querySelector('.dfa-symbol').value;
-        const toState = row.querySelector('.dfa-to-state').value;
-        
-        if (fromState && symbol && toState) {
-            transitions.push({
-                from: fromState,
-                to: toState,
-                symbol: symbol
-            });
-        }
-    });
-    
-    return {
-        states: stateList.map(id => ({
-            id: id,
-            label: id,
-            isStart: id === startState,
-            isFinal: finalStateList.includes(id)
-        })),
-        transitions: transitions,
-        alphabet: alphabetList,
-        startState: startState,
-        finalStates: finalStateList
-    };
-}
-
-function addTransitionRow(type) {
-    const container = document.getElementById(`${type}TransitionsContainer`);
-    if (!container) return;
-    
-    const existingRow = container.querySelector(`.${type}-transition-row`);
-    if (!existingRow) return;
-    
-    const newRow = existingRow.cloneNode(true);
-    
-    // Clear values in new row
-    newRow.querySelectorAll('select').forEach(select => {
-        select.value = '';
-    });
-    
-    // Add remove button if not present
-    const removeBtn = newRow.querySelector('.remove-transition');
-    if (!removeBtn) {
-        const removeButton = document.createElement('button');
-        removeButton.type = 'button';
-        removeButton.className = 'btn btn-outline-danger btn-sm remove-transition';
-        removeButton.innerHTML = '<i data-feather="x"></i>';
-        newRow.appendChild(removeButton);
-    }
-    
-    container.appendChild(newRow);
-    
-    // Update transition options for new row
-    if (type === 'nfa') {
-        updateNfaTransitionOptions();
-    } else {
-        updateDfaTransitionOptions();
-    }
-    
-    // Re-render icons
-    if (typeof feather !== 'undefined') {
-        feather.replace();
-    }
-}
-
-function updateNfaTransitionOptions() {
-    const states = document.getElementById('nfaStates').value.split(',').map(s => s.trim()).filter(s => s);
-    const alphabet = document.getElementById('nfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
-    
-    const stateList = states ? states.split(',').map(s => s.trim()).filter(s => s) : [];
-    const alphabetList = alphabet ? alphabet.split(',').map(s => s.trim()).filter(s => s) : [];
-    
-    // Add epsilon transition option
-    const symbolList = ['ε'].concat(alphabetList);
-    
-    const transitionRows = document.querySelectorAll('#nfaTransitionsContainer .nfa-transition-row');
-    
-    transitionRows.forEach(row => {
-        const fromSelect = row.querySelector('.nfa-from-state');
-        const symbolSelect = row.querySelector('.nfa-symbol');
-        
-        // Update from state options
-        updateSelectOptions(fromSelect, stateList);
-        
-        // Update symbol options
-        updateSelectOptions(symbolSelect, symbolList);
-    });
-}
-
-function updateDfaTransitionOptions() {
-    const states = document.getElementById('dfaStates').value.split(',').map(s => s.trim()).filter(s => s);
-    const alphabet = document.getElementById('dfaAlphabet').value.split(',').map(s => s.trim()).filter(s => s);
-    
-    const stateList = states ? states.split(',').map(s => s.trim()).filter(s => s) : [];
-    const alphabetList = alphabet ? alphabet.split(',').map(s => s.trim()).filter(s => s) : [];
-    
-    const transitionRows = document.querySelectorAll('#dfaTransitionsContainer .dfa-transition-row');
-    
-    transitionRows.forEach(row => {
-        const fromSelect = row.querySelector('.dfa-from-state');
-        const symbolSelect = row.querySelector('.dfa-symbol');
-        const toSelect = row.querySelector('.dfa-to-state');
-        
-        // Update options
-        updateSelectOptions(fromSelect, stateList);
-        updateSelectOptions(symbolSelect, alphabetList);
-        updateSelectOptions(toSelect, stateList);
-    });
-    
-    // Update start state select
-    const startStateSelect = document.getElementById('dfaStartState');
-    if (startStateSelect) {
-        updateSelectOptions(startStateSelect, stateList);
-    }
-}
-
-function updateSelectOptions(selectElement, options) {
-    if (!selectElement) return;
-    
-    const currentValue = selectElement.value;
-    selectElement.innerHTML = '<option value="">Select...</option>';
-    
-    options.forEach(option => {
-        const optionElement = document.createElement('option');
-        optionElement.value = option;
-        optionElement.textContent = option;
-        if (option === currentValue) {
-            optionElement.selected = true;
-        }
-        selectElement.appendChild(optionElement);
-    });
-}
-
-// Add event listener for remove transition buttons
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.remove-transition')) {
-        const button = e.target.closest('.remove-transition');
-        const row = button.closest('.nfa-transition-row, .dfa-transition-row');
-        const container = row.parentElement;
-        
-        // Only remove if there's more than one row
-        if (container.children.length > 1) {
-            row.remove();
-        }
-    }
-});
