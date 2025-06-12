@@ -758,6 +758,16 @@ function displayRegexResults(result) {
     if (regexStepContent) regexStepContent.parentElement.classList.add('d-none');
     if (regexProgress) regexProgress.classList.add('d-none');
 
+    // Display regex result
+    const regexTextElement = document.getElementById('regexText');
+    const regexInput = document.getElementById('regexInput'); // Get the input element
+
+    console.log("Result object in displayRegexResults:", result);
+    // Always display the input regex, or the converted one if available
+    if (regexTextElement) {
+        regexTextElement.textContent = result.regex || (regexInput ? regexInput.value : '');
+    }
+
     // Render the DFA visualization (result of Regex to DFA)
     if (result.dfa && window.renderAutomaton) {
         console.log("DFA data for Regex to DFA rendering:", result.dfa);

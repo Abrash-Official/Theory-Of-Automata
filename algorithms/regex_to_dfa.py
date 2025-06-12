@@ -186,12 +186,15 @@ class RegexToDFAConverter:
                          'Build DFA states and transitions using position sets',
                          {'dfa': dfa.to_dict()})
             
+            simplified_regex = self.simplify_regex(self.regex)
+            
             return {
                 'success': True,
                 'dfa': dfa.to_dict(),
                 'steps': self.steps,
                 'syntaxTree': self.syntax_tree.to_dict(),
-                'followposTable': self.serialize_followpos()
+                'followposTable': self.serialize_followpos(),
+                'regex': simplified_regex
             }
             
         except Exception as e:
@@ -199,7 +202,8 @@ class RegexToDFAConverter:
             return {
                 'success': False,
                 'error': str(e),
-                'steps': self.steps
+                'steps': self.steps,
+                'regex': self.regex
             }
     
     def validate_regex(self):
@@ -396,3 +400,9 @@ class RegexToDFAConverter:
             'data': data,
             'timestamp': len(self.steps) + 1
         })
+
+    def simplify_regex(self, regex: str) -> str:
+        # Implementation of simplify_regex method
+        # This method should return a simplified version of the regex
+        # For now, we'll just return the regex as it is
+        return regex
