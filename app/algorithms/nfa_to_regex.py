@@ -59,7 +59,7 @@ class NFAToRegexConverter:
         self.steps.append({'key': key, 'title': title, 'description': desc, 'data': data})
 
     def create_generalized_nfa(self):
-        from algorithms.dfa_to_regex import GeneralizedNFA
+        from .dfa_to_regex import GeneralizedNFA
         gnfa = GeneralizedNFA()
         new_start = 'qstart'
         new_final = 'qfinal'

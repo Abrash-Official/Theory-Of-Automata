@@ -2,9 +2,9 @@
 Example problems database for automata theory conversions
 """
 
-from algorithms.automata_structures import NFA, DFA, State, Transition
-from algorithms.nfa_to_dfa import NFABuilder
-from algorithms.dfa_to_regex import DFABuilder
+from ..algorithms.automata_structures import NFA, DFA, State, Transition
+from ..algorithms.nfa_to_dfa import NFABuilder
+from ..algorithms.dfa_to_regex import DFABuilder
 
 def get_examples():
     """Get all example problems organized by conversion type"""
@@ -12,7 +12,6 @@ def get_examples():
         'regex-to-dfa': get_regex_to_dfa_examples(),
         'nfa-to-dfa': get_nfa_to_dfa_examples(),
         'dfa-to-regex': get_dfa_to_regex_examples(),
-        'dfa-to-nfa': get_dfa_to_nfa_examples(),
         'nfa-to-regex': get_nfa_to_regex_examples(),
     }
 
@@ -909,136 +908,6 @@ def get_nfa_to_regex_examples():
                     ['q1']
                 ).to_dict(),
                 'description': 'NFA that accepts zero or more a followed by zero or more b (a*b*)'
-            }
-        ]
-    }
-
-def get_dfa_to_nfa_examples():
-    """Get DFA to NFA examples"""
-    from algorithms.automata_structures import DFA, State, Transition
-    return {
-        'simple': [
-            {
-                'id': 'dfa_simple_1',
-                'name': 'Simple DFA for a*',
-                'dfa': DFA(
-                    [State('q0', 'q0', True, True)],
-                    [Transition('q0', 'q0', 'a')],
-                    ['a'],
-                    'q0',
-                    ['q0']
-                ).to_dict(),
-                'description': 'DFA that accepts any number of a (a*)'
-            },
-            {
-                'id': 'dfa_simple_2',
-                'name': 'DFA for (ab)*',
-                'dfa': DFA(
-                    [State('q0', 'q0', True, False), State('q1', 'q1', False, True)],
-                    [Transition('q0', 'q1', 'a'), Transition('q1', 'q0', 'b')],
-                    ['a', 'b'],
-                    'q0',
-                    ['q1']
-                ).to_dict(),
-                'description': 'DFA that accepts strings like ab, abab, ababab, ...'
-            },
-            {
-                'id': 'dfa_simple_3',
-                'name': 'DFA for even number of 0s',
-                'dfa': DFA(
-                    [State('q0', 'q0', True, True), State('q1', 'q1', False, False)],
-                    [Transition('q0', 'q1', '0'), Transition('q1', 'q0', '0')],
-                    ['0'],
-                    'q0',
-                    ['q0']
-                ).to_dict(),
-                'description': 'DFA that accepts binary strings with even number of 0s'
-            },
-            {
-                'id': 'dfa_simple_4',
-                'name': 'DFA for a|b',
-                'dfa': DFA(
-                    [State('q0', 'q0', True, False), State('q1', 'q1', False, True)],
-                    [Transition('q0', 'q1', 'a'), Transition('q0', 'q1', 'b')],
-                    ['a', 'b'],
-                    'q0',
-                    ['q1']
-                ).to_dict(),
-                'description': 'DFA that accepts a single a or b'
-            },
-            {
-                'id': 'dfa_simple_5',
-                'name': 'DFA for strings ending with 1',
-                'dfa': DFA(
-                    [State('q0', 'q0', True, False), State('q1', 'q1', False, True)],
-                    [Transition('q0', 'q0', '0'), Transition('q0', 'q1', '1'), Transition('q1', 'q0', '0'), Transition('q1', 'q1', '1')],
-                    ['0', '1'],
-                    'q0',
-                    ['q1']
-                ).to_dict(),
-                'description': 'DFA that accepts binary strings ending with 1'
-            }
-        ],
-        'complex': [
-            {
-                'id': 'dfa_complex_1',
-                'name': 'DFA for binary strings ending with 01',
-                'dfa': DFA(
-                    [State('q0', 'q0', True, False), State('q1', 'q1', False, False), State('q2', 'q2', False, True)],
-                    [Transition('q0', 'q0', '0'), Transition('q0', 'q1', '1'), Transition('q1', 'q2', '0'), Transition('q2', 'q1', '1')],
-                    ['0', '1'],
-                    'q0',
-                    ['q2']
-                ).to_dict(),
-                'description': 'DFA that accepts binary strings ending with 01'
-            },
-            {
-                'id': 'dfa_complex_2',
-                'name': 'DFA for strings containing "ab" as a substring',
-                'dfa': DFA(
-                    [State('q0', 'q0', True, False), State('q1', 'q1', False, False), State('q2', 'q2', False, True)],
-                    [Transition('q0', 'q0', 'a'), Transition('q0', 'q0', 'b'), Transition('q0', 'q1', 'a'), Transition('q1', 'q2', 'b'), Transition('q2', 'q2', 'a'), Transition('q2', 'q2', 'b')],
-                    ['a', 'b'],
-                    'q0',
-                    ['q2']
-                ).to_dict(),
-                'description': 'DFA that accepts strings containing "ab" as a substring'
-            },
-            {
-                'id': 'dfa_complex_3',
-                'name': 'DFA for strings with at least two 1s',
-                'dfa': DFA(
-                    [State('q0', 'q0', True, False), State('q1', 'q1', False, False), State('q2', 'q2', False, True)],
-                    [Transition('q0', 'q0', '0'), Transition('q0', 'q1', '1'), Transition('q1', 'q1', '0'), Transition('q1', 'q2', '1'), Transition('q2', 'q2', '0'), Transition('q2', 'q2', '1')],
-                    ['0', '1'],
-                    'q0',
-                    ['q2']
-                ).to_dict(),
-                'description': 'DFA that accepts binary strings with at least two 1s'
-            },
-            {
-                'id': 'dfa_complex_4',
-                'name': 'DFA for strings of even length',
-                'dfa': DFA(
-                    [State('q0', 'q0', True, True), State('q1', 'q1', False, False)],
-                    [Transition('q0', 'q1', 'a'), Transition('q1', 'q0', 'a'), Transition('q0', 'q1', 'b'), Transition('q1', 'q0', 'b')],
-                    ['a', 'b'],
-                    'q0',
-                    ['q0']
-                ).to_dict(),
-                'description': 'DFA that accepts strings of even length over {a, b}'
-            },
-            {
-                'id': 'dfa_complex_5',
-                'name': 'DFA for strings that do not contain "11"',
-                'dfa': DFA(
-                    [State('q0', 'q0', True, True), State('q1', 'q1', False, False), State('q2', 'q2', False, False)],
-                    [Transition('q0', 'q0', '0'), Transition('q0', 'q1', '1'), Transition('q1', 'q2', '1'), Transition('q1', 'q0', '0'), Transition('q2', 'q2', '0'), Transition('q2', 'q2', '1')],
-                    ['0', '1'],
-                    'q0',
-                    ['q0']
-                ).to_dict(),
-                'description': 'DFA that accepts binary strings that do not contain "11" as a substring'
             }
         ]
     }

@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
-from app import app
-from algorithms.regex_to_dfa import RegexToDFAConverter
-from algorithms.nfa_to_dfa import NFAToDFAConverter
-from algorithms.dfa_to_regex import DFAToRegexConverter
-from algorithms.automata_structures import NFA, DFA, State, Transition
-from data.examples import get_examples
-from algorithms.nfa_to_regex import NFAToRegexConverter
+from . import app
+from .algorithms.regex_to_dfa import RegexToDFAConverter
+from .algorithms.nfa_to_dfa import NFAToDFAConverter
+from .algorithms.dfa_to_regex import DFAToRegexConverter
+from .algorithms.automata_structures import NFA, DFA, State, Transition
+from .data.examples import get_examples
+from .algorithms.nfa_to_regex import NFAToRegexConverter
 import json
 import logging
 
