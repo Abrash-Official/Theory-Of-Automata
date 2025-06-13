@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Mealy and Moore Machines{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h3 class="card-title mb-0">Mealy and Moore Machines</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Mealy Machine</h4>
+        <p>In the theory of computation, a <strong>Mealy machine</strong> is a finite-state machine whose output values are determined both by its current state and the current inputs. This is in contrast to a Moore machine, whose output values are determined solely by its current state.</p>
+        <h5 class="mt-4">Formal Definition of Mealy Machine</h5>
+        <ul>
+            <li>S: a finite set of states</li>
+            <li>S₀: a start state (initial state) which is an element of S</li>
+            <li>Σ: a finite set called the input alphabet</li>
+            <li>Λ: a finite set called the output alphabet</li>
+            <li>T: a transition function T: S × Σ → S</li>
+            <li>G: an output function G: S × Σ → Λ</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Moore Machine</h4>
+        <p>A <strong>Moore machine</strong> is a finite-state machine whose current output values are determined only by its current state. The input may indirectly influence subsequent outputs, but not the current or immediate output.</p>
+        <h5 class="mt-4">Formal Definition of Moore Machine</h5>
+        <ul>
+            <li>S: A finite set of states</li>
+            <li>s₀: A start state (initial state) which is an element of S</li>
+            <li>Σ: A finite set called the input alphabet</li>
+            <li>O: A finite set called the output alphabet</li>
+            <li>δ: A transition function δ: S × Σ → S</li>
+            <li>G: An output function G: S → O</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Comparison</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm">
+                <thead class="table-light">
+                    <tr><th>Aspect</th><th>Mealy Machine</th><th>Moore Machine</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Output depends on</td><td>Current state + Input</td><td>Current state only</td></tr>
+                    <tr><td>Number of states</td><td>Tend to have fewer states</td><td>May require more states</td></tr>
+                    <tr><td>Output timing</td><td>Changes with input</td><td>Changes at clock edge</td></tr>
+                    <tr><td>Safety</td><td>Less safe for circuits</td><td>Safer for electronic circuits</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> Mealy and Moore machines are used in digital circuit design and help us understand how outputs can depend on states and/or inputs!
+        </div>
+    </div>
+</div>
+{% endblock %} 

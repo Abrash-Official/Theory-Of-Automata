@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from app import app
 from algorithms.regex_to_dfa import RegexToDFAConverter
 from algorithms.nfa_to_dfa import NFAToDFAConverter
@@ -13,9 +13,7 @@ logger = logging.getLogger(__name__)
 
 @app.route('/')
 def index():
-    """Main application page"""
-    examples = get_examples()
-    return render_template('index.html', examples=examples)
+    return redirect(url_for('course_intro'))
 
 @app.route('/api/convert/regex-to-dfa', methods=['POST'])
 def convert_regex_to_dfa():
@@ -210,3 +208,64 @@ def not_found(error):
 @app.errorhandler(500)
 def internal_error(error):
     return render_template('500.html'), 500
+
+@app.route('/course-intro')
+def course_intro():
+    return render_template('course_intro.html', active_page='course_intro')
+
+@app.route('/recursive-def')
+def recursive_def():
+    return render_template('recursive_def.html', active_page='recursive_def')
+
+@app.route('/languages-regex')
+def languages_regex():
+    return render_template('languages_regex.html', active_page='languages_regex')
+
+@app.route('/finite-automata')
+def finite_automata():
+    return render_template('finite_automata.html', active_page='finite_automata')
+
+@app.route('/nfa-dfa-graphs')
+def nfa_dfa_graphs():
+    return render_template('nfa_dfa_graphs.html', active_page='nfa_dfa_graphs')
+
+@app.route('/kleene-closure')
+def kleene_closure():
+    return render_template('kleene_closure.html', active_page='kleene_closure')
+
+@app.route('/mealy-moore')
+def mealy_moore():
+    return render_template('mealy_moore.html', active_page='mealy_moore')
+
+@app.route('/cfg')
+def cfg():
+    return render_template('cfg.html', active_page='cfg')
+
+@app.route('/pda')
+def pda():
+    return render_template('pda.html', active_page='pda')
+
+@app.route('/parse-trees')
+def parse_trees():
+    return render_template('parse_trees.html', active_page='parse_trees')
+
+@app.route('/pumping-lemma')
+def pumping_lemma():
+    return render_template('pumping_lemma.html', active_page='pumping_lemma')
+
+@app.route('/turing-machines')
+def turing_machines():
+    return render_template('turing_machines.html', active_page='turing_machines')
+
+@app.route('/decidability')
+def decidability():
+    return render_template('decidability.html', active_page='decidability')
+
+@app.route('/context-sensitive')
+def context_sensitive():
+    return render_template('context_sensitive.html', active_page='context_sensitive')
+
+@app.route('/conversion')
+def conversion():
+    examples = get_examples()
+    return render_template('conversion.html', active_page='conversion', examples=examples)

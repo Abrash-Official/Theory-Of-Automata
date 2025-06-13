@@ -41,7 +41,35 @@
 
     <!-- Main Content -->
     <main class="container-fluid py-4">
-        {% block content %}{% endblock %}
+        <div class="row">
+            <!-- Sidebar with Course Topics and Conversion Tools -->
+            <div class="col-lg-3 col-md-4">
+                <div class="card h-100">
+                    <div class="card-body p-0">
+                        <div class="nav flex-column nav-pills" id="course-sidebar" role="tablist" aria-orientation="vertical" style="text-align: left;">
+                            <a class="nav-link text-start ms-2 {% if active_page == 'course_intro' %}active{% endif %}" href="{{ url_for('course_intro') }}">1 Course Introduction, Fundamentals of Automata</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'recursive_def' %}active{% endif %}" href="{{ url_for('recursive_def') }}">2 Recursive Definitions, Regular Expressions</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'languages_regex' %}active{% endif %}" href="{{ url_for('languages_regex') }}">3 Languages and Regular Expressions</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'finite_automata' %}active{% endif %}" href="{{ url_for('finite_automata') }}">4 Finite Automata (FA)</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'nfa_dfa_graphs' %}active{% endif %}" href="{{ url_for('nfa_dfa_graphs') }}">5 NFA, DFA, Transition Graphs</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'kleene_closure' %}active{% endif %}" href="{{ url_for('kleene_closure') }}">6 Kleene's Theorem, Closure Properties</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'mealy_moore' %}active{% endif %}" href="{{ url_for('mealy_moore') }}">7 Mealy and Moore Machines</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'cfg' %}active{% endif %}" href="{{ url_for('cfg') }}">8 Context-Free Grammars (CFG)</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'pda' %}active{% endif %}" href="{{ url_for('pda') }}">9 Pushdown Automata (PDA)</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'parse_trees' %}active{% endif %}" href="{{ url_for('parse_trees') }}">10 Parse Trees, Ambiguity, Chomsky Normal Form</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'pumping_lemma' %}active{% endif %}" href="{{ url_for('pumping_lemma') }}">11 Pumping Lemma for CFLs</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'turing_machines' %}active{% endif %}" href="{{ url_for('turing_machines') }}">12 Turing Machines, Variants</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'decidability' %}active{% endif %}" href="{{ url_for('decidability') }}">13 Decidability, Computability Theory</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'context_sensitive' %}active{% endif %}" href="{{ url_for('context_sensitive') }}">14 Context-Sensitive Languages, LBA, Chomsky Hierarchy</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'conversion' %}active{% endif %}" href="{{ url_for('conversion') }}"><i data-feather="layers" class="me-2"></i>15 Conversion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-8">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
     </main>
 
     <!-- Help Modal -->

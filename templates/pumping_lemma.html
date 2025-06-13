@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Pumping Lemma for CFLs{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h3 class="card-title mb-0">Pumping Lemma for CFLs</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Formal Statement</h4>
+        <p>If a language L is context-free, then there exists some integer p ≥ 1 (called a "pumping length") such that every string s in L that has a length of p or more symbols can be written as s = uvwxy with substrings u, v, w, x and y, such that:</p>
+        <ul>
+            <li>|vx| ≥ 1 (v and x cannot both be empty)</li>
+            <li>|vwx| ≤ p (the middle portion has bounded length)</li>
+            <li>uv^n wx^n y ∈ L for all n ≥ 0 (pumping property)</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Informal Explanation</h4>
+        <p>The pumping lemma describes a property that all context-free languages are guaranteed to have. The property applies to all strings in the language that are of length at least p, where p is a constant called the pumping length.</p>
+        <hr>
+        <h4 class="mb-3">Using the Pumping Lemma</h4>
+        <ul>
+            <li>Assume L is context-free</li>
+            <li>Let p be the pumping length</li>
+            <li>Choose a string s ∈ L with |s| ≥ p</li>
+            <li>Consider all ways to write s = uvwxy satisfying conditions 1 and 2</li>
+            <li>For each decomposition, find an n such that uv^n wx^n y ∉ L</li>
+            <li>This contradicts condition 3, so L is not context-free</li>
+        </ul>
+        <h5 class="mt-4">Example Application</h5>
+        <p>The language L = {a^n b^n c^n : n ≥ 1} can be proven not context-free using the pumping lemma, since any attempt to pump will create unequal numbers of a's, b's, and c's.</p>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> The pumping lemma is a powerful tool for proving that certain languages are not context-free!
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}NFA, DFA, Transition Graphs{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-secondary text-white">
+        <h3 class="card-title mb-0">NFA, DFA, Transition Graphs</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Deterministic Finite Automata (DFA)</h4>
+        <p>Deterministic finite automata are finite state machines that accept or reject strings of characters by parsing them through a sequence that is uniquely determined by each string. The term "deterministic" refers to the fact that each string, and thus each state sequence, is unique.</p>
+        <hr>
+        <h4 class="mb-3">Non-deterministic Finite Automata (NFA)</h4>
+        <p>In a nondeterministic finite automaton (NFA), for each state there can be zero, one, two, or more transitions corresponding to a particular symbol. If NFA gets to state with more than one possible transition corresponding to the input symbol, we say it branches.</p>
+        <h5 class="mt-4">NFA Acceptance</h5>
+        <p>An NFA accepts the input string if there exists some choice of transitions that leads to ending in an accept state. Thus, one accepting branch is enough for the overall NFA to accept, but every branch must reject for the overall NFA to reject.</p>
+        <hr>
+        <h4 class="mb-3">Transition Graphs</h4>
+        <ul>
+            <li>A finite set of states, one of which is designated as start state and some as final states</li>
+            <li>An alphabet Σ of possible input symbols from which input strings are formed</li>
+            <li>A finite set of transitions that show the change of state from the given state on a given input</li>
+        </ul>
+        <h5 class="mt-4">Transition Tables</h5>
+        <p>A transition table is a tabular representation of the transition function that takes two arguments and returns a state. The column contains the state in which the automaton will be on the input represented by that column.</p>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm">
+                <thead class="table-light">
+                    <tr><th>State</th><th>a</th><th>b</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>q0</td><td>q1</td><td>q2</td></tr>
+                    <tr><td>q1</td><td>q1</td><td>q3</td></tr>
+                    <tr><td>q2</td><td>q2</td><td>q3</td></tr>
+                    <tr><td>q3</td><td>q3</td><td>q3</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> Transition tables and graphs are visual and tabular ways to understand how automata process input!
+        </div>
+    </div>
+</div>
+{% endblock %} 

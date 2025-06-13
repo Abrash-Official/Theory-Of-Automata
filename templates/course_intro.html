@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Course Introduction & Fundamentals of Automata{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    {# The following card-header is removed as per user request to avoid redundancy with sidebar #}
+    {# <div class="card-header bg-primary text-white">
+        <h3 class="card-title mb-0">Course Introduction & Fundamentals of Automata</h3>
+    </div> #}
+    <div class="card-body">
+        <h4 class="mb-3">What is Automata Theory?</h4>
+        <p>
+            <strong>Automata theory</strong> is an exciting, theoretical branch of computer science that established its roots during the 20th century, as mathematicians began developing machines which imitated certain features of man, completing calculations more quickly and reliably. Simply stated, automata theory deals with the logic of computation with respect to simple machines, referred to as <strong>automata</strong>.
+        </p>
+        <hr>
+        <h4 class="mb-3">Key Concepts</h4>
+        <ul>
+            <li><strong>Automaton:</strong> An abstract model of a machine that performs computations on input by moving through a series of states or configurations. At each state of the computation, a transition function determines the next configuration on the basis of a finite portion of the present configuration.</li>
+            <li><strong>Finite Automaton:</strong> A simple idealized machine used to recognize patterns within input taken from some character set (or alphabet). The finite automata is an abstract computing device used for recognizing patterns.</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Applications of Automata Theory</h4>
+        <ul>
+            <li><strong>Compiler Design:</strong> Used in designing lexical scanners for checking program syntax</li>
+            <li><strong>Pattern Matching:</strong> Spell checkers and text validation systems</li>
+            <li><strong>Sequential Circuit Design:</strong> Used as transducers in hardware design</li>
+            <li><strong>Text Editors:</strong> Essential for text processing applications</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Central Concepts</h4>
+        <ul>
+            <li><strong>Automaton:</strong> Developing a model which takes input and processing and gives output</li>
+            <li><strong>Computability:</strong> Whether the process or machine can accept the input or not</li>
+            <li><strong>Complexity:</strong> Accepting the optimal solution with low complexity.</li>
+        </ul>
+        <div class="alert alert-info mt-4">
+            <strong>Tip for Beginners:</strong> Automata theory is the foundation for understanding how computers process languages and solve problems. Don't worry if it feels abstract at first—visualizing automata as simple machines that read and process input step by step can make the concepts much clearer!
+        </div>
+    </div>
+</div>
+{% endblock %} 

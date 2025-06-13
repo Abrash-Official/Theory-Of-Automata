@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Decidability, Computability Theory{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-warning text-dark">
+        <h3 class="card-title mb-0">Decidability, Computability Theory</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Decidability</h4>
+        <p>In logic, a true/false decision problem is <strong>decidable</strong> if there exists an effective method for deriving the correct answer. Logical systems are decidable if membership in their set of logically valid formulas can be effectively determined.</p>
+        <h5 class="mt-4">Examples of Decidability</h5>
+        <ul>
+            <li>Propositional logic: Decidable (can use truth-table method)</li>
+            <li>First-order logic: Not decidable in general</li>
+            <li>Higher-order logic: Also undecidable</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Computability</h4>
+        <p>Turing machines provide a precise, formal definition of what it means for a function to be computable. Many other definitions of computation have been proposed, but all known definitions agree on what is computable and what is not.</p>
+        <h5 class="mt-4">Church-Turing Thesis</h5>
+        <p>The Church-Turing thesis states that every effectively calculable function is computable by a Turing machine. This connects the intuitive notion of algorithm with the formal definition of Turing machine computation.</p>
+        <hr>
+        <h4 class="mb-3">Undecidable Problems</h4>
+        <ul>
+            <li>Halting problem: Cannot determine if arbitrary Turing machine halts</li>
+            <li>Post correspondence problem: Cannot determine if solution exists</li>
+            <li>Entscheidungsproblem: Cannot determine validity in first-order logic</li>
+        </ul>
+        <h5 class="mt-4">Reduction</h5>
+        <p>A problem A is reducible to problem B if solving B would also solve A. If A is undecidable and A reduces to B, then B is also undecidable.</p>
+        <h5 class="mt-4">Complexity Classes</h5>
+        <ul>
+            <li>P: Problems solvable in polynomial time</li>
+            <li>NP: Problems verifiable in polynomial time</li>
+            <li>PSPACE: Problems solvable in polynomial space</li>
+            <li>EXPTIME: Problems solvable in exponential time</li>
+        </ul>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> Decidability and computability help us understand what computers can and cannot do!
+        </div>
+    </div>
+</div>
+{% endblock %} 

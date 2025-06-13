@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Finite Automata (FA){% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-warning text-dark">
+        <h3 class="card-title mb-0">Finite Automata (FA)</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Definition</h4>
+        <p>A <strong>finite automaton (FA)</strong> is a simple idealized machine used to recognize patterns within input taken from some character set or alphabet. It is an abstract machine that can be in exactly one of a finite number of states at any given time.</p>
+        <hr>
+        <h4 class="mb-3">Formal Definition</h4>
+        <p>A finite automaton can be represented by a 5-tuple (Q, Σ, δ, q₀, F) where:</p>
+        <ul>
+            <li><strong>Q:</strong> finite set of states</li>
+            <li><strong>Σ:</strong> finite set of symbols called the alphabet</li>
+            <li><strong>δ:</strong> transition function where δ: Q × Σ → Q</li>
+            <li><strong>q₀:</strong> initial state from where any input is processed (q₀ ∈ Q)</li>
+            <li><strong>F:</strong> set of final states of Q (F ⊆ Q)</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Types of Finite Automata</h4>
+        <ul>
+            <li>Deterministic Finite Automaton (DFA)</li>
+            <li>Non-deterministic Finite Automaton (NFA)</li>
+            <li>Non-deterministic Finite Automaton with ε-transitions (ε-NFA)</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Key Properties</h4>
+        <ul>
+            <li>For each input symbol, a DFA has exactly one transition from each state</li>
+            <li>DFA cannot move to another state without any input character</li>
+            <li>DFA may have multiple final states</li>
+            <li>The finite state machine possesses less computational power than certain other models of computation like the Turing machine</li>
+        </ul>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> Finite automata are the simplest models of computation and are great for understanding how machines process input step by step.
+        </div>
+    </div>
+</div>
+{% endblock %} 

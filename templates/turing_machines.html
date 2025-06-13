@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Turing Machines, Variants{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <h3 class="card-title mb-0">Turing Machines, Variants</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Definition</h4>
+        <p>A <strong>Turing machine</strong> is a mathematical model of computation describing an abstract machine that manipulates symbols on a strip of tape according to a table of rules. Despite the model's simplicity, it is capable of implementing any computer algorithm.</p>
+        <hr>
+        <h4 class="mb-3">Components</h4>
+        <ul>
+            <li>An infinite memory tape divided into discrete cells</li>
+            <li>Each cell can hold a single symbol from a finite alphabet</li>
+            <li>A head positioned over one cell at any time</li>
+            <li>A state selected from a finite set of states</li>
+        </ul>
+        <h5 class="mt-4">Operation</h5>
+        <ul>
+            <li>The head reads the symbol in its cell</li>
+            <li>Based on the symbol and machine's current state, the machine:
+                <ul>
+                    <li>Writes a symbol into the same cell</li>
+                    <li>Moves the head left, right, or stays</li>
+                    <li>Changes to a new state, or halts</li>
+                </ul>
+            </li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Formal Definition</h4>
+        <ul>
+            <li>Σ: finite alphabet</li>
+            <li>K: finite set of states with special start state s</li>
+            <li>δ: transition function δ: K × Σ → (K ∪ {halt, yes, no}) × Σ × {←, →, −}</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Key Features</h4>
+        <ul>
+            <li>A finite amount of internal state</li>
+            <li>An infinite amount of external data storage</li>
+            <li>A program specified by finite instructions</li>
+            <li>Self-reference: can write an interpreter for its own programs</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Variants</h4>
+        <ul>
+            <li>Multi-tape Turing machines: Multiple tapes for increased efficiency</li>
+            <li>Non-deterministic Turing machines: Multiple possible transitions</li>
+            <li>Universal Turing machines: Can simulate any other Turing machine</li>
+            <li>Linear bounded automata: Restricted to linear space</li>
+        </ul>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> Turing machines are the most powerful model of computation and can simulate any algorithm!
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Parse Trees, Ambiguity, Chomsky Normal Form{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h3 class="card-title mb-0">Parse Trees, Ambiguity, Chomsky Normal Form</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Parse Trees</h4>
+        <p>A <strong>parse tree</strong> or parsing tree is an ordered, rooted tree that represents the syntactic structure of a string according to some context-free grammar. The term parse tree itself is used primarily in computational linguistics.</p>
+        <h5 class="mt-4">Parse Tree Structure</h5>
+        <ul>
+            <li>Root node: The topmost node (usually the start symbol)</li>
+            <li>Branch nodes: Internal nodes representing nonterminals</li>
+            <li>Leaf nodes: Terminal symbols in the derived string</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Ambiguity</h4>
+        <p>A context-free grammar is <strong>ambiguous</strong> if there exists a string that has more than one parse tree (or equivalently, more than one leftmost derivation). Ambiguity is a property of grammars, not languages.</p>
+        <hr>
+        <h4 class="mb-3">Chomsky Normal Form</h4>
+        <p>A context-free grammar G is in <strong>Chomsky normal form</strong> if all of its production rules are of the form:</p>
+        <ul>
+            <li>A → BC (two nonterminals)</li>
+            <li>A → a (single terminal)</li>
+            <li>S → ε (only if ε is in the language)</li>
+        </ul>
+        <p>Where A, B, and C are nonterminal symbols, a is a terminal symbol, S is the start symbol, and ε denotes the empty string.</p>
+        <h5 class="mt-4">Converting to Chomsky Normal Form</h5>
+        <ul>
+            <li>START: Eliminate the start symbol from right-hand sides</li>
+            <li>TERM: Eliminate rules with nonsolitary terminals</li>
+            <li>BIN: Eliminate right-hand sides with more than 2 nonterminals</li>
+            <li>DEL: Eliminate ε-rules</li>
+            <li>UNIT: Eliminate unit rules</li>
+        </ul>
+        <h5 class="mt-4">Benefits of CNF</h5>
+        <p>Every context-free grammar can be transformed into an equivalent one in Chomsky normal form and has a size no larger than the square of the original grammar's size.</p>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> Parse trees help visualize how strings are derived from grammars, and CNF is useful for parsing algorithms!
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Context-Sensitive Languages, LBA, Chomsky Hierarchy{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h3 class="card-title mb-0">Context-Sensitive Languages, LBA, Chomsky Hierarchy</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Context-Sensitive Languages</h4>
+        <p>A <strong>context-sensitive language</strong> is a language that can be defined by a context-sensitive grammar. Context-sensitive is known as type-1 in the Chomsky hierarchy of formal languages.</p>
+        <hr>
+        <h4 class="mb-3">Linear Bounded Automata (LBA)</h4>
+        <p>A <strong>linear bounded automaton</strong> is a restricted form of Turing machine. An LBA satisfies three conditions:</p>
+        <ul>
+            <li>Its input alphabet includes left and right endmarkers</li>
+            <li>Transitions may not print other symbols over the endmarkers</li>
+            <li>Transitions may not move beyond the endmarkers</li>
+        </ul>
+        <h5 class="mt-4">LBA Operation</h5>
+        <p>Instead of having potentially infinite tape, computation is restricted to the portion containing the input plus the two tape squares holding the endmarkers. This makes an LBA a more accurate model of real-world computers than unrestricted Turing machines.</p>
+        <h5 class="mt-4">Equivalence</h5>
+        <p>Linear bounded automata are acceptors for the class of context-sensitive languages. Computationally, a context-sensitive language is equivalent to a linear bounded nondeterministic Turing machine.</p>
+        <h5 class="mt-4">Example Context-Sensitive Language</h5>
+        <p>L = {a^n b^n c^n : n ≥ 1} is context-sensitive but not context-free. It consists of strings with equal numbers of a's, b's, and c's in that order.</p>
+        <hr>
+        <h4 class="mb-3">Chomsky Hierarchy</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm">
+                <thead class="table-light">
+                    <tr><th>Type</th><th>Grammar</th><th>Languages</th><th>Automaton</th><th>Production Rules</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>3</td><td>Regular</td><td>Regular</td><td>Finite automaton</td><td>A → a, A → aB</td></tr>
+                    <tr><td>2</td><td>Context-free</td><td>Context-free</td><td>Pushdown automaton</td><td>A → α</td></tr>
+                    <tr><td>1</td><td>Context-sensitive</td><td>Context-sensitive</td><td>Linear bounded automaton</td><td>αAβ → αγβ</td></tr>
+                    <tr><td>0</td><td>Unrestricted</td><td>Recursively enumerable</td><td>Turing machine</td><td>α → β</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> The Chomsky hierarchy helps us understand the power and limitations of different types of grammars and automata!
+        </div>
+        <hr>
+        <h4 class="mb-3">Hierarchy Properties</h4>
+        <ul>
+            <li>Each class completely generates the language of all inferior classes:</li>
+        </ul>
+        <div class="mb-2 ms-3">
+            <code>Regular ⊆ Context-free ⊆ Context-sensitive ⊆ Recursively enumerable</code>
+        </div>
+        <ul>
+            <li>The hierarchy represents increasing computational power</li>
+            <li>Higher levels can recognize more complex patterns and structures</li>
+        </ul>
+    </div>
+</div>
+{% endblock %} 

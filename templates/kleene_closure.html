@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Kleene's Theorem, Closure Properties{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h3 class="card-title mb-0">Kleene's Theorem, Closure Properties</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Kleene's Theorem</h4>
+        <p>Kleene's theorem states that any regular language is accepted by a finite automaton and conversely that any language accepted by a finite automaton is regular. The theorem establishes the equivalence between regular expressions, finite automata, and transition graphs.</p>
+        <h5 class="mt-4">Three Parts of Kleene's Theorem</h5>
+        <ul>
+            <li>Any language defined by a finite automaton can also be defined by a transition graph</li>
+            <li>Any language defined by a transition graph can be defined by a regular expression</li>
+            <li>Any language defined by a regular expression can be defined by a finite automaton</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Closure Properties</h4>
+        <p>Regular languages are closed under various operations:</p>
+        <h5>Boolean Operations</h5>
+        <ul>
+            <li>Union: L₁ ∪ L₂ is regular if L₁ and L₂ are regular</li>
+            <li>Intersection: L₁ ∩ L₂ is regular if L₁ and L₂ are regular</li>
+            <li>Complementation: L̄ is regular if L is regular</li>
+        </ul>
+        <h5>Other Operations</h5>
+        <ul>
+            <li>Concatenation: L₁L₂ is regular if L₁ and L₂ are regular</li>
+            <li>Kleene Star: L* is regular if L is regular</li>
+            <li>Reversal: L^R is regular if L is regular</li>
+            <li>Homomorphism: h(L) is regular if L is regular</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Practical Applications</h4>
+        <p>These closure properties are very useful in studying the properties of one language by relating it to other better understood languages. Most useful when the operations are sophisticated, yet are guaranteed to preserve interesting properties of the language.</p>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> Closure properties help us understand how regular languages behave under different operations!
+        </div>
+    </div>
+</div>
+{% endblock %} 

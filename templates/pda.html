@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Pushdown Automata (PDA){% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-warning text-dark">
+        <h3 class="card-title mb-0">Pushdown Automata (PDA)</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Definition</h4>
+        <p>A <strong>pushdown automaton</strong>, or PDA, is finite automaton supplemented with a storage device, specifically, a stack onto which we can push symbols. The transitions in the pushdown automaton read input symbols, just as a finite automaton does.</p>
+        <hr>
+        <h4 class="mb-3">Stack Operations</h4>
+        <ul>
+            <li>Pop symbols from the top of the stack</li>
+            <li>Push new symbols onto the stack</li>
+        </ul>
+        <h5 class="mt-4">Typical PDA Transition</h5>
+        <p>A transition has two parts:</p>
+        <ul>
+            <li>The symbol to be read from the input</li>
+            <li>The stack operation (symbol to remove from top and symbol to push)</li>
+        </ul>
+        <p>The PDA can do the transition if and only if the required symbol comes in on the input and the symbol that we want to remove from the stack is sitting at the top of the stack.</p>
+        <hr>
+        <h4 class="mb-3">Special Transitions</h4>
+        <ul>
+            <li><strong>ε-transitions:</strong> To ignore input, use ε in the input part</li>
+            <li><strong>Stack ignore:</strong> To ignore stack, use ε in the stack part</li>
+            <li><strong>Push without pop:</strong> Push a symbol without popping anything</li>
+            <li><strong>Pop without push:</strong> Pop a symbol without pushing anything</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Stack Alphabet</h4>
+        <p>The set of symbols a PDA can use with the stack is known as the stack alphabet, Γ. Typically, the stack alphabet consists of the input alphabet Σ supplemented with additional marker symbols.</p>
+        <h5 class="mt-4">Bottom Marker</h5>
+        <p>One commonly used marker symbol, <code>$</code>, is used to mark the bottom of the stack. The <code>$</code> serves as a special marker to let us know whether or not the stack is about to empty out.</p>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> PDAs are more powerful than finite automata because they can use a stack to remember information!
+        </div>
+    </div>
+</div>
+{% endblock %} 

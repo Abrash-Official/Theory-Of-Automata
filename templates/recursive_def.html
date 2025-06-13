@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Recursive Definitions & Regular Expressions{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h3 class="card-title mb-0">Recursive Definitions & Regular Expressions</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Recursive Definitions</h4>
+        <p>
+            In computer science, <strong>recursion</strong> is a method of solving a computational problem where the solution depends on solutions to smaller instances of the same problem. The power of recursion lies in the possibility of defining an infinite set of objects by a finite statement.
+        </p>
+        <h5 class="mt-4">Features of Recursion</h5>
+        <ul>
+            <li>The function must call itself</li>
+            <li>A <strong>base case</strong> - this means that it can return a value without further recursive calls</li>
+            <li>A <strong>stopping condition</strong> - this must be reachable after a finite number of times</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Regular Expressions</h4>
+        <p>
+            A <strong>Regular Expression (regex)</strong> is a syntax that allows you to match strings with specific patterns. Think of it as a suped-up text search shortcut, but a regular expression adds the ability to use quantifiers, pattern collections, special characters, and capture groups.
+        </p>
+        <hr>
+        <h4 class="mb-3">Try It Yourself: Factorial Example</h4>
+        <pre class="bg-light p-3 rounded"><code>def factorial(n):
+    # Base case
+    if n == 0 or n == 1:
+        return 1
+    else:
+        # Recursive call
+        return n * factorial(n - 1)
+
+result = factorial(5)
+print(result)  # Output: 120</code></pre>
+        <hr>
+        <h4 class="mb-3">Regular Expression Applications</h4>
+        <ul>
+            <li>Analyzing command line output</li>
+            <li>Parsing user input</li>
+            <li>Examining server or program logs</li>
+            <li>Handling text files with consistent syntax</li>
+            <li>Reading configuration files</li>
+            <li>Searching and refactoring code</li>
+        </ul>
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> Recursion and regular expressions are powerful tools. Practice writing small recursive functions and simple regex patterns to build your confidence!
+        </div>
+    </div>
+</div>
+{% endblock %} 
