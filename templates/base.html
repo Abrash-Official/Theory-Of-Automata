@@ -45,6 +45,12 @@
             <!-- Sidebar with Course Topics and Conversion Tools -->
             <div class="col-lg-3 col-md-4">
                 <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i data-feather="book-open" class="me-2"></i>
+                            Automata Course Topics
+                        </h5>
+                    </div>
                     <div class="card-body p-0">
                         <div class="nav flex-column nav-pills" id="course-sidebar" role="tablist" aria-orientation="vertical" style="text-align: left;">
                             <a class="nav-link text-start ms-2 {% if active_page == 'course_intro' %}active{% endif %}" href="{{ url_for('course_intro') }}">1 Course Introduction, Fundamentals of Automata</a>
