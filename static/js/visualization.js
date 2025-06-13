@@ -620,6 +620,7 @@ window.addEventListener('resize', function() {
 
 // Export functions for global access
 window.renderAutomaton = renderAutomaton;
+window.renderAutomatonGraph = renderAutomaton;
 window.highlightElements = highlightElements;
 window.exportVisualization = exportVisualization;
 window.animateStep = animateStep;

@@ -89,6 +89,9 @@ function setupEventListeners() {
     
     // DFA to RegEx
     setupDfaToRegexListeners();
+    
+    // NFA to Regex
+    setupNfaToRegexListeners();
 }
 
 // RegEx to DFA event listeners
@@ -207,6 +210,39 @@ function setupDfaToRegexListeners() {
     
     if (statesInput) statesInput.addEventListener('input', updateDfaTransitionOptions);
     if (alphabetInput) alphabetInput.addEventListener('input', updateDfaTransitionOptions);
+}
+
+// NFA to Regex event listeners
+function setupNfaToRegexListeners() {
+    // Input mode radio buttons
+    const inputModeRadios = document.querySelectorAll('input[name="nfaToRegexInputMode"]');
+    inputModeRadios.forEach(radio => {
+        radio.addEventListener('change', handleNfaToRegexInputModeChange);
+    });
+    // Convert buttons
+    const convertBtn = document.getElementById('convertNfaToRegexBtn');
+    const convertExampleBtn = document.getElementById('convertNfaToRegexExampleBtn');
+    if (convertBtn) convertBtn.addEventListener('click', convertNfaToRegex);
+    if (convertExampleBtn) convertExampleBtn.addEventListener('click', convertNfaToRegexExample);
+    // Add transition button
+    const addTransitionBtn = document.getElementById('addNfaToRegexTransition');
+    if (addTransitionBtn) {
+        addTransitionBtn.addEventListener('click', () => {
+            const container = document.getElementById('nfaToRegexTransitionsContainer');
+            if (!container) return;
+            const row = container.querySelector('.nfa-to-regex-transition-row');
+            if (!row) return;
+            const newRow = row.cloneNode(true);
+            newRow.querySelectorAll('select').forEach(sel => sel.value = '');
+            container.appendChild(newRow);
+            updateNfaToRegexTransitionOptions();
+        });
+    }
+    // States and alphabet input listeners
+    const statesInput = document.getElementById('nfaToRegexStates');
+    const alphabetInput = document.getElementById('nfaToRegexAlphabet');
+    if (statesInput) statesInput.addEventListener('input', updateNfaToRegexTransitionOptions);
+    if (alphabetInput) alphabetInput.addEventListener('input', updateNfaToRegexTransitionOptions);
 }
 
 // Tab change handler
@@ -1207,4 +1243,151 @@ function updateNavigationButtons(type) {
     // Update button states
     prevBtn.disabled = currentStep === 0;
     nextBtn.disabled = currentStep === totalSteps - 1;
+}
+
+// NFA to Regex input mode switching
+function handleNfaToRegexInputModeChange() {
+    const selectedMode = document.querySelector('input[name="nfaToRegexInputMode"]:checked');
+    if (!selectedMode) return;
+    const visualInput = document.getElementById('nfaToRegexVisualInput');
+    const exampleInput = document.getElementById('nfaToRegexExampleInput');
+    if (selectedMode.value === 'visual') {
+        visualInput.classList.remove('d-none');
+        exampleInput.classList.add('d-none');
+    } else {
+        visualInput.classList.add('d-none');
+        exampleInput.classList.remove('d-none');
+    }
+}
+
+function updateNfaToRegexTransitionOptions() {
+    const statesInput = document.getElementById('nfaToRegexStates');
+    const alphabetInput = document.getElementById('nfaToRegexAlphabet');
+    const transitionsContainer = document.getElementById('nfaToRegexTransitionsContainer');
+    if (!statesInput || !alphabetInput || !transitionsContainer) return;
+    const states = statesInput.value.split(',').map(s => s.trim()).filter(Boolean);
+    const alphabet = alphabetInput.value.split(',').map(a => a.trim()).filter(Boolean);
+    // Update transition row selects
+    const rows = transitionsContainer.querySelectorAll('.nfa-to-regex-transition-row');
+    rows.forEach(row => {
+        updateSelectOptions(row.querySelector('.nfa-to-regex-from-state'), states);
+        updateSelectOptions(row.querySelector('.nfa-to-regex-to-state'), states);
+        updateSelectOptions(row.querySelector('.nfa-to-regex-symbol'), alphabet);
+    });
+}
+
+function collectNfaToRegexData() {
+    const statesInput = document.getElementById('nfaToRegexStates');
+    const alphabetInput = document.getElementById('nfaToRegexAlphabet');
+    const startStatesInput = document.getElementById('nfaToRegexStartStates');
+    const finalStatesInput = document.getElementById('nfaToRegexFinalStates');
+    const transitionsContainer = document.getElementById('nfaToRegexTransitionsContainer');
+    if (!statesInput || !alphabetInput || !startStatesInput || !finalStatesInput || !transitionsContainer) return null;
+    const states = statesInput.value.split(',').map(s => s.trim()).filter(Boolean).map(id => ({ id, label: id, isStart: startStatesInput.value.split(',').map(f => f.trim()).includes(id), isFinal: finalStatesInput.value.split(',').map(f => f.trim()).includes(id) }));
+    if (!states.length) return null;
+    const alphabet = alphabetInput.value.split(',').map(a => a.trim()).filter(Boolean);
+    const startStates = startStatesInput.value.split(',').map(f => f.trim()).filter(Boolean);
+    const finalStates = finalStatesInput.value.split(',').map(f => f.trim()).filter(Boolean);
+    const transitions = [];
+    const rows = transitionsContainer.querySelectorAll('.nfa-to-regex-transition-row');
+    rows.forEach(row => {
+        const from = row.querySelector('.nfa-to-regex-from-state').value;
+        const symbol = row.querySelector('.nfa-to-regex-symbol').value;
+        const to = row.querySelector('.nfa-to-regex-to-state').value;
+        if (from && symbol && to) {
+            transitions.push({ from, symbol, to });
+        }
+    });
+    return {
+        states,
+        alphabet,
+        startStates,
+        finalStates,
+        transitions
+    };
+}
+
+async function convertNfaToRegex() {
+    const nfaData = collectNfaToRegexData();
+    if (!nfaData) {
+        showError('nfaToRegexError', 'Please fill in all required fields');
+        return;
+    }
+    hideError('nfaToRegexError');
+    try {
+        const response = await fetch('/api/convert/nfa-to-regex', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nfa: nfaData })
+        });
+        const result = await response.json();
+        if (result.success) {
+            window.AutomataEdu.conversionData = result;
+            window.AutomataEdu.currentStep = 0;
+            window.AutomataEdu.totalSteps = result.steps.length;
+            displayNfaToRegexResults(result);
+        } else {
+            showError('nfaToRegexError', result.error || 'Conversion failed');
+        }
+    } catch (error) {
+        console.error('Conversion error:', error);
+        showError('nfaToRegexError', 'Network error during conversion');
+    }
+}
+
+async function convertNfaToRegexExample() {
+    const selectElement = document.getElementById('nfaToRegexExampleSelect');
+    const selectedIndex = selectElement.value;
+    if (!selectedIndex) {
+        showError('nfaToRegexError', 'Please select an example');
+        return;
+    }
+    const examples = window.AutomataEdu.examples['nfa-to-regex'];
+    const allExamples = [...examples.simple, ...examples.complex];
+    const exampleData = allExamples[parseInt(selectedIndex)];
+    if (exampleData && exampleData.nfa) {
+        hideError('nfaToRegexError');
+        try {
+            const response = await fetch('/api/convert/nfa-to-regex', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ nfa: exampleData.nfa })
+            });
+            const result = await response.json();
+            if (result.success) {
+                window.AutomataEdu.conversionData = result;
+                window.AutomataEdu.currentStep = 0;
+                window.AutomataEdu.totalSteps = result.steps.length;
+                displayNfaToRegexResults(result);
+            } else {
+                showError('nfaToRegexError', result.error || 'Conversion failed');
+            }
+        } catch (error) {
+            console.error('Conversion error:', error);
+            showError('nfaToRegexError', 'Network error during conversion');
+        }
+    }
+}
+
+function displayNfaToRegexResults(result) {
+    const resultsSection = document.getElementById('nfaToRegexResults');
+    if (resultsSection) resultsSection.classList.remove('d-none');
+    // Show regex
+    if (result.regex) {
+        document.getElementById('nfaToRegexText').textContent = result.regex;
+    }
+    // Visualize original NFA
+    if (result.originalNfa) {
+        renderAutomatonGraph('nfaToRegexOriginalVisualization', result.originalNfa);
+        // Show and populate original NFA transition table card (fix)
+        const nfaOriginalTableCard = document.getElementById('nfaToRegexOriginalTableCard');
+        if (nfaOriginalTableCard) {
+            nfaOriginalTableCard.classList.remove('d-none');
+            generateTransitionTable('nfaToRegexOriginal', result.originalNfa);
+        }
+    }
 }

@@ -5,6 +5,7 @@ from algorithms.nfa_to_dfa import NFAToDFAConverter
 from algorithms.dfa_to_regex import DFAToRegexConverter
 from algorithms.automata_structures import NFA, DFA, State, Transition
 from data.examples import get_examples
+from algorithms.nfa_to_regex import NFAToRegexConverter
 import json
 import logging
 
@@ -93,6 +94,28 @@ def convert_dfa_to_regex():
     
     except Exception as e:
         logger.error(f"Error in dfa-to-regex conversion: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/convert/nfa-to-regex', methods=['POST'])
+def convert_nfa_to_regex():
+    """Convert NFA to regular expression"""
+    try:
+        data = request.get_json()
+        nfa_data = data.get('nfa', {})
+        if not nfa_data:
+            return jsonify({'success': False, 'error': 'NFA data is required'})
+        nfa = build_nfa_from_data(nfa_data)
+        converter = NFAToRegexConverter(nfa)
+        result = converter.convert()
+        return jsonify({
+            'success': result['success'],
+            'regex': result.get('regex'),
+            'originalNfa': nfa.to_dict(),
+            'steps': result.get('steps', []),
+            'error': result.get('error')
+        })
+    except Exception as e:
+        logger.error(f"Error in nfa-to-regex conversion: {str(e)}")
         return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/api/examples/<conversion_type>')

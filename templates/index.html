@@ -31,6 +31,12 @@
                         DFA → RegEx
                         <small class="d-block text-muted">DFA to Regular Expression</small>
                     </button>
+                    <button class="nav-link text-start" id="nfa-to-regex-tab" data-bs-toggle="pill" 
+                            data-bs-target="#nfa-to-regex" type="button" role="tab">
+                        <i data-feather="arrow-left" class="me-2"></i>
+                        NFA → RegEx
+                        <small class="d-block text-muted">NFA to Regular Expression</small>
+                    </button>
                 </div>
             </div>
         </div>
@@ -537,6 +543,179 @@
                         <div id="dfaError" class="alert alert-danger d-none" role="alert">
                             <i data-feather="alert-circle" class="me-2"></i>
                             <span id="dfaErrorMessage"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NFA to Regex Tab -->
+            <div class="tab-pane fade" id="nfa-to-regex" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">
+                            <i data-feather="shuffle" class="me-2"></i>
+                            NFA to Regular Expression Conversion
+                        </h4>
+                        <p class="card-text mb-0">Extract regular expressions from nondeterministic finite automata using state elimination</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Input Mode Selection -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">Input Mode</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="nfaToRegexInputMode" id="nfaToRegexVisualMode" value="visual" checked>
+                                    <label class="btn btn-outline-primary" for="nfaToRegexVisualMode">Visual Editor</label>
+                                    <input type="radio" class="btn-check" name="nfaToRegexInputMode" id="nfaToRegexExampleMode" value="example">
+                                    <label class="btn btn-outline-primary" for="nfaToRegexExampleMode">Choose Example</label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Visual Input Mode -->
+                        <div id="nfaToRegexVisualInput">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="nfaToRegexStates" class="form-label">States (comma-separated)</label>
+                                    <input type="text" class="form-control" id="nfaToRegexStates" placeholder="q0, q1, q2" autocomplete="off">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nfaToRegexAlphabet" class="form-label">Alphabet (comma-separated)</label>
+                                    <input type="text" class="form-control" id="nfaToRegexAlphabet" placeholder="a, b" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="nfaToRegexStartStates" class="form-label">Start States</label>
+                                    <input type="text" class="form-control" id="nfaToRegexStartStates" placeholder="q0" autocomplete="off">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nfaToRegexFinalStates" class="form-label">Final States</label>
+                                    <input type="text" class="form-control" id="nfaToRegexFinalStates" placeholder="q2" autocomplete="off">
+                                </div>
+                            </div>
+                            <!-- Transitions Input -->
+                            <div class="mb-3">
+                                <label class="form-label">Transitions</label>
+                                <div id="nfaToRegexTransitionsContainer">
+                                    <div class="row g-2 mb-2 nfa-to-regex-transition-row">
+                                        <div class="col-3">
+                                            <select class="form-select nfa-to-regex-from-state">
+                                                <option value="">From State</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <select class="form-select nfa-to-regex-symbol">
+                                                <option value="">Symbol</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <select class="form-select nfa-to-regex-to-state">
+                                                <option value="">To State</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-outline-danger btn-sm remove-transition">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary btn-sm" id="addNfaToRegexTransition">
+                                    <i data-feather="plus"></i> Add Transition
+                                </button>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary" type="button" id="convertNfaToRegexBtn">
+                                    <i data-feather="play" class="me-2"></i>Convert NFA to RegEx
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Example Input Mode -->
+                        <div id="nfaToRegexExampleInput" class="d-none">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <label class="form-label">Choose an example:</label>
+                                    <select class="form-select" id="nfaToRegexExampleSelect">
+                                        <option value="">Select an example...</option>
+                                        <optgroup label="Simple Examples">
+                                            {% for example in examples['nfa-to-regex']['simple'] %}
+                                            <option value="{{ loop.index0 }}" data-description="{{ example.description }}">
+                                                {{ example.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </optgroup>
+                                        <optgroup label="Complex Examples">
+                                            {% for example in examples['nfa-to-regex']['complex'] %}
+                                            <option value="{{ loop.index0 + 10 }}" data-description="{{ example.description }}">
+                                                {{ example.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary" type="button" id="convertNfaToRegexExampleBtn">
+                                    <i data-feather="play" class="me-2"></i>Convert Selected NFA
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Results Section -->
+                        <div id="nfaToRegexResults" class="d-none">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-secondary" id="nfaToRegexShowTable">
+                                        <i data-feather="table"></i> Show Table
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="nfaToRegexExport">
+                                        <i data-feather="download"></i> Export
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="nfaToRegexReset">
+                                        <i data-feather="refresh-cw"></i> Reset
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="progress mb-3 d-none">
+                                <div class="progress-bar" id="nfaToRegexProgress" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">Regular Expression Result</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="alert alert-success" id="nfaToRegexResult">
+                                                <h5 class="alert-heading">Generated Regular Expression:</h5>
+                                                <p class="mb-0 font-monospace fs-4" id="nfaToRegexText"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="card mt-3">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">NFA Visualization (Original)</h6>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div id="nfaToRegexOriginalVisualization" class="cytoscape-container"></div>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-3" id="nfaToRegexOriginalTableCard">
+                                        <div class="card-header">
+                                            <h6 class="card-title mb-0">NFA Transition Table (Original)</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="nfaToRegexOriginalTransitionTable"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Error Display -->
+                        <div id="nfaToRegexError" class="alert alert-danger d-none" role="alert">
+                            <i data-feather="alert-circle" class="me-2"></i>
+                            <span id="nfaToRegexErrorMessage"></span>
                         </div>
                     </div>
                 </div>

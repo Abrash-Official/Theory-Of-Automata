@@ -9,6 +9,7 @@ from .automata_structures import State, Transition, NFA, DFA, AutomataUtils
 from .regex_to_dfa import RegexToDFAConverter
 from .nfa_to_dfa import NFAToDFAConverter
 from .dfa_to_regex import DFAToRegexConverter
+from .nfa_to_regex import NFAToRegexConverter
 
 __all__ = [
     'State',
@@ -18,5 +19,6 @@ __all__ = [
     'AutomataUtils',
     'RegexToDFAConverter',
     'NFAToDFAConverter',
-    'DFAToRegexConverter'
+    'DFAToRegexConverter',
+    'NFAToRegexConverter'
 ]
