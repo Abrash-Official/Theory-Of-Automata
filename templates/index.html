@@ -2,40 +2,62 @@
 
 {% block content %}
 <div class="row">
-    <!-- Sidebar with Navigation Tabs -->
+    <!-- Sidebar with Course Topics and Conversion Tools -->
     <div class="col-lg-3 col-md-4">
         <div class="card h-100">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i data-feather="layers" class="me-2"></i>
-                    Conversion Tools
+                    <i data-feather="book-open" class="me-2"></i>
+                    Automata Course Topics
                 </h5>
             </div>
             <div class="card-body p-0">
-                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <button class="nav-link active text-start" id="regex-to-dfa-tab" data-bs-toggle="pill" 
-                            data-bs-target="#regex-to-dfa" type="button" role="tab">
-                        <i data-feather="arrow-right" class="me-2"></i>
-                        RegEx → DFA
-                        <small class="d-block text-muted">Regular Expression to DFA</small>
+                <div class="nav flex-column nav-pills" id="course-sidebar" role="tablist" aria-orientation="vertical" style="text-align: left;">
+                    <button class="nav-link active text-start ms-2" id="course-intro-tab" data-bs-toggle="pill" data-bs-target="#course-intro" type="button" role="tab">
+                        1 Course Introduction, Fundamentals of Automata
                     </button>
-                    <button class="nav-link text-start" id="nfa-to-dfa-tab" data-bs-toggle="pill" 
-                            data-bs-target="#nfa-to-dfa" type="button" role="tab">
-                        <i data-feather="arrow-right" class="me-2"></i>
-                        NFA → DFA
-                        <small class="d-block text-muted">NFA to DFA Conversion</small>
+                    <button class="nav-link text-start ms-2" id="recursive-def-tab" data-bs-toggle="pill" data-bs-target="#recursive-def" type="button" role="tab">
+                        2 Recursive Definitions, Regular Expressions
                     </button>
-                    <button class="nav-link text-start" id="dfa-to-regex-tab" data-bs-toggle="pill" 
-                            data-bs-target="#dfa-to-regex" type="button" role="tab">
-                        <i data-feather="arrow-left" class="me-2"></i>
-                        DFA → RegEx
-                        <small class="d-block text-muted">DFA to Regular Expression</small>
+                    <button class="nav-link text-start ms-2" id="languages-regex-tab" data-bs-toggle="pill" data-bs-target="#languages-regex" type="button" role="tab">
+                        3 Languages and Regular Expressions
                     </button>
-                    <button class="nav-link text-start" id="nfa-to-regex-tab" data-bs-toggle="pill" 
-                            data-bs-target="#nfa-to-regex" type="button" role="tab">
-                        <i data-feather="arrow-left" class="me-2"></i>
-                        NFA → RegEx
-                        <small class="d-block text-muted">NFA to Regular Expression</small>
+                    <button class="nav-link text-start ms-2" id="finite-automata-tab" data-bs-toggle="pill" data-bs-target="#finite-automata" type="button" role="tab">
+                        4 Finite Automata (FA)
+                    </button>
+                    <button class="nav-link text-start ms-2" id="nfa-dfa-graphs-tab" data-bs-toggle="pill" data-bs-target="#nfa-dfa-graphs" type="button" role="tab">
+                        5 NFA, DFA, Transition Graphs
+                    </button>
+                    <button class="nav-link text-start ms-2" id="kleene-closure-tab" data-bs-toggle="pill" data-bs-target="#kleene-closure" type="button" role="tab">
+                        6 Kleene's Theorem, Closure Properties
+                    </button>
+                    <button class="nav-link text-start ms-2" id="mealy-moore-tab" data-bs-toggle="pill" data-bs-target="#mealy-moore" type="button" role="tab">
+                        7 Mealy and Moore Machines
+                    </button>
+                    <button class="nav-link text-start ms-2" id="cfg-tab" data-bs-toggle="pill" data-bs-target="#cfg" type="button" role="tab">
+                        8 Context-Free Grammars (CFG)
+                    </button>
+                    <button class="nav-link text-start ms-2" id="pda-tab" data-bs-toggle="pill" data-bs-target="#pda" type="button" role="tab">
+                        9 Pushdown Automata (PDA)
+                    </button>
+                    <button class="nav-link text-start ms-2" id="parse-trees-tab" data-bs-toggle="pill" data-bs-target="#parse-trees" type="button" role="tab">
+                        10 Parse Trees, Ambiguity, Chomsky Normal Form
+                    </button>
+                    <button class="nav-link text-start ms-2" id="pumping-lemma-tab" data-bs-toggle="pill" data-bs-target="#pumping-lemma" type="button" role="tab">
+                        11 Pumping Lemma for CFLs
+                    </button>
+                    <button class="nav-link text-start ms-2" id="turing-machines-tab" data-bs-toggle="pill" data-bs-target="#turing-machines" type="button" role="tab">
+                        12 Turing Machines, Variants
+                    </button>
+                    <button class="nav-link text-start ms-2" id="decidability-tab" data-bs-toggle="pill" data-bs-target="#decidability" type="button" role="tab">
+                        13 Decidability, Computability Theory
+                    </button>
+                    <button class="nav-link text-start ms-2" id="context-sensitive-tab" data-bs-toggle="pill" data-bs-target="#context-sensitive" type="button" role="tab">
+                        14 Context-Sensitive Languages, LBA, Chomsky Hierarchy
+                    </button>
+                    <button class="nav-link text-start ms-2" id="conversion-tab" data-bs-toggle="pill" data-bs-target="#conversion" type="button" role="tab">
+                        <i data-feather="layers" class="me-2"></i>
+                        15 Conversion
                     </button>
                 </div>
             </div>
@@ -45,30 +67,670 @@
     <!-- Main Content Area -->
     <div class="col-lg-9 col-md-8">
         <div class="tab-content" id="v-pills-tabContent">
-            
-            <!-- Regular Expression to DFA Tab -->
-            <div class="tab-pane fade show active" id="regex-to-dfa" role="tabpanel">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title mb-0">
-                            <i data-feather="code" class="me-2"></i>
-                            Regular Expression to DFA Conversion
-                        </h4>
-                        <p class="card-text mb-0">Convert regular expressions to deterministic finite automata using direct construction</p>
+            <!-- Course Introduction Tab -->
+            <div class="tab-pane fade show active" id="course-intro" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">Course Introduction & Fundamentals of Automata</h3>
                     </div>
                     <div class="card-body">
-                        <!-- Input Section -->
-                        <div class="row mb-4">
-                            <div class="col-md-8">
-                                <label for="regexInput" class="form-label">Regular Expression</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="regexInput" 
-                                           placeholder="Enter regular expression (e.g., (a|b)*abb)" 
-                                           autocomplete="off">
-                                    <button class="btn btn-primary" type="button" id="convertRegexBtn">
-                                        <i data-feather="play" class="me-2"></i>Convert
-                                    </button>
-                                </div>
+                        <h4 class="mb-3">What is Automata Theory?</h4>
+                        <p>
+                            <strong>Automata theory</strong> is an exciting, theoretical branch of computer science that established its roots during the 20th century, as mathematicians began developing machines which imitated certain features of man, completing calculations more quickly and reliably. Simply stated, automata theory deals with the logic of computation with respect to simple machines, referred to as <strong>automata</strong>.
+                        </p>
+                        <hr>
+                        <h4 class="mb-3">Key Concepts</h4>
+                        <ul>
+                            <li><strong>Automaton:</strong> An abstract model of a machine that performs computations on input by moving through a series of states or configurations. At each state of the computation, a transition function determines the next configuration on the basis of a finite portion of the present configuration.</li>
+                            <li><strong>Finite Automaton:</strong> A simple idealized machine used to recognize patterns within input taken from some character set (or alphabet). The finite automata is an abstract computing device used for recognizing patterns.</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Applications of Automata Theory</h4>
+                        <ul>
+                            <li><strong>Compiler Design:</strong> Used in designing lexical scanners for checking program syntax</li>
+                            <li><strong>Pattern Matching:</strong> Spell checkers and text validation systems</li>
+                            <li><strong>Sequential Circuit Design:</strong> Used as transducers in hardware design</li>
+                            <li><strong>Text Editors:</strong> Essential for text processing applications</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Central Concepts</h4>
+                        <ul>
+                            <li><strong>Automaton:</strong> Developing a model which takes input and processing and gives output</li>
+                            <li><strong>Computability:</strong> Whether the process or machine can accept the input or not</li>
+                            <li><strong>Complexity:</strong> Accepting the optimal solution with low complexity.</li>
+                        </ul>
+                        <div class="alert alert-info mt-4">
+                            <strong>Tip for Beginners:</strong> Automata theory is the foundation for understanding how computers process languages and solve problems. Don't worry if it feels abstract at first—visualizing automata as simple machines that read and process input step by step can make the concepts much clearer!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recursive Definitions, Regular Expressions Tab -->
+            <div class="tab-pane fade" id="recursive-def" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="card-title mb-0">Recursive Definitions & Regular Expressions</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Recursive Definitions</h4>
+                        <p>
+                            In computer science, <strong>recursion</strong> is a method of solving a computational problem where the solution depends on solutions to smaller instances of the same problem. The power of recursion lies in the possibility of defining an infinite set of objects by a finite statement.
+                        </p>
+                        <h5 class="mt-4">Features of Recursion</h5>
+                        <ul>
+                            <li>The function must call itself</li>
+                            <li>A <strong>base case</strong> - this means that it can return a value without further recursive calls</li>
+                            <li>A <strong>stopping condition</strong> - this must be reachable after a finite number of times</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Regular Expressions</h4>
+                        <p>
+                            A <strong>Regular Expression (regex)</strong> is a syntax that allows you to match strings with specific patterns. Think of it as a suped-up text search shortcut, but a regular expression adds the ability to use quantifiers, pattern collections, special characters, and capture groups.
+                        </p>
+                        <hr>
+                        <h4 class="mb-3">Try It Yourself: Factorial Example</h4>
+                        <pre class="bg-light p-3 rounded"><code>def factorial(n):
+    # Base case
+    if n == 0 or n == 1:
+        return 1
+    else:
+        # Recursive call
+        return n * factorial(n - 1)
+
+result = factorial(5)
+print(result)  # Output: 120</code></pre>
+                        <hr>
+                        <h4 class="mb-3">Regular Expression Applications</h4>
+                        <ul>
+                            <li>Analyzing command line output</li>
+                            <li>Parsing user input</li>
+                            <li>Examining server or program logs</li>
+                            <li>Handling text files with consistent syntax</li>
+                            <li>Reading configuration files</li>
+                            <li>Searching and refactoring code</li>
+                        </ul>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> Recursion and regular expressions are powerful tools. Practice writing small recursive functions and simple regex patterns to build your confidence!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Languages and Regular Expressions Tab -->
+            <div class="tab-pane fade" id="languages-regex" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="card-title mb-0">Languages and Regular Expressions</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Formal Language Definition</h4>
+                        <p>A <strong>formal language</strong> is a set of strings of symbols drawn from a finite alphabet. Languages generated by context-free grammars are known as context-free languages, and automata are often classified by the class of formal languages they can recognize.</p>
+                        <hr>
+                        <h4 class="mb-3">Regular Languages</h4>
+                        <p>Regular languages are a class of formal languages that can be described by regular expressions, recognized by finite automata, or generated by regular grammars. The class of regular languages is the simplest class in the Chomsky hierarchy.</p>
+                        <hr>
+                        <h4 class="mb-3">Operations on Regular Languages</h4>
+                        <ul>
+                            <li><strong>Union:</strong> If L₁ and L₂ are regular, then L₁ ∪ L₂ is regular</li>
+                            <li><strong>Concatenation:</strong> If L₁ and L₂ are regular, then L₁L₂ is regular</li>
+                            <li><strong>Kleene Star:</strong> If L is regular, then L* is regular</li>
+                            <li><strong>Intersection:</strong> If L₁ and L₂ are regular, then L₁ ∩ L₂ is regular</li>
+                            <li><strong>Complementation:</strong> If L is regular, then L̄ is regular</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Regular Expression Syntax</h4>
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr><th>Symbol</th><th>Meaning</th><th>Example</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><code>a</code></td><td>Literal character</td><td><code>cat</code> matches "cat"</td></tr>
+                                <tr><td><code>.</code></td><td>Any character</td><td><code>c.t</code> matches "cat", "cut", "cot"</td></tr>
+                                <tr><td><code>*</code></td><td>Zero or more</td><td><code>ca*t</code> matches "ct", "cat", "caat"</td></tr>
+                                <tr><td><code>+</code></td><td>One or more</td><td><code>ca+t</code> matches "cat", "caat", but not "ct"</td></tr>
+                                <tr><td><code>?</code></td><td>Zero or one</td><td><code>ca?t</code> matches "ct", "cat"</td></tr>
+                                <tr><td><code>|</code></td><td>Alternation</td><td><code>cat|dog</code> matches "cat" or "dog"</td></tr>
+                            </tbody>
+                        </table>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> Regular languages are the foundation for pattern matching and text processing in computer science!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Finite Automata (FA) Tab -->
+            <div class="tab-pane fade" id="finite-automata" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h3 class="card-title mb-0">Finite Automata (FA)</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Definition</h4>
+                        <p>A <strong>finite automaton (FA)</strong> is a simple idealized machine used to recognize patterns within input taken from some character set or alphabet. It is an abstract machine that can be in exactly one of a finite number of states at any given time.</p>
+                        <hr>
+                        <h4 class="mb-3">Formal Definition</h4>
+                        <p>A finite automaton can be represented by a 5-tuple (Q, Σ, δ, q₀, F) where:</p>
+                        <ul>
+                            <li><strong>Q:</strong> finite set of states</li>
+                            <li><strong>Σ:</strong> finite set of symbols called the alphabet</li>
+                            <li><strong>δ:</strong> transition function where δ: Q × Σ → Q</li>
+                            <li><strong>q₀:</strong> initial state from where any input is processed (q₀ ∈ Q)</li>
+                            <li><strong>F:</strong> set of final states of Q (F ⊆ Q)</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Types of Finite Automata</h4>
+                        <ul>
+                            <li>Deterministic Finite Automaton (DFA)</li>
+                            <li>Non-deterministic Finite Automaton (NFA)</li>
+                            <li>Non-deterministic Finite Automaton with ε-transitions (ε-NFA)</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Key Properties</h4>
+                        <ul>
+                            <li>For each input symbol, a DFA has exactly one transition from each state</li>
+                            <li>DFA cannot move to another state without any input character</li>
+                            <li>DFA may have multiple final states</li>
+                            <li>The finite state machine possesses less computational power than certain other models of computation like the Turing machine</li>
+                        </ul>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> Finite automata are the simplest models of computation and are great for understanding how machines process input step by step.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NFA, DFA, Transition Graphs Tab -->
+            <div class="tab-pane fade" id="nfa-dfa-graphs" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h3 class="card-title mb-0">NFA, DFA, Transition Graphs</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Deterministic Finite Automata (DFA)</h4>
+                        <p>Deterministic finite automata are finite state machines that accept or reject strings of characters by parsing them through a sequence that is uniquely determined by each string. The term "deterministic" refers to the fact that each string, and thus each state sequence, is unique.</p>
+                        <hr>
+                        <h4 class="mb-3">Non-deterministic Finite Automata (NFA)</h4>
+                        <p>In a nondeterministic finite automaton (NFA), for each state there can be zero, one, two, or more transitions corresponding to a particular symbol. If NFA gets to state with more than one possible transition corresponding to the input symbol, we say it branches.</p>
+                        <h5 class="mt-4">NFA Acceptance</h5>
+                        <p>An NFA accepts the input string if there exists some choice of transitions that leads to ending in an accept state. Thus, one accepting branch is enough for the overall NFA to accept, but every branch must reject for the overall NFA to reject.</p>
+                        <hr>
+                        <h4 class="mb-3">Transition Graphs</h4>
+                        <ul>
+                            <li>A finite set of states, one of which is designated as start state and some as final states</li>
+                            <li>An alphabet Σ of possible input symbols from which input strings are formed</li>
+                            <li>A finite set of transitions that show the change of state from the given state on a given input</li>
+                        </ul>
+                        <h5 class="mt-4">Transition Tables</h5>
+                        <p>A transition table is a tabular representation of the transition function that takes two arguments and returns a state. The column contains the state in which the automaton will be on the input represented by that column.</p>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead class="table-light">
+                                    <tr><th>State</th><th>a</th><th>b</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>q0</td><td>q1</td><td>q2</td></tr>
+                                    <tr><td>q1</td><td>q1</td><td>q3</td></tr>
+                                    <tr><td>q2</td><td>q2</td><td>q3</td></tr>
+                                    <tr><td>q3</td><td>q3</td><td>q3</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> Transition tables and graphs are visual and tabular ways to understand how automata process input!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kleene's Theorem, Closure Properties Tab -->
+            <div class="tab-pane fade" id="kleene-closure" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">Kleene's Theorem, Closure Properties</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Kleene's Theorem</h4>
+                        <p>Kleene's theorem states that any regular language is accepted by a finite automaton and conversely that any language accepted by a finite automaton is regular. The theorem establishes the equivalence between regular expressions, finite automata, and transition graphs.</p>
+                        <h5 class="mt-4">Three Parts of Kleene's Theorem</h5>
+                        <ul>
+                            <li>Any language defined by a finite automaton can also be defined by a transition graph</li>
+                            <li>Any language defined by a transition graph can be defined by a regular expression</li>
+                            <li>Any language defined by a regular expression can be defined by a finite automaton</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Closure Properties</h4>
+                        <p>Regular languages are closed under various operations:</p>
+                        <h5>Boolean Operations</h5>
+                        <ul>
+                            <li>Union: L₁ ∪ L₂ is regular if L₁ and L₂ are regular</li>
+                            <li>Intersection: L₁ ∩ L₂ is regular if L₁ and L₂ are regular</li>
+                            <li>Complementation: L̄ is regular if L is regular</li>
+                        </ul>
+                        <h5>Other Operations</h5>
+                        <ul>
+                            <li>Concatenation: L₁L₂ is regular if L₁ and L₂ are regular</li>
+                            <li>Kleene Star: L* is regular if L is regular</li>
+                            <li>Reversal: L^R is regular if L is regular</li>
+                            <li>Homomorphism: h(L) is regular if L is regular</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Practical Applications</h4>
+                        <p>These closure properties are very useful in studying the properties of one language by relating it to other better understood languages. Most useful when the operations are sophisticated, yet are guaranteed to preserve interesting properties of the language.</p>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> Closure properties help us understand how regular languages behave under different operations!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mealy and Moore Machines Tab -->
+            <div class="tab-pane fade" id="mealy-moore" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="card-title mb-0">Mealy and Moore Machines</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Mealy Machine</h4>
+                        <p>In the theory of computation, a <strong>Mealy machine</strong> is a finite-state machine whose output values are determined both by its current state and the current inputs. This is in contrast to a Moore machine, whose output values are determined solely by its current state.</p>
+                        <h5 class="mt-4">Formal Definition of Mealy Machine</h5>
+                        <ul>
+                            <li>S: a finite set of states</li>
+                            <li>S₀: a start state (initial state) which is an element of S</li>
+                            <li>Σ: a finite set called the input alphabet</li>
+                            <li>Λ: a finite set called the output alphabet</li>
+                            <li>T: a transition function T: S × Σ → S</li>
+                            <li>G: an output function G: S × Σ → Λ</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Moore Machine</h4>
+                        <p>A <strong>Moore machine</strong> is a finite-state machine whose current output values are determined only by its current state. The input may indirectly influence subsequent outputs, but not the current or immediate output.</p>
+                        <h5 class="mt-4">Formal Definition of Moore Machine</h5>
+                        <ul>
+                            <li>S: A finite set of states</li>
+                            <li>s₀: A start state (initial state) which is an element of S</li>
+                            <li>Σ: A finite set called the input alphabet</li>
+                            <li>O: A finite set called the output alphabet</li>
+                            <li>δ: A transition function δ: S × Σ → S</li>
+                            <li>G: An output function G: S → O</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Comparison</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead class="table-light">
+                                    <tr><th>Aspect</th><th>Mealy Machine</th><th>Moore Machine</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Output depends on</td><td>Current state + Input</td><td>Current state only</td></tr>
+                                    <tr><td>Number of states</td><td>Tend to have fewer states</td><td>May require more states</td></tr>
+                                    <tr><td>Output timing</td><td>Changes with input</td><td>Changes at clock edge</td></tr>
+                                    <tr><td>Safety</td><td>Less safe for circuits</td><td>Safer for electronic circuits</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> Mealy and Moore machines are used in digital circuit design and help us understand how outputs can depend on states and/or inputs!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context-Free Grammars (CFG) Tab -->
+            <div class="tab-pane fade" id="cfg" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="card-title mb-0">Context-Free Grammars (CFG)</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Definition</h4>
+                        <p>A <strong>context-free grammar (CFG)</strong> is a formal grammar whose production rules can be applied to a nonterminal symbol regardless of its context. In particular, each production rule is of the form A → α with A a single nonterminal symbol, and α a string of terminals and/or nonterminals.</p>
+                        <hr>
+                        <h4 class="mb-3">Components of CFG</h4>
+                        <ul>
+                            <li><strong>Terminal symbols:</strong> Characters that appear in the language/strings generated by the grammar</li>
+                            <li><strong>Nonterminal symbols:</strong> Placeholders for patterns of terminal symbols</li>
+                            <li><strong>Production rules:</strong> Rules for replacing nonterminal symbols</li>
+                            <li><strong>Start symbol:</strong> A special nonterminal symbol that appears in the initial string</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Formal Definition</h4>
+                        <p>A context-free grammar G = (V, T, P, S) is composed of:</p>
+                        <ul>
+                            <li>V: a set of variables (non-terminals)</li>
+                            <li>T: a set of terminal symbols</li>
+                            <li>P: a set of productions</li>
+                            <li>S: a starting symbol</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Example: Simple Arithmetic Expressions</h4>
+                        <pre class="bg-light p-3 rounded"><code>E → int
+E → E Op E
+E → (E)
+Op → +
+Op → -
+Op → *
+Op → /</code></pre>
+                        <hr>
+                        <h4 class="mb-3">Context-Free Languages</h4>
+                        <p>Languages generated by context-free grammars are known as context-free languages (CFL). Different context-free grammars can generate the same context-free language. Context-free grammars can describe all regular languages and more, but they cannot describe all possible languages.</p>
+                        <hr>
+                        <h4 class="mb-3">Applications</h4>
+                        <p>CFGs are used to describe programming languages and parser programs in compilers can be generated automatically from context-free grammars. They are studied in fields of theoretical computer science, compiler design, and linguistics.</p>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> CFGs are the backbone of programming language syntax and parsing!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pushdown Automata (PDA) Tab -->
+            <div class="tab-pane fade" id="pda" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h3 class="card-title mb-0">Pushdown Automata (PDA)</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Definition</h4>
+                        <p>A <strong>pushdown automaton</strong>, or PDA, is finite automaton supplemented with a storage device, specifically, a stack onto which we can push symbols. The transitions in the pushdown automaton read input symbols, just as a finite automaton does.</p>
+                        <hr>
+                        <h4 class="mb-3">Stack Operations</h4>
+                        <ul>
+                            <li>Pop symbols from the top of the stack</li>
+                            <li>Push new symbols onto the stack</li>
+                        </ul>
+                        <h5 class="mt-4">Typical PDA Transition</h5>
+                        <p>A transition has two parts:</p>
+                        <ul>
+                            <li>The symbol to be read from the input</li>
+                            <li>The stack operation (symbol to remove from top and symbol to push)</li>
+                        </ul>
+                        <p>The PDA can do the transition if and only if the required symbol comes in on the input and the symbol that we want to remove from the stack is sitting at the top of the stack.</p>
+                        <hr>
+                        <h4 class="mb-3">Special Transitions</h4>
+                        <ul>
+                            <li><strong>ε-transitions:</strong> To ignore input, use ε in the input part</li>
+                            <li><strong>Stack ignore:</strong> To ignore stack, use ε in the stack part</li>
+                            <li><strong>Push without pop:</strong> Push a symbol without popping anything</li>
+                            <li><strong>Pop without push:</strong> Pop a symbol without pushing anything</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Stack Alphabet</h4>
+                        <p>The set of symbols a PDA can use with the stack is known as the stack alphabet, Γ. Typically, the stack alphabet consists of the input alphabet Σ supplemented with additional marker symbols.</p>
+                        <h5 class="mt-4">Bottom Marker</h5>
+                        <p>One commonly used marker symbol, <code>$</code>, is used to mark the bottom of the stack. The <code>$</code> serves as a special marker to let us know whether or not the stack is about to empty out.</p>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> PDAs are more powerful than finite automata because they can use a stack to remember information!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parse Trees, Ambiguity, Chomsky Normal Form Tab -->
+            <div class="tab-pane fade" id="parse-trees" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">Parse Trees, Ambiguity, Chomsky Normal Form</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Parse Trees</h4>
+                        <p>A <strong>parse tree</strong> or parsing tree is an ordered, rooted tree that represents the syntactic structure of a string according to some context-free grammar. The term parse tree itself is used primarily in computational linguistics.</p>
+                        <h5 class="mt-4">Parse Tree Structure</h5>
+                        <ul>
+                            <li>Root node: The topmost node (usually the start symbol)</li>
+                            <li>Branch nodes: Internal nodes representing nonterminals</li>
+                            <li>Leaf nodes: Terminal symbols in the derived string</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Ambiguity</h4>
+                        <p>A context-free grammar is <strong>ambiguous</strong> if there exists a string that has more than one parse tree (or equivalently, more than one leftmost derivation). Ambiguity is a property of grammars, not languages.</p>
+                        <hr>
+                        <h4 class="mb-3">Chomsky Normal Form</h4>
+                        <p>A context-free grammar G is in <strong>Chomsky normal form</strong> if all of its production rules are of the form:</p>
+                        <ul>
+                            <li>A → BC (two nonterminals)</li>
+                            <li>A → a (single terminal)</li>
+                            <li>S → ε (only if ε is in the language)</li>
+                        </ul>
+                        <p>Where A, B, and C are nonterminal symbols, a is a terminal symbol, S is the start symbol, and ε denotes the empty string.</p>
+                        <h5 class="mt-4">Converting to Chomsky Normal Form</h5>
+                        <ul>
+                            <li>START: Eliminate the start symbol from right-hand sides</li>
+                            <li>TERM: Eliminate rules with nonsolitary terminals</li>
+                            <li>BIN: Eliminate right-hand sides with more than 2 nonterminals</li>
+                            <li>DEL: Eliminate ε-rules</li>
+                            <li>UNIT: Eliminate unit rules</li>
+                        </ul>
+                        <h5 class="mt-4">Benefits of CNF</h5>
+                        <p>Every context-free grammar can be transformed into an equivalent one in Chomsky normal form and has a size no larger than the square of the original grammar's size.</p>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> Parse trees help visualize how strings are derived from grammars, and CNF is useful for parsing algorithms!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pumping Lemma for CFLs Tab -->
+            <div class="tab-pane fade" id="pumping-lemma" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="card-title mb-0">Pumping Lemma for CFLs</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Formal Statement</h4>
+                        <p>If a language L is context-free, then there exists some integer p ≥ 1 (called a "pumping length") such that every string s in L that has a length of p or more symbols can be written as s = uvwxy with substrings u, v, w, x and y, such that:</p>
+                        <ul>
+                            <li>|vx| ≥ 1 (v and x cannot both be empty)</li>
+                            <li>|vwx| ≤ p (the middle portion has bounded length)</li>
+                            <li>uv^n wx^n y ∈ L for all n ≥ 0 (pumping property)</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Informal Explanation</h4>
+                        <p>The pumping lemma describes a property that all context-free languages are guaranteed to have. The property applies to all strings in the language that are of length at least p, where p is a constant called the pumping length.</p>
+                        <hr>
+                        <h4 class="mb-3">Using the Pumping Lemma</h4>
+                        <ul>
+                            <li>Assume L is context-free</li>
+                            <li>Let p be the pumping length</li>
+                            <li>Choose a string s ∈ L with |s| ≥ p</li>
+                            <li>Consider all ways to write s = uvwxy satisfying conditions 1 and 2</li>
+                            <li>For each decomposition, find an n such that uv^n wx^n y ∉ L</li>
+                            <li>This contradicts condition 3, so L is not context-free</li>
+                        </ul>
+                        <h5 class="mt-4">Example Application</h5>
+                        <p>The language L = {a^n b^n c^n : n ≥ 1} can be proven not context-free using the pumping lemma, since any attempt to pump will create unequal numbers of a's, b's, and c's.</p>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> The pumping lemma is a powerful tool for proving that certain languages are not context-free!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Turing Machines, Variants Tab -->
+            <div class="tab-pane fade" id="turing-machines" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="card-title mb-0">Turing Machines, Variants</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Definition</h4>
+                        <p>A <strong>Turing machine</strong> is a mathematical model of computation describing an abstract machine that manipulates symbols on a strip of tape according to a table of rules. Despite the model's simplicity, it is capable of implementing any computer algorithm.</p>
+                        <hr>
+                        <h4 class="mb-3">Components</h4>
+                        <ul>
+                            <li>An infinite memory tape divided into discrete cells</li>
+                            <li>Each cell can hold a single symbol from a finite alphabet</li>
+                            <li>A head positioned over one cell at any time</li>
+                            <li>A state selected from a finite set of states</li>
+                        </ul>
+                        <h5 class="mt-4">Operation</h5>
+                        <ul>
+                            <li>The head reads the symbol in its cell</li>
+                            <li>Based on the symbol and machine's current state, the machine:
+                                <ul>
+                                    <li>Writes a symbol into the same cell</li>
+                                    <li>Moves the head left, right, or stays</li>
+                                    <li>Changes to a new state, or halts</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Formal Definition</h4>
+                        <ul>
+                            <li>Σ: finite alphabet</li>
+                            <li>K: finite set of states with special start state s</li>
+                            <li>δ: transition function δ: K × Σ → (K ∪ {halt, yes, no}) × Σ × {←, →, −}</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Key Features</h4>
+                        <ul>
+                            <li>A finite amount of internal state</li>
+                            <li>An infinite amount of external data storage</li>
+                            <li>A program specified by finite instructions</li>
+                            <li>Self-reference: can write an interpreter for its own programs</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Variants</h4>
+                        <ul>
+                            <li>Multi-tape Turing machines: Multiple tapes for increased efficiency</li>
+                            <li>Non-deterministic Turing machines: Multiple possible transitions</li>
+                            <li>Universal Turing machines: Can simulate any other Turing machine</li>
+                            <li>Linear bounded automata: Restricted to linear space</li>
+                        </ul>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> Turing machines are the most powerful model of computation and can simulate any algorithm!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decidability, Computability Theory Tab -->
+            <div class="tab-pane fade" id="decidability" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h3 class="card-title mb-0">Decidability, Computability Theory</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Decidability</h4>
+                        <p>In logic, a true/false decision problem is <strong>decidable</strong> if there exists an effective method for deriving the correct answer. Logical systems are decidable if membership in their set of logically valid formulas can be effectively determined.</p>
+                        <h5 class="mt-4">Examples of Decidability</h5>
+                        <ul>
+                            <li>Propositional logic: Decidable (can use truth-table method)</li>
+                            <li>First-order logic: Not decidable in general</li>
+                            <li>Higher-order logic: Also undecidable</li>
+                        </ul>
+                        <hr>
+                        <h4 class="mb-3">Computability</h4>
+                        <p>Turing machines provide a precise, formal definition of what it means for a function to be computable. Many other definitions of computation have been proposed, but all known definitions agree on what is computable and what is not.</p>
+                        <h5 class="mt-4">Church-Turing Thesis</h5>
+                        <p>The Church-Turing thesis states that every effectively calculable function is computable by a Turing machine. This connects the intuitive notion of algorithm with the formal definition of Turing machine computation.</p>
+                        <hr>
+                        <h4 class="mb-3">Undecidable Problems</h4>
+                        <ul>
+                            <li>Halting problem: Cannot determine if arbitrary Turing machine halts</li>
+                            <li>Post correspondence problem: Cannot determine if solution exists</li>
+                            <li>Entscheidungsproblem: Cannot determine validity in first-order logic</li>
+                        </ul>
+                        <h5 class="mt-4">Reduction</h5>
+                        <p>A problem A is reducible to problem B if solving B would also solve A. If A is undecidable and A reduces to B, then B is also undecidable.</p>
+                        <h5 class="mt-4">Complexity Classes</h5>
+                        <ul>
+                            <li>P: Problems solvable in polynomial time</li>
+                            <li>NP: Problems verifiable in polynomial time</li>
+                            <li>PSPACE: Problems solvable in polynomial space</li>
+                            <li>EXPTIME: Problems solvable in exponential time</li>
+                        </ul>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> Decidability and computability help us understand what computers can and cannot do!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context-Sensitive Languages, LBA, Chomsky Hierarchy Tab -->
+            <div class="tab-pane fade" id="context-sensitive" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">Context-Sensitive Languages, LBA, Chomsky Hierarchy</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Context-Sensitive Languages</h4>
+                        <p>A <strong>context-sensitive language</strong> is a language that can be defined by a context-sensitive grammar. Context-sensitive is known as type-1 in the Chomsky hierarchy of formal languages.</p>
+                        <hr>
+                        <h4 class="mb-3">Linear Bounded Automata (LBA)</h4>
+                        <p>A <strong>linear bounded automaton</strong> is a restricted form of Turing machine. An LBA satisfies three conditions:</p>
+                        <ul>
+                            <li>Its input alphabet includes left and right endmarkers</li>
+                            <li>Transitions may not print other symbols over the endmarkers</li>
+                            <li>Transitions may not move beyond the endmarkers</li>
+                        </ul>
+                        <h5 class="mt-4">LBA Operation</h5>
+                        <p>Instead of having potentially infinite tape, computation is restricted to the portion containing the input plus the two tape squares holding the endmarkers. This makes an LBA a more accurate model of real-world computers than unrestricted Turing machines.</p>
+                        <h5 class="mt-4">Equivalence</h5>
+                        <p>Linear bounded automata are acceptors for the class of context-sensitive languages. Computationally, a context-sensitive language is equivalent to a linear bounded nondeterministic Turing machine.</p>
+                        <h5 class="mt-4">Example Context-Sensitive Language</h5>
+                        <p>L = {a^n b^n c^n : n ≥ 1} is context-sensitive but not context-free. It consists of strings with equal numbers of a's, b's, and c's in that order.</p>
+                        <hr>
+                        <h4 class="mb-3">Chomsky Hierarchy</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead class="table-light">
+                                    <tr><th>Type</th><th>Grammar</th><th>Languages</th><th>Automaton</th><th>Production Rules</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>3</td><td>Regular</td><td>Regular</td><td>Finite automaton</td><td>A → a, A → aB</td></tr>
+                                    <tr><td>2</td><td>Context-free</td><td>Context-free</td><td>Pushdown automaton</td><td>A → α</td></tr>
+                                    <tr><td>1</td><td>Context-sensitive</td><td>Context-sensitive</td><td>Linear bounded automaton</td><td>αAβ → αγβ</td></tr>
+                                    <tr><td>0</td><td>Unrestricted</td><td>Recursively enumerable</td><td>Turing machine</td><td>α → β</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert alert-info mt-4">
+                            <strong>Beginner Tip:</strong> The Chomsky hierarchy helps us understand the power and limitations of different types of grammars and automata!
+                        </div>
+                        <hr>
+                        <h4 class="mb-3">Hierarchy Properties</h4>
+                        <ul>
+                            <li>Each class completely generates the language of all inferior classes:</li>
+                        </ul>
+                        <div class="mb-2 ms-3">
+                            <code>Regular ⊆ Context-free ⊆ Context-sensitive ⊆ Recursively enumerable</code>
+                        </div>
+                        <ul>
+                            <li>The hierarchy represents increasing computational power</li>
+                            <li>Higher levels can recognize more complex patterns and structures</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversion Tab -->
+            <div class="tab-pane fade" id="conversion" role="tabpanel">
+                <div class="tab-content" id="conversion-tabContent">
+                    <!-- Regular Expression to DFA Tab -->
+                    <div class="tab-pane fade show active" id="regex-to-dfa" role="tabpanel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0">
+                                    <i data-feather="code" class="me-2"></i>
+                                    Regular Expression to DFA Conversion
+                                </h4>
+                                <p class="card-text mb-0">Convert regular expressions to deterministic finite automata using direct construction</p>
+                            </div>
+                            <div class="card-body">
+                                <!-- Input Section -->
+                                <div class="row mb-4">
+                                    <div class="col-md-8">
+                                        <label for="regexInput" class="form-label">Regular Expression</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="regexInput" 
+                                                   placeholder="Enter regular expression (e.g., (a|b)*abb)" 
+                                                   autocomplete="off">
+                                            <button class="btn btn-primary" type="button" id="convertRegexBtn">
+                                                <i data-feather="play" class="me-2"></i>Convert
+                                            </button>
+                                        </div>
                                 <div class="form-text">Supported operators: *, |, (), ε, ∅</div>
                             </div>
                             <div class="col-md-4">
