@@ -172,3 +172,25 @@
 .cytoscape-container[data-theme="light"] {
     background-color: #ffffff;
 }
+
+/* Custom CSS for AutomataEdu */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Adjust main content padding for fixed navbar */
+main {
+    padding-top: 100px; /* Increased padding further to ensure content is not hidden by fixed navbar */
+}
+
+[data-bs-theme="dark"] .table-light th {
+    background-color: #495057 !important;
+    color: #fff !important;
+}
+
+/* Styles for MCQ options */
+.mcq-option.selected-option {
+    border-color: #007bff; /* Primary blue for selected option */
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Bootstrap focus ring */
+}
