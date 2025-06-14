@@ -8,12 +8,9 @@
     border: 1px solid var(--bs-border-color);
     border-radius: 0.375rem;
     position: relative;
-}
-
-/* Dark mode adjustments */
-[data-bs-theme="dark"] .cytoscape-container {
-    background-color: #1a1d29;
-    border-color: #374151;
+    flex-shrink: 0; /* Prevent the container from shrinking */
+    display: block !important; /* Ensure it's always displayed */
+    visibility: visible !important; /* Ensure it's always visible */
 }
 
 /* Step navigation controls */
@@ -255,6 +252,7 @@ main.container-fluid {
     padding-bottom: 20px; /* Add some padding at the bottom */
     padding-left: 15px;
     padding-right: 15px;
+    min-height: 450px; /* Ensure a minimum height for the scrollable content area */
 }
 
 /* Remove or adjust conflicting Bootstrap padding */

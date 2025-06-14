@@ -11,6 +11,25 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Define the order of topics for navigation
+TOPIC_ORDER = [
+    'course_intro',
+    'recursive_def',
+    'languages_regex',
+    'finite_automata',
+    'nfa_dfa_graphs',
+    'kleene_closure',
+    'mealy_moore',
+    'cfg',
+    'pda',
+    'parse_trees',
+    'pumping_lemma',
+    'turing_machines',
+    'decidability',
+    'context_sensitive',
+    'conversion'
+]
+
 @app.route('/')
 def index():
     return redirect(url_for('course_intro'))
@@ -209,63 +228,98 @@ def not_found(error):
 def internal_error(error):
     return render_template('500.html'), 500
 
+def get_nav_links(current_topic_endpoint):
+    try:
+        current_index = TOPIC_ORDER.index(current_topic_endpoint)
+        previous_topic = None
+        next_topic = None
+
+        if current_index > 0:
+            previous_topic = TOPIC_ORDER[current_index - 1]
+
+        if current_index < len(TOPIC_ORDER) - 1:
+            next_topic = TOPIC_ORDER[current_index + 1]
+        
+        previous_url = url_for(previous_topic) if previous_topic else None
+        next_url = url_for(next_topic) if next_topic else None
+
+        return previous_url, next_url
+    except ValueError:
+        # Handle case where current_topic_endpoint is not found in TOPIC_ORDER
+        return None, None
+
 @app.route('/course-intro')
 def course_intro():
-    return render_template('course_intro.html', active_page='course_intro')
+    previous_page, next_page = get_nav_links('course_intro')
+    return render_template('course_intro.html', active_page='course_intro', previous_page=previous_page, next_page=next_page)
 
 @app.route('/recursive-def')
 def recursive_def():
-    return render_template('recursive_def.html', active_page='recursive_def')
+    previous_page, next_page = get_nav_links('recursive_def')
+    return render_template('recursive_def.html', active_page='recursive_def', previous_page=previous_page, next_page=next_page)
 
 @app.route('/languages-regex')
 def languages_regex():
-    return render_template('languages_regex.html', active_page='languages_regex')
+    previous_page, next_page = get_nav_links('languages_regex')
+    return render_template('languages_regex.html', active_page='languages_regex', previous_page=previous_page, next_page=next_page)
 
 @app.route('/finite-automata')
 def finite_automata():
-    return render_template('finite_automata.html', active_page='finite_automata')
+    previous_page, next_page = get_nav_links('finite_automata')
+    return render_template('finite_automata.html', active_page='finite_automata', previous_page=previous_page, next_page=next_page)
 
 @app.route('/nfa-dfa-graphs')
 def nfa_dfa_graphs():
-    return render_template('nfa_dfa_graphs.html', active_page='nfa_dfa_graphs')
+    previous_page, next_page = get_nav_links('nfa_dfa_graphs')
+    return render_template('nfa_dfa_graphs.html', active_page='nfa_dfa_graphs', previous_page=previous_page, next_page=next_page)
 
 @app.route('/kleene-closure')
 def kleene_closure():
-    return render_template('kleene_closure.html', active_page='kleene_closure')
+    previous_page, next_page = get_nav_links('kleene_closure')
+    return render_template('kleene_closure.html', active_page='kleene_closure', previous_page=previous_page, next_page=next_page)
 
 @app.route('/mealy-moore')
 def mealy_moore():
-    return render_template('mealy_moore.html', active_page='mealy_moore')
+    previous_page, next_page = get_nav_links('mealy_moore')
+    return render_template('mealy_moore.html', active_page='mealy_moore', previous_page=previous_page, next_page=next_page)
 
 @app.route('/cfg')
 def cfg():
-    return render_template('cfg.html', active_page='cfg')
+    previous_page, next_page = get_nav_links('cfg')
+    return render_template('cfg.html', active_page='cfg', previous_page=previous_page, next_page=next_page)
 
 @app.route('/pda')
 def pda():
-    return render_template('pda.html', active_page='pda')
+    previous_page, next_page = get_nav_links('pda')
+    return render_template('pda.html', active_page='pda', previous_page=previous_page, next_page=next_page)
 
 @app.route('/parse-trees')
 def parse_trees():
-    return render_template('parse_trees.html', active_page='parse_trees')
+    previous_page, next_page = get_nav_links('parse_trees')
+    return render_template('parse_trees.html', active_page='parse_trees', previous_page=previous_page, next_page=next_page)
 
 @app.route('/pumping-lemma')
 def pumping_lemma():
-    return render_template('pumping_lemma.html', active_page='pumping_lemma')
+    previous_page, next_page = get_nav_links('pumping_lemma')
+    return render_template('pumping_lemma.html', active_page='pumping_lemma', previous_page=previous_page, next_page=next_page)
 
 @app.route('/turing-machines')
 def turing_machines():
-    return render_template('turing_machines.html', active_page='turing_machines')
+    previous_page, next_page = get_nav_links('turing_machines')
+    return render_template('turing_machines.html', active_page='turing_machines', previous_page=previous_page, next_page=next_page)
 
 @app.route('/decidability')
 def decidability():
-    return render_template('decidability.html', active_page='decidability')
+    previous_page, next_page = get_nav_links('decidability')
+    return render_template('decidability.html', active_page='decidability', previous_page=previous_page, next_page=next_page)
 
 @app.route('/context-sensitive')
 def context_sensitive():
-    return render_template('context_sensitive.html', active_page='context_sensitive')
+    previous_page, next_page = get_nav_links('context_sensitive')
+    return render_template('context_sensitive.html', active_page='context_sensitive', previous_page=previous_page, next_page=next_page)
 
 @app.route('/conversion')
 def conversion():
+    previous_page, next_page = get_nav_links('conversion')
     examples = get_examples()
-    return render_template('conversion.html', active_page='conversion', examples=examples)
+    return render_template('conversion.html', active_page='conversion', previous_page=previous_page, next_page=next_page, examples=examples)
