@@ -15,10 +15,17 @@
         <p>
             In TOA, recursion helps us describe infinite sets or languages using a few simple rules.
         </p>
-        <p>For example, a language L can be defined recursively:</p>
-        <p><b>Base case:</b> The empty string ε is in L.</p>
-        <p><b>Recursive case:</b> If x is in L, then so is axb (for some symbol a, b).</p>
-        <p>This way, we can generate infinitely many strings by repeatedly applying the rule.</p>
+        <pre class="alert alert-info mt-2 p-3 rounded">
+            <code>
+For example, a language L can be defined recursively:
+
+<strong>Base case:</strong> The empty string ε is in L.
+
+<strong>Recursive case:</strong> If x is in L, then so is axb (for some symbol a, b).
+
+This way, we can generate infinitely many strings by repeatedly applying the rule.
+            </code>
+        </pre>
 
         <h5 class="mt-4">2. Classic Example: Fibonacci Sequence</h5>
         <p>
@@ -46,7 +53,7 @@ print(fibonacci(5))
         </div>
         <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtn">Run Code</button>
         <h6>Output:</h6>
-        <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutput"></code></pre>
+        <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutput">5</code></pre>
         <p>The function calls itself to solve smaller subproblems, just like recursion in TOA definitions.</p>
         <h6>Fibonacci in TOA</h6>
         <p>Fibonacci can be described using recursive definitions, similar to how we define languages in automata theory.</p>
