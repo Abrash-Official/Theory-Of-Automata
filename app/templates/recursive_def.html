@@ -2,50 +2,133 @@
 {% block title %}Recursive Definitions & Regular Expressions{% endblock %}
 {% block content %}
 <div class="card mb-4">
-    <div class="card-header bg-success text-white">
+    <div class="card-header">
         <h3 class="card-title mb-0">Recursive Definitions & Regular Expressions</h3>
     </div>
     <div class="card-body">
-        <h4 class="mb-3">Recursive Definitions</h4>
+        <h4 class="mb-3">Recursion in Theory of Automata (TOA)</h4>
         <p>
-            In computer science, <strong>recursion</strong> is a method of solving a computational problem where the solution depends on solutions to smaller instances of the same problem. The power of recursion lies in the possibility of defining an infinite set of objects by a finite statement.
+            Recursion is a fundamental concept in computer science and the Theory of Automata (TOA). In simple terms, recursion means defining something in terms of itself. In TOA, recursion is used to define languages, grammars, and patterns in a compact and powerful way.
         </p>
-        <h5 class="mt-4">Features of Recursion</h5>
-        <ul>
-            <li>The function must call itself</li>
-            <li>A <strong>base case</strong> - this means that it can return a value without further recursive calls</li>
-            <li>A <strong>stopping condition</strong> - this must be reachable after a finite number of times</li>
-        </ul>
-        <hr>
-        <h4 class="mb-3">Regular Expressions</h4>
+
+        <h5 class="mt-4">1. Recursion Explained (TOA Perspective)</h5>
         <p>
-            A <strong>Regular Expression (regex)</strong> is a syntax that allows you to match strings with specific patterns. Think of it as a suped-up text search shortcut, but a regular expression adds the ability to use quantifiers, pattern collections, special characters, and capture groups.
+            In TOA, recursion helps us describe infinite sets or languages using a few simple rules.
         </p>
-        <hr>
-        <h4 class="mb-3">Try It Yourself: Factorial Example</h4>
-        <pre class="bg-light p-3 rounded"><code>def factorial(n):
-    # Base case
-    if n == 0 or n == 1:
+        <p>For example, a language L can be defined recursively:</p>
+        <p><b>Base case:</b> The empty string ε is in L.</p>
+        <p><b>Recursive case:</b> If x is in L, then so is axb (for some symbol a, b).</p>
+        <p>This way, we can generate infinitely many strings by repeatedly applying the rule.</p>
+
+        <h5 class="mt-4">2. Classic Example: Fibonacci Sequence</h5>
+        <p>
+            The Fibonacci sequence is a famous example of recursion, both in mathematics and programming.
+        </p>
+        <h6>Recursive Formula:</h6>
+        <p>
+            F(0)=0<br>
+            F(1)=1<br>
+            F(n)=F(n−1)+F(n−2) for n>1
+        </p>
+        <h6>Python Example:</h6>
+        <div class="mb-3">
+            <label for="pythonCodeInput" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInput" rows="10">def fibonacci(n):
+    if n == 0:
+        return 0
+    elif n == 1:
         return 1
     else:
-        # Recursive call
-        return n * factorial(n - 1)
+        return fibonacci(n-1) + fibonacci(n-2)
 
-result = factorial(5)
-print(result)  # Output: 120</code></pre>
-        <hr>
-        <h4 class="mb-3">Regular Expression Applications</h4>
-        <ul>
-            <li>Analyzing command line output</li>
-            <li>Parsing user input</li>
-            <li>Examining server or program logs</li>
-            <li>Handling text files with consistent syntax</li>
-            <li>Reading configuration files</li>
-            <li>Searching and refactoring code</li>
-        </ul>
-        <div class="alert alert-info mt-4">
-            <strong>Beginner Tip:</strong> Recursion and regular expressions are powerful tools. Practice writing small recursive functions and simple regex patterns to build your confidence!
+print(fibonacci(5))
+</textarea>
         </div>
+        <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtn">Run Code</button>
+        <h6>Output:</h6>
+        <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutput"></code></pre>
+        <p>The function calls itself to solve smaller subproblems, just like recursion in TOA definitions.</p>
+        <h6>Fibonacci in TOA</h6>
+        <p>Fibonacci can be described using recursive definitions, similar to how we define languages in automata theory.</p>
+
+        <h5 class="mt-4">3. Regular Expressions and Recursion</h5>
+        <p>
+            A regular expression (regex) describes a set of strings (a language) using patterns. Recursion can appear in regular expressions when defining patterns that repeat or nest.
+        </p>
+        <h6>Recursive Definition of Regular Expressions:</h6>
+        <p><b>Base cases:</b></p>
+        <ul>
+            <li>ε (empty string) is a regular expression.</li>
+            <li>Any symbol (like 'a') is a regular expression.</li>
+        </ul>
+        <p><b>Recursive cases:</b></p>
+        <p>If r and s are regular expressions, so are:</p>
+        <ul>
+            <li>(r)|(s) (union)</li>
+            <li>(r)(s) (concatenation)</li>
+            <li>(r)* (Kleene star, meaning repeat r zero or more times)</li>
+        </ul>
+        <p>This means we can build complex patterns from simple ones by applying these rules repeatedly.</p>
+
+        <h5 class="mt-4">4. Recursion in Regular Expressions: Examples</h5>
+        <h6>Example 1: Matching Balanced Parentheses</h6>
+        <p>Recursive regex pattern: ($$(?R)*$$)</p>
+        <p>This matches strings like (), (()), ((())), etc.</p>
+        <p>The pattern uses recursion to match nested structures.</p>
+        <h6>Example 2: Palindromes</h6>
+        <p>Regex: (\w)(?:(?R)|\w?)\1</p>
+        <p>This pattern matches mirror words like "level" or "noon" by recursively matching characters from both ends.</p>
+        <h6>Example 3: Regular Language Recursion</h6>
+        <p>For language L = {aⁿbⁿ | n ≥ 0} (strings with equal numbers of a's and b's):</p>
+        <ul>
+            <li><b>Base case:</b> ε ∈ L</li>
+            <li><b>Recursive case:</b> If w ∈ L, then awb ∈ L</li>
+        </ul>
+
+        <h5 class="mt-4">5. Visualizing Recursion</h5>
+        <p>Recursion can be visualized as a tree, where each call creates branches for subproblems until reaching the base case.</p>
+        <img src="https://www.w3schools.com/dsa/img_recursive_explotion.gif" alt="Recursion Tree Example" class="img-fluid my-3">
+
+        <h5 class="mt-4">Summary Table</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Concept</th>
+                    <th>Recursive Definition Example</th>
+                    <th>TOA/Regex Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Fibonacci</td>
+                    <td>F(n) = F(n-1) + F(n-2)</td>
+                    <td>Recursive function</td>
+                </tr>
+                <tr>
+                    <td>Regular Expression</td>
+                    <td>r* = (r)(r*) ∪ ε</td>
+                    <td>(a*) = "" or "a" + "a..."</td>
+                </tr>
+                <tr>
+                    <td>Balanced Parentheses</td>
+                    <td>($$(?R)*$$)</td>
+                    <td>"()", "(())", etc.</td>
+                </tr>
+                <tr>
+                    <td>Palindromes</td>
+                    <td>(\w)(?:(?R)|\w?)\1</td>
+                    <td>"level", "noon", etc.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h5 class="mt-4">Key Takeaways</h5>
+        <ul>
+            <li>Recursion lets us define infinite sets, sequences, and languages with a few simple rules.</li>
+            <li>In TOA, recursion is used in language definitions, grammars, and regular expressions.</li>
+            <li>The Fibonacci sequence is a classic recursive example, and recursion also appears in regex patterns for complex matching.</li>
+        </ul>
+
     </div>
 </div>
 {% endblock %} 

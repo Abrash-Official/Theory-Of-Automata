@@ -8,6 +8,11 @@ from .data.examples import get_examples
 from .algorithms.nfa_to_regex import NFAToRegexConverter
 import json
 import logging
+import io
+import sys
+import subprocess
+import tempfile
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -334,3 +339,38 @@ def conversion():
     previous_page, next_page = get_nav_links('conversion')
     examples = get_examples()
     return render_template('conversion.html', active_page='conversion', previous_page=previous_page, next_page=next_page, examples=examples)
+
+@app.route('/run_python_code', methods=['POST'])
+def run_python_code():
+    code = request.json.get('code', '')
+
+    # Create a temporary file to write the Python code
+    fd, path = tempfile.mkstemp(suffix='.py')
+    os.close(fd) # Close the file descriptor immediately
+
+    try:
+        with open(path, 'w') as f:
+            f.write(code)
+        
+        # Execute the Python code using subprocess
+        result = subprocess.run(
+            ['python', path],
+            capture_output=True,
+            text=True,
+            encoding='utf-8',
+            check=False  # Do not raise an exception for non-zero exit codes
+        )
+
+        if result.returncode == 0:
+            output = result.stdout
+            return jsonify({'output': output})
+        else:
+            error_output = result.stderr if result.stderr else result.stdout
+            return jsonify({'error': error_output})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    finally:
+        # Clean up the temporary file
+        if os.path.exists(path):
+            os.remove(path)

@@ -81,6 +81,12 @@ function setupEventListeners() {
         trigger.addEventListener('shown.bs.tab', handleTabChange);
     });
     
+    // Python Code Runner
+    const runPythonCodeBtn = document.getElementById('runPythonCodeBtn');
+    if (runPythonCodeBtn) {
+        runPythonCodeBtn.addEventListener('click', runPythonCode);
+    }
+    
     // RegEx to DFA
     setupRegexToDfaListeners();
     
@@ -161,13 +167,6 @@ function setupNfaToDfaListeners() {
     if (showTableBtn) showTableBtn.addEventListener('click', () => toggleTransitionTable('nfa'));
     if (exportBtn) exportBtn.addEventListener('click', () => exportResults('nfa'));
     if (resetBtn) resetBtn.addEventListener('click', () => resetConversion('nfa'));
-    
-    // States and alphabet input listeners
-    const statesInput = document.getElementById('nfaStates');
-    const alphabetInput = document.getElementById('nfaAlphabet');
-    
-    if (statesInput) statesInput.addEventListener('input', updateNfaTransitionOptions);
-    if (alphabetInput) alphabetInput.addEventListener('input', updateNfaTransitionOptions);
 }
 
 // DFA to RegEx event listeners
@@ -1390,4 +1389,38 @@ function displayNfaToRegexResults(result) {
             generateTransitionTable('nfaToRegexOriginal', result.originalNfa);
         }
     }
+}
+
+// Python Code Runner Function
+function runPythonCode() {
+    const pythonCodeInput = document.getElementById('pythonCodeInput');
+    const pythonCodeOutput = document.getElementById('pythonCodeOutput');
+
+    // Get the code directly from the textarea
+    let code = pythonCodeInput.value;
+
+    // Clear previous output
+    pythonCodeOutput.textContent = 'Running code...';
+
+    fetch('/run_python_code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: code })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.output) {
+            pythonCodeOutput.textContent = data.output;
+        } else if (data.error) {
+            pythonCodeOutput.textContent = `Error: ${data.error}`;
+            pythonCodeOutput.style.color = 'red';
+        }
+    })
+    .catch(error => {
+        console.error('Error running Python code:', error);
+        pythonCodeOutput.textContent = 'Failed to run code. Please check console for details.';
+        pythonCodeOutput.style.color = 'red';
+    });
 }
