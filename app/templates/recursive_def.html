@@ -37,10 +37,11 @@ This way, we can generate infinitely many strings by repeatedly applying the rul
             $$F(1) = 1$$
             $$F(n) = F(n-1) + F(n-2) \text{ for } n > 1$$
         </p>
-        <h6>Python Example:</h6>
-        <div class="mb-3">
-            <label for="pythonCodeInput" class="form-label">Enter Python Code:</label>
-            <textarea class="form-control" id="pythonCodeInput" rows="10">def fibonacci(n):
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <h6>Python Example:</h6>
+            <div class="mb-3">
+                <label for="pythonCodeInput" class="form-label">Enter Python Code:</label>
+                <textarea class="form-control" id="pythonCodeInput" rows="10">def fibonacci(n):
     if n == 0:
         return 0
     elif n == 1:
@@ -50,11 +51,12 @@ This way, we can generate infinitely many strings by repeatedly applying the rul
 
 print(fibonacci(5))
 </textarea>
+            </div>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtn">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutput">5</code></pre>
+            <p class="text-center"><strong>The function calls itself to solve smaller subproblems, just like recursion in TOA definitions.</strong></p>
         </div>
-        <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtn">Run Code</button>
-        <h6>Output:</h6>
-        <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutput">5</code></pre>
-        <p class="text-center"><strong>The function calls itself to solve smaller subproblems, just like recursion in TOA definitions.</strong></p>
         <h6>Fibonacci in TOA</h6>
         <p>Fibonacci can be described using recursive definitions, similar to how we define languages in automata theory.</p>
 
