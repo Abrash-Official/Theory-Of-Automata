@@ -49,6 +49,21 @@ function initializeApp() {
         console.log("Attempting to render Introduction DFA graph...");
         renderAutomaton('introDfaVisualization', introDfaData);
     }
+
+    // Initialize CodeMirror for Python code input if present
+    const pythonCodeEditorElement = document.getElementById('pythonCodeInput');
+    if (pythonCodeEditorElement && typeof CodeMirror !== 'undefined') {
+        console.log('Initializing CodeMirror for Python code editor...');
+        window.AutomataEdu.codeEditorInstance = CodeMirror.fromTextArea(pythonCodeEditorElement, {
+            mode: 'python',
+            theme: 'dracula',
+            lineNumbers: true,
+            indentUnit: 4,
+            tabSize: 4,
+            lineWrapping: true,
+            readOnly: false // Make it editable
+        });
+    }
     
     // Render KaTeX math expressions after the DOM is ready
     if (typeof renderMathInElement !== 'undefined') {
@@ -1429,21 +1444,31 @@ function displayNfaToRegexResults(result) {
 
 // Python Code Runner Function
 function runPythonCode() {
-    const pythonCodeInput = document.getElementById('pythonCodeInput');
+    // Get the CodeMirror instance from the global object
+    const editor = window.AutomataEdu.codeEditorInstance;
     const pythonCodeOutput = document.getElementById('pythonCodeOutput');
 
-    // Get the code directly from the textarea
-    let code = pythonCodeInput.value;
+    if (!editor) {
+        pythonCodeOutput.textContent = 'Error: Code editor not initialized.';
+        return;
+    }
 
-    // Clear previous output
-    pythonCodeOutput.textContent = 'Running code...';
+    const code = editor.getValue();
+
+    if (!code.trim()) {
+        pythonCodeOutput.textContent = 'Please enter code to run.';
+        return;
+    }
+
+    console.log('Sending code to backend:', code); // Debugging: log the code being sent
+    pythonCodeOutput.textContent = 'Running...';
 
     fetch('/run_python_code', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code: code })
+        body: JSON.stringify({ code: code }),
     })
     .then(response => response.json())
     .then(data => {
@@ -1451,12 +1476,12 @@ function runPythonCode() {
             pythonCodeOutput.textContent = data.output;
         } else if (data.error) {
             pythonCodeOutput.textContent = `Error: ${data.error}`;
-            pythonCodeOutput.style.color = 'red';
+        } else {
+            pythonCodeOutput.textContent = 'Unknown response from server.';
         }
     })
     .catch(error => {
         console.error('Error running Python code:', error);
-        pythonCodeOutput.textContent = 'Failed to run code. Please check console for details.';
-        pythonCodeOutput.style.color = 'red';
+        pythonCodeOutput.textContent = `Network error: ${error.message}`;
     });
 }

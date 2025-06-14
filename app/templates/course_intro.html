@@ -147,7 +147,8 @@
         <h4 class="mb-3">Code Example</h4>
         <p>Here's a simple Python function that simulates the DFA described above. You can modify the code and test it live:</p>
         <div class="alert alert-info mt-2 p-3 rounded">
-            <textarea id="codeEditor" style="height: 250px;">
+            <label for="pythonCodeInput" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInput" rows="10">
 def ends_with_one(s):
     state = 'q0'  # Initial state
     for char in s:
@@ -168,14 +169,9 @@ def ends_with_one(s):
 # print(ends_with_one('100'))
 # print(ends_with_one('0'))
 # print(ends_with_one('1'))</textarea>
-            <div class="input-group mt-3">
-                <input type="text" class="form-control bg-secondary text-white" id="codeTestInput" placeholder="Enter input string (e.g., 101)">
-                <button class="btn btn-primary" id="runCodeBtn">
-                    <i data-feather="play" class="me-2"></i>Run Code
-                </button>
-            </div>
-            <h6 class="mt-3">Output:</h6>
-            <pre id="codeOutput" class="bg-secondary text-white p-3 rounded"></pre>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtn">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutput"></code></pre>
         </div>
         <hr>
         <div class="card bg-dark text-white p-4">
@@ -228,160 +224,4 @@ def ends_with_one(s):
 {% endblock %}
 
 {% block scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // CodeMirror Editor Initialization
-        const codeEditorElement = document.getElementById('codeEditor');
-        const editor = CodeMirror.fromTextArea(codeEditorElement, {
-            mode: 'python',
-            theme: 'dracula',
-            lineNumbers: true,
-            indentUnit: 4,
-            tabSize: 4,
-            lineWrapping: true,
-            readOnly: true
-        });
-
-        // Set initial code content (from the textarea)
-        editor.setValue(`def ends_with_one(s):
-    state = 'q0'  # Initial state
-    for char in s:
-        if state == 'q0':
-            if char == '0':
-                state = 'q0'
-            elif char == '1':
-                state = 'q1'
-        elif state == 'q1':
-            if char == '0':
-                state = 'q0'
-            elif char == '1':
-                state = 'q1'
-    return state == 'q1'
-`);
-
-        // Client-side simulation of ends_with_one
-        function simulateEndsWithOne(s) {
-            let state = 'q0';  // Initial state
-            for (let i = 0; i < s.length; i++) {
-                let char = s[i];
-                if (state === 'q0') {
-                    if (char === '0') {
-                        state = 'q0';
-                    } else if (char === '1') {
-                        state = 'q1';
-                    }
-                } else if (state === 'q1') {
-                    if (char === '0') {
-                        state = 'q0';
-                    } else if (char === '1') {
-                        state = 'q1';
-                    }
-                }
-            }
-            return state === 'q1';
-        }
-
-        // Run Code Button Logic
-        const runCodeBtn = document.getElementById('runCodeBtn');
-        const codeTestInput = document.getElementById('codeTestInput');
-        const codeOutput = document.getElementById('codeOutput');
-
-        runCodeBtn.addEventListener('click', function() {
-            const inputString = codeTestInput.value;
-            let output = '';
-
-            // Safely evaluate the predefined function using the simulated JS version
-            try {
-                const result = simulateEndsWithOne(inputString);
-                output = `Input: '${inputString}'\nOutput: ${result}`; /* Display input as well */
-            } catch (e) {
-                output = `Error: ${e.message}`; /* Basic error handling */
-            }
-
-            codeOutput.textContent = output;
-        });
-
-        // DFA Visualization for Introduction
-        const dfaIntroElements = [
-            { data: { id: 'q0', label: 'q0' }, position: { x: 100, y: 100 } },
-            { data: { id: 'q1', label: 'q1' }, position: { x: 300, y: 100 } },
-            { data: { source: 'q0', target: 'q0', label: '0' } },
-            { data: { source: 'q0', target: 'q1', label: '1' } },
-            { data: { source: 'q1', target: 'q0', label: '0' } },
-            { data: { source: 'q1', target: 'q1', label: '1' } }
-        ];
-
-        const cyIntro = cytoscape({
-            container: document.getElementById('introDfaVisualization'),
-            elements: dfaIntroElements,
-            style: [
-                { // Nodes
-                    selector: 'node',
-                    style: {
-                        'background-color': '#666',
-                        'label': 'data(label)',
-                        'text-valign': 'center',
-                        'color': 'white',
-                        'text-outline-width': 2,
-                        'text-outline-color': '#333',
-                        'shape': 'ellipse',
-                        'width': '40px',
-                        'height': '40px'
-                    }
-                },
-                { // Edges
-                    selector: 'edge',
-                    style: {
-                        'width': 2,
-                        'line-color': '#ccc',
-                        'target-arrow-color': '#ccc',
-                        'target-arrow-shape': 'triangle',
-                        'curve-style': 'bezier',
-                        'label': 'data(label)',
-                        'color': '#ccc',
-                        'text-margin-y': -10
-                    }
-                },
-                { // Start state (e.g., make it larger or different color)
-                    selector: '#q0',
-                    style: {
-                        'background-color': '#28a745' // Green
-                    }
-                },
-                { // Final state (e.g., double border)
-                    selector: 'node[id = \'q1\']',
-                    style: {
-                        'border-width': 2,
-                        'border-color': 'white',
-                        'border-style': 'double'
-                    }
-                }
-            ],
-            layout: {
-                name: 'grid',
-                rows: 1,
-                columns: 2
-            },
-            // User interaction
-            wheelSensitivity: 0.2,
-            // Initial viewport
-            zoom: 1,
-            pan: { x: 0, y: 0 },
-            // Pixel ratio for higher resolution rendering
-            pixelRatio: 2
-        });
-
-        // Workaround for Cytoscape not rendering in initially hidden/collapsed containers
-        setTimeout(() => {
-            cyIntro.resize();
-            cyIntro.fit(); // Zoom to fit all elements
-        }, 500); // Increased delay
-
-        // Initialize Feather icons
-        feather.replace();
-        
-        // Initialize application (assuming this is your global app initialization)
-        initializeApp(); 
-    });
-</script>
 {% endblock %} 
