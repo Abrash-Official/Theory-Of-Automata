@@ -26,9 +26,9 @@
         </p>
         <h6>Recursive Formula:</h6>
         <p>
-            F(0)=0<br>
-            F(1)=1<br>
-            F(n)=F(n−1)+F(n−2) for n>1
+            $$F(0) = 0$$
+            $$F(1) = 1$$
+            $$F(n) = F(n-1) + F(n-2) \text{ for } n > 1$$
         </p>
         <h6>Python Example:</h6>
         <div class="mb-3">
@@ -72,7 +72,9 @@ print(fibonacci(5))
 
         <h5 class="mt-4">4. Recursion in Regular Expressions: Examples</h5>
         <h6>Example 1: Matching Balanced Parentheses</h6>
-        <p>Recursive regex pattern: ($$(?R)*$$)</p>
+        <div class="text-start">
+            <p>Recursive regex pattern: (?R)*</p>
+        </div>
         <p>This matches strings like (), (()), ((())), etc.</p>
         <p>The pattern uses recursion to match nested structures.</p>
         <h6>Example 2: Palindromes</h6>
@@ -87,7 +89,7 @@ print(fibonacci(5))
 
         <h5 class="mt-4">5. Visualizing Recursion</h5>
         <p>Recursion can be visualized as a tree, where each call creates branches for subproblems until reaching the base case.</p>
-        <img src="https://www.w3schools.com/dsa/img_recursive_explotion.gif" alt="Recursion Tree Example" class="img-fluid my-3">
+        <img src="{{ url_for('static', filename='assets/img_recursive_example.png') }}" alt="Recursion Tree Example" class="img-fluid my-3">
 
         <h5 class="mt-4">Summary Table</h5>
         <table class="table table-bordered">
@@ -111,7 +113,7 @@ print(fibonacci(5))
                 </tr>
                 <tr>
                     <td>Balanced Parentheses</td>
-                    <td>($$(?R)*$$)</td>
+                    <td class="text-start">(?R)*</td>
                     <td>"()", "(())", etc.</td>
                 </tr>
                 <tr>

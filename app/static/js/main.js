@@ -30,9 +30,26 @@ function initializeApp() {
     
     // Setup example selectors
     setupExampleSelectors();
+
+    // Render KaTeX math expressions after the DOM is ready
+    if (typeof renderMathInElement !== 'undefined') {
+        console.log('Attempting to render KaTeX math...');
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError : false
+        });
+    }
     
     console.log('AutomataEdu initialized successfully');
 }
+
+// Ensure initializeApp is called when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', initializeApp);
 
 // Theme management
 function initializeTheme() {
