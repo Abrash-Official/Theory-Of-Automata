@@ -31,6 +31,25 @@ function initializeApp() {
     // Setup example selectors
     setupExampleSelectors();
 
+    // Initialize introduction DFA graph if present
+    const introDfaVisualizationContainer = document.getElementById('introDfaVisualization');
+    if (introDfaVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+        const introDfaData = {
+            states: [
+                { id: 'q0', label: 'q0', isStart: true, isFinal: false },
+                { id: 'q1', label: 'q1', isStart: false, isFinal: true }
+            ],
+            transitions: [
+                { from: 'q0', to: 'q0', symbol: '0' },
+                { from: 'q0', to: 'q1', symbol: '1' },
+                { from: 'q1', to: 'q0', symbol: '0' },
+                { from: 'q1', to: 'q1', symbol: '1' }
+            ]
+        };
+        console.log("Attempting to render Introduction DFA graph...");
+        renderAutomaton('introDfaVisualization', introDfaData);
+    }
+    
     // Render KaTeX math expressions after the DOM is ready
     if (typeof renderMathInElement !== 'undefined') {
         console.log('Attempting to render KaTeX math...');

@@ -2,10 +2,9 @@
 {% block title %}Course Introduction & Fundamentals of Automata{% endblock %}
 {% block content %}
 <div class="card mb-4">
-    {# The following card-header is removed as per user request to avoid redundancy with sidebar #}
-    {# <div class="card-header bg-primary text-white">
+    <div class="card-header">
         <h3 class="card-title mb-0">Course Introduction & Fundamentals of Automata</h3>
-    </div> #}
+    </div>
     <div class="card-body">
         <h4 class="mb-3">What is Automata Theory?</h4>
         <h6>Definition:</h6>
@@ -147,8 +146,8 @@
         <hr>
         <h4 class="mb-3">Code Example</h4>
         <p>Here's a simple Python function that simulates the DFA described above. You can modify the code and test it live:</p>
-        <div class="code-editor-container card bg-dark p-3 rounded">
-            <textarea id="codeEditor" style="height: 250px;" readonly>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <textarea id="codeEditor" style="height: 250px;">
 def ends_with_one(s):
     state = 'q0'  # Initial state
     for char in s:
