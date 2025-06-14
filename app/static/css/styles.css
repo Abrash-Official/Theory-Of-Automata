@@ -208,6 +208,12 @@
     z-index: 10;
 }
 
+.image-glow {
+    box-shadow: 0 0 15px rgba(79, 209, 197, 0.8);
+    padding: 5px; /* Add some padding so the glow is visible around the image */
+    border-radius: 5px; /* Optional: slightly rounded corners for the glow */
+}
+
 /* Step display enhancements */
 .step-data {
     margin-top: 1rem;
