@@ -1,5 +1,133 @@
 /* AutomataEdu Custom Styles */
 
+:root {
+    --bs-primary: #4FD1C5;
+    --bs-primary-rgb: 79, 209, 197;
+}
+
+/* Ensure the navbar background is correct */
+.navbar.bg-primary {
+    background-color: #4FD1C5 !important;
+}
+
+/* Force black text for all text and icons within the navbar */
+.navbar.bg-primary a,
+.navbar.bg-primary a *,
+.navbar.bg-primary button,
+.navbar.bg-primary button * {
+    color: #000000 !important; /* Force all text and icons in these elements to black */
+}
+
+.navbar-dark .navbar-toggler-icon {
+    filter: invert(1);
+}
+
+/* Custom styles for filled primary buttons */
+.btn-primary {
+    --bs-btn-bg: #4FD1C5;
+    --bs-btn-border-color: #4FD1C5;
+    --bs-btn-color: #000000; /* Ensure text is black */
+    --bs-btn-hover-bg: #45b7ac;
+    --bs-btn-hover-border-color: #45b7ac;
+    --bs-btn-active-bg: #3c9c92;
+    --bs-btn-active-border-color: #3c9c92;
+    --bs-btn-focus-shadow-rgb: 79, 209, 197;
+}
+
+/* Custom styles for outline buttons to match theme */
+.btn-outline-primary {
+    --bs-btn-color: #40E0D0;
+    --bs-btn-border-color: #40E0D0;
+    --bs-btn-hover-bg: #4FD1C5;
+    --bs-btn-hover-border-color: #4FD1C5;
+    --bs-btn-active-bg: #4FD1C5;
+    --bs-btn-active-border-color: #4FD1C5;
+    --bs-btn-active-color: #000000;
+    --bs-btn-hover-color: #000000;
+    --bs-btn-focus-shadow-rgb: 79, 209, 197;
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: #40E0D0;
+    --bs-btn-border-color: #40E0D0;
+    --bs-btn-hover-bg: #4FD1C5;
+    --bs-btn-hover-border-color: #4FD1C5;
+    --bs-btn-active-bg: #4FD1C5;
+    --bs-btn-active-border-color: #4FD1C5;
+    --bs-btn-active-color: #000000;
+    --bs-btn-hover-color: #000000;
+    --bs-btn-focus-shadow-rgb: 79, 209, 197;
+}
+
+/* Adjust outline-light buttons in navbar (dark mode toggle, help button) */
+.navbar.bg-primary .btn-outline-light {
+    color: #000000 !important; /* Ensures text is black */
+    border-color: #000000 !important;
+    background-color: transparent !important;
+}
+
+.navbar.bg-primary .btn-outline-light:hover,
+.navbar.bg-primary .btn-outline-light:focus,
+.navbar.bg-primary .btn-outline-light:active {
+    color: #ffffff !important; /* Force text color to white on hover/focus/active */
+    background-color: #000000 !important; /* Background color on hover/focus/active becomes black */
+    border-color: #000000 !important;
+}
+
+.navbar.bg-primary .btn-outline-light:hover *,
+.navbar.bg-primary .btn-outline-light:focus *,
+.navbar.bg-primary .btn-outline-light:active * {
+    color: #ffffff !important; /* Force text color of child elements/icons to white on hover/focus/active */
+}
+
+/* Sidebar and Tab Navigation improvements */
+.nav-pills .nav-link {
+    border-radius: 0.5rem;
+    margin: 0 0.25rem;
+}
+
+[data-bs-theme="light"] .nav-pills .nav-link {
+    color: #006666; /* Slightly darker teal for non-active links in light mode */
+    text-shadow: 0px 0px 2px rgba(0, 128, 128, 0.5); /* Subtle glow */
+}
+
+[data-bs-theme="dark"] .nav-pills .nav-link {
+    color: #40E0D0; /* Vibrant turquoise for non-active links in dark mode */
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .nav-link.active:hover,
+.nav-pills .nav-link.active:focus {
+    background-color: #4FD1C5 !important; /* Keep original teal for active state background */
+    color: #000000 !important; /* Ensure text is black for active state */
+}
+
+.nav-tabs .nav-link {
+}
+
+[data-bs-theme="light"] .nav-tabs .nav-link {
+    color: #006666; /* Slightly darker teal for non-active tab links in light mode */
+    text-shadow: 0px 0px 2px rgba(0, 128, 128, 0.5); /* Subtle glow */
+}
+
+[data-bs-theme="dark"] .nav-tabs .nav-link {
+    color: #40E0D0; /* Vibrant turquoise for non-active tab links in dark mode */
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link.active:hover,
+.nav-tabs .nav-link.active:focus {
+    background-color: #4FD1C5 !important; /* Keep original teal for active tab background */
+    border-color: #4FD1C5 #4FD1C5 #fff !important; /* Adjust border to match active tab style */
+    color: #000000 !important; /* Ensure text is black for active tab */
+}
+
+.list-group-item-action.active {
+    background-color: #4FD1C5 !important;
+    border-color: #4FD1C5 !important;
+    color: #000000 !important; /* Set text to black for active list group items */
+}
+
 /* Cytoscape visualization containers */
 .cytoscape-container {
     width: 100%;
@@ -136,12 +264,6 @@
     border-color: var(--bs-border-color);
 }
 
-/* Navigation improvements */
-.nav-pills .nav-link {
-    border-radius: 0.5rem;
-    margin: 0 0.25rem;
-}
-
 /* Utility classes */
 .text-monospace {
     font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
@@ -272,6 +394,87 @@ main.container-fluid {
 
 /* Styles for MCQ options */
 .mcq-option.selected-option {
-    border-color: #007bff; /* Primary blue for selected option */
-    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Bootstrap focus ring */
+    border-color: #4FD1C5; /* New teal color for selected option */
+    box-shadow: 0 0 0 0.25rem rgba(79, 209, 197, 0.25); /* New teal focus ring */
+}
+
+/* Ensure Bootstrap components use the new primary color */
+.btn-primary {
+    --bs-btn-bg: #4FD1C5;
+    --bs-btn-border-color: #4FD1C5;
+    --bs-btn-hover-bg: #45b7ac; /* A slightly darker teal for hover */
+    --bs-btn-hover-border-color: #45b7ac;
+    --bs-btn-active-bg: #3c9c92; /* Even darker for active state */
+    --bs-btn-active-border-color: #3c9c92;
+    --bs-btn-focus-shadow-rgb: 79, 209, 197;
+    color: #000000; /* Set text to black for primary buttons */
+}
+
+.navbar-dark.bg-primary {
+    background-color: #4FD1C5 !important;
+    /* Ensure any direct text in the navbar, not covered by more specific rules, is black */
+    color: #000000 !important;
+}
+
+/* Target specific elements within the navbar to force black text */
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-brand *,
+.navbar-dark .navbar-nav .nav-link,
+.navbar-dark .navbar-nav .nav-link *,
+.navbar-dark .btn-outline-light,
+.navbar-dark .btn-outline-light * {
+    color: #000000 !important; /* Force all text and icons in these elements to black */
+}
+
+.navbar-dark .navbar-toggler-icon {
+    filter: invert(1);
+}
+
+.list-group-item-action.active {
+    background-color: #4FD1C5 !important;
+    border-color: #4FD1C5 !important;
+    color: #000000 !important; /* Set text to black for active list group items */
+}
+
+/* Custom styles for outline buttons to match theme */
+.btn-outline-primary {
+    color: #40E0D0 !important;
+    border-color: #40E0D0 !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:active,
+.btn-outline-primary:focus {
+    color: #000000 !important; /* Set text to black on hover/active/focus */
+    background-color: #4FD1C5 !important;
+    border-color: #4FD1C5 !important;
+    box-shadow: 0 0 0 0.25rem rgba(79, 209, 197, 0.25) !important;
+}
+
+.btn-outline-secondary {
+    color: #40E0D0 !important;
+    border-color: #40E0D0 !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-secondary:active,
+.btn-outline-secondary:focus {
+    color: #000000 !important; /* Set text to black on hover/active/focus */
+    background-color: #4FD1C5 !important;
+    border-color: #4FD1C5 !important;
+    box-shadow: 0 0 0 0.25rem rgba(79, 209, 197, 0.25) !important;
+}
+
+.btn-outline-light {
+    border-color: #000000 !important; /* Ensures border of outline-light buttons is black */
+}
+
+.btn-outline-light:hover,
+.btn-outline-light:focus,
+.btn-outline-light:active {
+    color: #4FD1C5 !important; /* Text color on hover/focus/active for outline-light buttons (becomes teal) */
+    background-color: #000000 !important; /* Background color on hover/focus/active (becomes black) */
+    border-color: #000000 !important;
 }
