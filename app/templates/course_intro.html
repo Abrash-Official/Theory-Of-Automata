@@ -308,17 +308,4 @@ def ends_with_one(s):
         initializeApp(); 
     });
 </script>
-<div class="d-flex justify-content-between mt-4">
-    {% if previous_url %}
-    <a href="{{ previous_url }}" class="btn btn-outline-primary"><i data-feather="arrow-left" class="me-2"></i> Previous</a>
-    {% else %}
-    <div></div> {# Empty div to maintain spacing if no previous button #}
-    {% endif %}
-
-    {% if next_url %}
-    <a href="{{ next_url }}" class="btn btn-primary">Next <i data-feather="arrow-right" class="ms-2"></i></a>
-    {% else %}
-    <div></div> {# Empty div to maintain spacing if no next button #}
-    {% endif %}
-</div>
 {% endblock %} 

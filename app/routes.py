@@ -40,6 +40,11 @@ def toa_home():
     previous_url, next_url = get_nav_links('toa_home')
     return render_template('toa_home.html', previous_page=previous_url, next_page=next_url, active_page='toa_home')
 
+@app.route('/theory-of-computation')
+def theory_of_computation():
+    # This page is supplementary, not part of sequential topic flow, so no previous/next links
+    return render_template('theory_of_computation.html', active_page='theory_of_computation')
+
 @app.route('/api/convert/regex-to-dfa', methods=['POST'])
 def convert_regex_to_dfa():
     """Convert regular expression to DFA"""
@@ -256,43 +261,43 @@ def get_nav_links(current_topic_endpoint):
 
 @app.route('/course-intro')
 def course_intro():
-    previous_page, next_page = get_nav_links('course_intro')
-    return render_template('course_intro.html', active_page='course_intro', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('course_intro')
+    return render_template('course_intro.html', previous_page=previous_url, next_page=next_url, active_page='course_intro')
 
 @app.route('/recursive-def')
 def recursive_def():
-    previous_page, next_page = get_nav_links('recursive_def')
-    return render_template('recursive_def.html', active_page='recursive_def', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('recursive_def')
+    return render_template('recursive_def.html', previous_page=previous_url, next_page=next_url, active_page='recursive_def')
 
 @app.route('/languages-regex')
 def languages_regex():
-    previous_page, next_page = get_nav_links('languages_regex')
-    return render_template('languages_regex.html', active_page='languages_regex', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('languages_regex')
+    return render_template('languages_regex.html', previous_page=previous_url, next_page=next_url, active_page='languages_regex')
 
 @app.route('/finite-automata')
 def finite_automata():
-    previous_page, next_page = get_nav_links('finite_automata')
-    return render_template('finite_automata.html', active_page='finite_automata', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('finite_automata')
+    return render_template('finite_automata.html', previous_page=previous_url, next_page=next_url, active_page='finite_automata')
 
 @app.route('/nfa-dfa-graphs')
 def nfa_dfa_graphs():
-    previous_page, next_page = get_nav_links('nfa_dfa_graphs')
-    return render_template('nfa_dfa_graphs.html', active_page='nfa_dfa_graphs', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('nfa_dfa_graphs')
+    return render_template('nfa_dfa_graphs.html', previous_page=previous_url, next_page=next_url, active_page='nfa_dfa_graphs')
 
 @app.route('/kleene-closure')
 def kleene_closure():
-    previous_page, next_page = get_nav_links('kleene_closure')
-    return render_template('kleene_closure.html', active_page='kleene_closure', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('kleene_closure')
+    return render_template('kleene_closure.html', previous_page=previous_url, next_page=next_url, active_page='kleene_closure')
 
 @app.route('/mealy-moore')
 def mealy_moore():
-    previous_page, next_page = get_nav_links('mealy_moore')
-    return render_template('mealy_moore.html', active_page='mealy_moore', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('mealy_moore')
+    return render_template('mealy_moore.html', previous_page=previous_url, next_page=next_url, active_page='mealy_moore')
 
 @app.route('/cfg')
 def cfg():
-    previous_page, next_page = get_nav_links('cfg')
-    return render_template('cfg.html', active_page='cfg', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('cfg')
+    return render_template('cfg.html', previous_page=previous_url, next_page=next_url, active_page='cfg')
 
 @app.route('/pda')
 def pda():
