@@ -53,11 +53,24 @@
         </p>
         <h6>Types of Languages:</h6>
         <ul>
-            <li><strong>Regular Languages:</strong> Recognized by finite automata.</li>
-            <li><strong>Context-Free Languages:</strong> Recognized by pushdown automata.</li>
-            <li><strong>Context-Sensitive Languages:</strong> Recognized by context-sensitive grammars.</li>
-            <li><strong>Recursively Enumerable Languages:</strong> Recognized by Turing machines.</li>
+            <li><strong>Regular Languages:</strong> Simple patterns, described by regular expressions or finite automata.<br>Example: All strings with any number of a (like "", "a", "aa", ...).</li>
+            <li><strong>Context-Free Languages:</strong> More complex, described by context-free grammars or pushdown automata.<br>Example: All strings with equal numbers of a and b in the form "aa...bb...".</li>
+            <li><strong>Context-Sensitive Languages:</strong> Even more complex, need more powerful rules.</li>
+            <li><strong>Recursive & Recursively Enumerable Languages:</strong> The most complex, handled by Turing machines.</li>
         </ul>
+
+        <hr>
+
+        <div class="alert alert-info mt-4">
+            <h4 class="mb-3">Simple Examples</h4>
+            <h6>Alphabet: &Sigma; = {a, b}</h6>
+            <p>Strings of length 2: "aa", "ab", "ba", "bb"</p>
+            <h6>Language Example:</h6>
+            <ul>
+                <li>Finite: L = {"xy", "yx", "xx", "yy"}</li>
+                <li>Infinite: L = {all strings starting with "b"} = {"b", "ba", "bb", "baa", ...}</li>
+            </ul>
+        </div>
 
         <hr>
 

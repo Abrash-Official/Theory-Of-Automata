@@ -316,13 +316,13 @@ def pumping_lemma():
 
 @app.route('/turing-machines')
 def turing_machines():
-    previous_page, next_page = get_nav_links('turing_machines')
-    return render_template('turing_machines.html', active_page='turing_machines', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('turing_machines')
+    return render_template('turing_machines.html', previous_page=previous_url, next_page=next_url, active_page='turing_machines')
 
 @app.route('/decidability')
 def decidability():
-    previous_page, next_page = get_nav_links('decidability')
-    return render_template('decidability.html', active_page='decidability', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('decidability')
+    return render_template('decidability.html', previous_page=previous_url, next_page=next_url, active_page='decidability')
 
 @app.route('/context-sensitive')
 def context_sensitive():
