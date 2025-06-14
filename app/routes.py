@@ -301,18 +301,18 @@ def cfg():
 
 @app.route('/pda')
 def pda():
-    previous_page, next_page = get_nav_links('pda')
-    return render_template('pda.html', active_page='pda', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('pda')
+    return render_template('pda.html', previous_page=previous_url, next_page=next_url, active_page='pda')
 
 @app.route('/parse-trees')
 def parse_trees():
-    previous_page, next_page = get_nav_links('parse_trees')
-    return render_template('parse_trees.html', active_page='parse_trees', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('parse_trees')
+    return render_template('parse_trees.html', previous_page=previous_url, next_page=next_url, active_page='parse_trees')
 
 @app.route('/pumping-lemma')
 def pumping_lemma():
-    previous_page, next_page = get_nav_links('pumping_lemma')
-    return render_template('pumping_lemma.html', active_page='pumping_lemma', previous_page=previous_page, next_page=next_page)
+    previous_url, next_url = get_nav_links('pumping_lemma')
+    return render_template('pumping_lemma.html', previous_page=previous_url, next_page=next_url, active_page='pumping_lemma')
 
 @app.route('/turing-machines')
 def turing_machines():

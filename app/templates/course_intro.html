@@ -8,32 +8,96 @@
     </div> #}
     <div class="card-body">
         <h4 class="mb-3">What is Automata Theory?</h4>
+        <h6>Definition:</h6>
         <p>
-            <strong>Automata theory</strong> is the study of <strong>abstract machines (or automata)</strong> and the computational problems that can be solved using these machines. <br><br>It forms the foundation of computer science, particularly in the areas of compilers, parsing, and formal language theory. The theory addresses fundamental questions such as <strong>"What different models of machines can do and cannot do?"</strong> and explores the relationship between computability and complexity.
+            Automata Theory is the study of abstract machines (called automata) and the computational problems they can solve. These machines help us understand what computers can and cannot do.
         </p>
-        <hr>
-        <h4 class="mb-3">Historical Perspective</h4>
-        <p>The development of Automata Theory follows a rich timeline:</p>
+
+        <h6>Importance:</h6>
+        <p>
+            Automata Theory is a foundation of computer science. It's especially important in areas like compilers (which turn code into something computers understand), parsing, and formal language theory.
+        </p>
+
+        <h6>Applications:</h6>
         <ul>
-            <li><strong>1930s:</strong> Alan Turing studies Turing machines, decidability, and the halting problem</li>
-            <li><strong>1940-1950s:</strong> Finite automata machines are first studied</li>
-            <li><strong>1950s:</strong> Noam Chomsky proposes the Chomsky Hierarchy for formal languages</li>
-            <li><strong>1969:</strong> Cook introduces "intractable" problems or "NP-Hard" problems</li>
-            <li><strong>1970-Present:</strong> Modern computer science evolves with compilers, computational and complexity theory</li>
+            <li>Compiler design</li>
+            <li>Text processing (like spell checkers)</li>
+            <li>Hardware design (circuits)</li>
+            <li>Artificial intelligence</li>
+            <li>Many more areas</li>
         </ul>
+
         <hr>
+
         <h4 class="mb-3">Key Concepts</h4>
-        <ul>
-            <li><strong>Automaton:</strong> An abstract model of a machine that performs computations on input by moving through a series of states or configurations. At each state of the computation, a transition function determines the next configuration on the basis of a finite portion of the present configuration.</li>
-            <li><strong>Finite Automaton:</strong> A simple idealized machine used to recognize patterns within input taken from some character set (or alphabet). The finite automata is an abstract computing device used for recognizing patterns.</li>
-        </ul>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr><th>Term</th><th>Meaning</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Alphabet (Σ)</td><td>A set of symbols. Example: Σ = {a, b}</td></tr>
+                    <tr><td>String</td><td>A sequence of symbols from an alphabet. Example: "abba"</td></tr>
+                    <tr><td>Language</td><td>A set of strings over an alphabet. Example: L = {ab, aab, aaab, ...}</td></tr>
+                    <tr><td>Grammar</td><td>Rules that define how strings in a language are structured</td></tr>
+                </tbody>
+            </table>
+        </div>
+
         <hr>
-        <h4 class="mb-3">Applications of Automata Theory</h4>
+
+        <h4 class="mb-3">Formal Languages</h4>
+        <h6>Definition:</h6>
+        <p>
+            A formal language is a set of strings made from an alphabet, following specific rules.
+        </p>
+        <h6>Types of Languages:</h6>
         <ul>
-            <li><strong>Compiler Design:</strong> Used in designing lexical scanners for checking program syntax</li>
-            <li><strong>Pattern Matching:</strong> Spell checkers and text validation systems</li>
-            <li><strong>Sequential Circuit Design:</strong> Used as transducers in hardware design</li>
-            <li><strong>Text Editors:</strong> Essential for text processing applications</li>
+            <li><strong>Regular Languages:</strong> Recognized by finite automata.</li>
+            <li><strong>Context-Free Languages:</strong> Recognized by pushdown automata.</li>
+            <li><strong>Context-Sensitive Languages:</strong> Recognized by context-sensitive grammars.</li>
+            <li><strong>Recursively Enumerable Languages:</strong> Recognized by Turing machines.</li>
+        </ul>
+
+        <hr>
+
+        <h4 class="mb-3">Automata (Types of Machines)</h4>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr><th>Type of Automaton</th><th>What It Recognizes</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Finite Automata (FA)</td><td>Regular languages</td></tr>
+                    <tr><td>Pushdown Automata (PDA)</td><td>Context-free languages</td></tr>
+                    <tr><td>Turing Machines (TM)</td><td>Recursively enumerable languages</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <h6>Automaton:</h6>
+        <p>
+            An abstract machine that can read or generate strings in a language. It changes states based on the input and rules.
+        </p>
+
+        <hr>
+
+        <h4 class="mb-3">Why Study Automata Theory?</h4>
+        <ul>
+            <li>Helps design efficient compilers and text processors.</li>
+            <li>Used in hardware design for circuits and digital systems.</li>
+            <li>Explains what computers can and cannot do.</li>
+            <li>Forms the basis for advanced topics like artificial intelligence and language processing.</li>
+        </ul>
+
+        <hr>
+
+        <h4 class="mb-3">Historical Perspective</h4>
+        <ul>
+            <li>1930s: Alan Turing introduces Turing machines and the concept of computability.</li>
+            <li>1940s-1950s: Finite automata are studied.</li>
+            <li>1950s: Noam Chomsky introduces the Chomsky Hierarchy for classifying languages and automata.</li>
+            <li>1969: The concept of "NP-hard" problems is introduced, highlighting very difficult computational problems.</li>
+            <li>1970s-Present: Automata Theory continues to influence modern computer science, especially in areas like compilers and complexity theory.</li>
         </ul>
         <hr>
         <h4 class="mb-3">Central Concepts</h4>
