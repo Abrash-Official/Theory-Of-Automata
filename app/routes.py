@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Define the order of topics for navigation
 TOPIC_ORDER = [
+    'toa_home',
     'course_intro',
     'recursive_def',
     'languages_regex',
@@ -32,7 +33,12 @@ TOPIC_ORDER = [
 
 @app.route('/')
 def index():
-    return redirect(url_for('course_intro'))
+    return redirect(url_for('toa_home'))
+
+@app.route('/toa-home')
+def toa_home():
+    previous_url, next_url = get_nav_links('toa_home')
+    return render_template('toa_home.html', previous_page=previous_url, next_page=next_url, active_page='toa_home')
 
 @app.route('/api/convert/regex-to-dfa', methods=['POST'])
 def convert_regex_to_dfa():
