@@ -99,11 +99,85 @@ function initializeApp() {
         }
     }
 
+    // Initialize Finite Automata DFA graph for strings ending with 'ab'
+    const dfaEndingWithAbVisualizationContainer = document.getElementById('dfaEndingWithAbVisualization');
+    if (dfaEndingWithAbVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+        const dfaEndingWithAbData = {
+            states: [
+                { id: 'q0', label: 'q0', isStart: true, isFinal: false },
+                { id: 'q1', label: 'q1', isStart: false, isFinal: false },
+                { id: 'q2', label: 'q2', isStart: false, isFinal: true }
+            ],
+            transitions: [
+                { from: 'q0', to: 'q1', symbol: 'a' },
+                { from: 'q0', to: 'q0', symbol: 'b' },
+                { from: 'q1', to: 'q1', symbol: 'a' },
+                { from: 'q1', to: 'q2', symbol: 'b' },
+                { from: 'q2', to: 'q1', symbol: 'a' },
+                { from: 'q2', to: 'q0', symbol: 'b' }
+            ]
+        };
+        console.log("Attempting to render DFA for strings ending with 'ab' graph...");
+        renderAutomaton('dfaEndingWithAbVisualization', dfaEndingWithAbData);
+    }
+
+    // Initialize Formal DFA Example graph
+    const dfaFormalExampleVisualizationContainer = document.getElementById('dfaFormalExampleVisualization');
+    if (dfaFormalExampleVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+        const dfaFormalExampleData = {
+            states: [
+                { id: 'q0', label: 'q0', isStart: true, isFinal: false },
+                { id: 'q1', label: 'q1', isStart: false, isFinal: true }
+            ],
+            transitions: [
+                { from: 'q0', to: 'q1', symbol: 'a' },
+                { from: 'q0', to: 'q0', symbol: 'b' },
+                { from: 'q1', to: 'q1', symbol: 'a' },
+                { from: 'q1', to: 'q0', symbol: 'b' }
+            ]
+        };
+        console.log("Attempting to render Formal DFA Example graph...");
+        renderAutomaton('dfaFormalExampleVisualization', dfaFormalExampleData);
+    }
+
+    // Initialize NFA Diagram for Strings Ending with 'a'
+    const nfaEndingWithAVisualizationContainer = document.getElementById('nfaEndingWithAVisualization');
+    if (nfaEndingWithAVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+        const nfaEndingWithAData = {
+            states: [
+                { id: 'q0', label: 'q0', isStart: true, isFinal: false },
+                { id: 'q1', label: 'q1', isStart: false, isFinal: true }
+            ],
+            transitions: [
+                { from: 'q0', to: 'q0', symbol: 'a' },
+                { from: 'q0', to: 'q1', symbol: 'a' },
+                { from: 'q0', to: 'q0', symbol: 'b' }
+            ]
+        };
+        console.log("Attempting to render NFA Diagram for Strings Ending with 'a'...");
+        renderAutomaton('nfaEndingWithAVisualization', nfaEndingWithAData);
+    }
+
     // Initialize CodeMirror for Python code input if present
     const pythonCodeEditorElement = document.getElementById('pythonCodeInput');
     if (pythonCodeEditorElement && typeof CodeMirror !== 'undefined') {
         console.log('Initializing CodeMirror for Python code editor...');
         window.AutomataEdu.codeEditorInstance = CodeMirror.fromTextArea(pythonCodeEditorElement, {
+            mode: 'python',
+            theme: 'dracula',
+            lineNumbers: true,
+            indentUnit: 4,
+            tabSize: 4,
+            lineWrapping: true,
+            readOnly: false // Make it editable
+        });
+    }
+
+    // Initialize CodeMirror for Python code input in Finite Automata page
+    const pythonCodeEditorElementFA = document.getElementById('pythonCodeInputFA');
+    if (pythonCodeEditorElementFA && typeof CodeMirror !== 'undefined') {
+        console.log('Initializing CodeMirror for Python code editor in FA page...');
+        window.AutomataEdu.codeEditorInstanceFA = CodeMirror.fromTextArea(pythonCodeEditorElementFA, {
             mode: 'python',
             theme: 'dracula',
             lineNumbers: true,
@@ -185,6 +259,12 @@ function setupEventListeners() {
     const runPythonCodeBtn = document.getElementById('runPythonCodeBtn');
     if (runPythonCodeBtn) {
         runPythonCodeBtn.addEventListener('click', runPythonCode);
+    }
+
+    // Python Code Runner for Finite Automata page
+    const runPythonCodeBtnFA = document.getElementById('runPythonCodeBtnFA');
+    if (runPythonCodeBtnFA) {
+        runPythonCodeBtnFA.addEventListener('click', runPythonCodeFA);
     }
     
     // RegEx to DFA
@@ -1493,140 +1573,242 @@ function displayNfaToRegexResults(result) {
 
 // Python Code Runner Function
 function runPythonCode() {
-    // Get the CodeMirror instance from the global object
-    const editor = window.AutomataEdu.codeEditorInstance;
-    const pythonCodeOutput = document.getElementById('pythonCodeOutput');
-
-    if (!editor) {
-        pythonCodeOutput.textContent = 'Error: Code editor not initialized.';
+    const codeEditor = window.AutomataEdu.codeEditorInstance;
+    if (!codeEditor) {
+        console.error("CodeMirror instance not found.");
         return;
     }
 
-    const code = editor.getValue();
-
-    if (!code.trim()) {
-        pythonCodeOutput.textContent = 'Please enter code to run.';
+    const pythonCode = codeEditor.getValue();
+    const outputElement = document.getElementById('pythonCodeOutput');
+    if (!outputElement) {
+        console.error("Output element not found.");
         return;
     }
 
-    console.log('Sending code to backend:', code); // Debugging: log the code being sent
-    pythonCodeOutput.textContent = 'Running...';
-
+    outputElement.textContent = 'Running code...';
     fetch('/run_python_code', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code: code }),
+        body: JSON.stringify({ code: pythonCode })
     })
     .then(response => response.json())
     .then(data => {
-        if (data.output) {
-            pythonCodeOutput.textContent = data.output;
-        } else if (data.error) {
-            pythonCodeOutput.textContent = `Error: ${data.error}`;
-        } else {
-            pythonCodeOutput.textContent = 'Unknown response from server.';
-        }
+        outputElement.textContent = data.output;
     })
     .catch(error => {
         console.error('Error running Python code:', error);
-        pythonCodeOutput.textContent = `Network error: ${error.message}`;
+        outputElement.textContent = `Error: ${error.message}`;
     });
 }
 
-// Initialize CodeMirror for the Python code input on the Course Introduction page
-const courseIntroPythonCodeInput = document.getElementById('pythonCodeInput');
-if (courseIntroPythonCodeInput) {
-    codeMirrorInstances['course_intro'] = CodeMirror.fromTextArea(courseIntroPythonCodeInput, {
-        mode: 'python',
-        theme: 'dracula',
-        lineNumbers: true,
+// New function for Finite Automata page's Python code runner
+function runPythonCodeFA() {
+    const codeEditor = window.AutomataEdu.codeEditorInstanceFA;
+    if (!codeEditor) {
+        console.error("CodeMirror instance for FA not found.");
+        return;
+    }
+
+    const pythonCode = codeEditor.getValue();
+    const outputElement = document.getElementById('pythonCodeOutputFA');
+    if (!outputElement) {
+        console.error("Output element for FA not found.");
+        return;
+    }
+
+    outputElement.textContent = 'Running code...';
+    fetch('/run_python_code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: pythonCode })
+    })
+    .then(response => response.json())
+    .then(data => {
+        outputElement.textContent = data.output;
+    })
+    .catch(error => {
+        console.error('Error running Python code in FA page:', error);
+        outputElement.textContent = `Error: ${error.message}`;
     });
 }
 
-// Initialize CodeMirror for the Python code input on the Languages and Regular Expressions page
-const languagesRegexPythonCodeInput = document.getElementById('pythonCodeInput');
-if (languagesRegexPythonCodeInput) {
-    codeMirrorInstances['languages_regex'] = CodeMirror.fromTextArea(languagesRegexPythonCodeInput, {
-        mode: 'python',
-        theme: 'dracula',
-        lineNumbers: true,
-    });
-}
+// MCQ handling for Languages and Regular Expressions
+document.addEventListener('DOMContentLoaded', () => {
+    const mcqContainer = document.getElementById('mcq-container');
+    if (!mcqContainer) return; // Exit if container not found
 
-// Handle MCQ display and navigation
-document.querySelectorAll('[id^="mcq-container"]').forEach(mcqContainer => {
-    const mcqItems = mcqContainer.querySelectorAll('.mcq-question-item');
-    const prevBtn = mcqContainer.querySelector('#prevMcqBtn');
-    const mcqProgress = mcqContainer.querySelector('.mcq-progress');
+    const mcqQuestions = Array.from(mcqContainer.querySelectorAll('.mcq-question-item'));
     let currentMcqIndex = 0;
+    const mcqProgress = mcqContainer.querySelector('.mcq-progress');
 
     function updateMcqDisplay() {
-        mcqItems.forEach((item, index) => {
-            item.style.display = index === currentMcqIndex ? 'block' : 'none';
+        mcqQuestions.forEach((question, index) => {
+            question.style.display = index === currentMcqIndex ? 'block' : 'none';
         });
 
         if (prevBtn) {
-            prevBtn.style.display = currentMcqIndex > 0 ? 'block' : 'none';
+            prevBtn.style.display = currentMcqIndex > 0 ? 'inline-block' : 'none';
         }
 
         if (mcqProgress) {
-            mcqProgress.textContent = `Question ${currentMcqIndex + 1} of ${mcqItems.length}`;
+            mcqProgress.textContent = `Question ${currentMcqIndex + 1} of ${mcqQuestions.length}`;
         }
     }
 
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
+    function resetQuestion(questionItem) {
+        const options = questionItem.querySelectorAll('.mcq-option');
+        options.forEach(option => {
+            option.classList.remove('list-group-item-success', 'list-group-item-danger');
+            option.disabled = false;
+        });
+        const feedback = questionItem.querySelector('.feedback');
+        if (feedback) feedback.textContent = '';
+        const submitBtn = questionItem.querySelector('.submit-mcq-btn');
+        if (submitBtn) submitBtn.style.display = 'inline-block';
+    }
+
+    mcqContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('submit-mcq-btn')) {
+            const questionItem = event.target.closest('.mcq-question-item');
+            const selectedOption = questionItem.querySelector('.mcq-option.active');
+            const correctAnswer = questionItem.dataset.correctAnswer;
+            const feedback = questionItem.querySelector('.feedback');
+
+            if (selectedOption) {
+                if (selectedOption.dataset.option === correctAnswer) {
+                    selectedOption.classList.add('list-group-item-success');
+                    feedback.textContent = 'Correct!';
+                    feedback.style.color = 'green';
+                } else {
+                    selectedOption.classList.add('list-group-item-danger');
+                    feedback.textContent = `Incorrect. The correct answer was ${correctAnswer.toUpperCase()}.`;
+                    feedback.style.color = 'red';
+                    // Highlight correct answer
+                    questionItem.querySelector(`[data-option="${correctAnswer}"]`).classList.add('list-group-item-success');
+                }
+                // Disable all options after submission
+                questionItem.querySelectorAll('.mcq-option').forEach(option => option.disabled = true);
+                event.target.style.display = 'none'; // Hide submit button
+            } else {
+                feedback.textContent = 'Please select an answer.';
+                feedback.style.color = 'orange';
+            }
+        } else if (event.target.classList.contains('mcq-option')) {
+            const questionItem = event.target.closest('.mcq-question-item');
+            questionItem.querySelectorAll('.mcq-option').forEach(opt => opt.classList.remove('active'));
+            event.target.classList.add('active');
+            // Clear feedback when a new option is selected before submission
+            questionItem.querySelector('.feedback').textContent = '';
+        } else if (event.target.id === 'prevMcqBtn') {
             if (currentMcqIndex > 0) {
+                resetQuestion(mcqQuestions[currentMcqIndex]);
                 currentMcqIndex--;
                 updateMcqDisplay();
             }
-        });
-    }
-
-    mcqItems.forEach(item => {
-        const submitBtn = item.querySelector('.submit-mcq-btn');
-        const feedbackElement = item.querySelector('.feedback');
-        const options = item.querySelectorAll('.mcq-option');
-        const correctAnswer = item.dataset.correctAnswer;
-
-        options.forEach(option => {
-            option.addEventListener('click', function() {
-                options.forEach(opt => opt.classList.remove('active', 'list-group-item-success', 'list-group-item-danger'));
-                this.classList.add('active');
-            });
-        });
-
-        if (submitBtn) {
-            submitBtn.addEventListener('click', () => {
-                const selectedOption = item.querySelector('.mcq-option.active');
-                if (selectedOption) {
-                    if (selectedOption.dataset.option === correctAnswer) {
-                        feedbackElement.textContent = 'Correct!';
-                        feedbackElement.className = 'feedback mt-2 text-success';
-                        selectedOption.classList.add('list-group-item-success');
-                    } else {
-                        feedbackElement.textContent = `Incorrect. The correct answer was ${correctAnswer.toUpperCase()}.`;
-                        feedbackElement.className = 'feedback mt-2 text-danger';
-                        selectedOption.classList.add('list-group-item-danger');
-                        // Highlight correct answer
-                        options.forEach(option => {
-                            if (option.dataset.option === correctAnswer) {
-                                option.classList.add('list-group-item-success');
-                            }
-                        });
-                    }
-                    options.forEach(option => option.classList.add('disabled'));
-                    submitBtn.disabled = true;
-                    item.dataset.answered = 'true'; // Mark question as answered
-                } else {
-                    feedbackElement.textContent = 'Please select an answer.';
-                    feedbackElement.className = 'feedback mt-2 text-warning';
-                }
-            });
+        } else if (event.target.id === 'nextMcqBtn') {
+            if (currentMcqIndex < mcqQuestions.length - 1) {
+                resetQuestion(mcqQuestions[currentMcqIndex]);
+                currentMcqIndex++;
+                updateMcqDisplay();
+            }
         }
     });
 
-    updateMcqDisplay(); // Initial display setup
+    // Initial display update
+    updateMcqDisplay();
+});
+
+// MCQ handling for Finite Automata page
+document.addEventListener('DOMContentLoaded', () => {
+    const mcqContainerFA = document.getElementById('mcq-container-fa');
+    if (!mcqContainerFA) return; // Exit if container not found
+
+    const mcqQuestionsFA = Array.from(mcqContainerFA.querySelectorAll('.mcq-question-item'));
+    let currentMcqIndexFA = 0;
+    const mcqProgressFA = mcqContainerFA.querySelector('.mcq-progress');
+
+    function updateMcqDisplayFA() {
+        mcqQuestionsFA.forEach((question, index) => {
+            question.style.display = index === currentMcqIndexFA ? 'block' : 'none';
+        });
+        mcqProgressFA.textContent = `Question ${currentMcqIndexFA + 1} of ${mcqQuestionsFA.length}`;
+
+        const prevBtnFA = mcqContainerFA.querySelector('#prevMcqBtnFA');
+        if (prevBtnFA) {
+            prevBtnFA.style.display = currentMcqIndexFA > 0 ? 'inline-block' : 'none';
+        }
+
+        // Enable/disable next button based on current question
+        const nextBtnFA = mcqContainerFA.querySelector('#nextMcqBtnFA'); // Assuming a next button exists for navigation
+        if (nextBtnFA) {
+            nextBtnFA.style.display = currentMcqIndexFA < mcqQuestionsFA.length - 1 ? 'inline-block' : 'none';
+        }
+    }
+
+    function resetQuestionFA(questionItem) {
+        const options = questionItem.querySelectorAll('.mcq-option');
+        options.forEach(option => {
+            option.classList.remove('list-group-item-success', 'list-group-item-danger');
+            option.disabled = false;
+        });
+        const feedback = questionItem.querySelector('.feedback');
+        if (feedback) feedback.textContent = '';
+        const submitBtn = questionItem.querySelector('.submit-mcq-btn');
+        if (submitBtn) submitBtn.style.display = 'inline-block';
+    }
+
+    mcqContainerFA.addEventListener('click', (event) => {
+        if (event.target.classList.contains('submit-mcq-btn')) {
+            const questionItem = event.target.closest('.mcq-question-item');
+            const selectedOption = questionItem.querySelector('.mcq-option.active');
+            const correctAnswer = questionItem.dataset.correctAnswer;
+            const feedback = questionItem.querySelector('.feedback');
+
+                if (selectedOption) {
+                    if (selectedOption.dataset.option === correctAnswer) {
+                        selectedOption.classList.add('list-group-item-success');
+                    feedback.textContent = 'Correct!';
+                    feedback.style.color = 'green';
+                    } else {
+                        selectedOption.classList.add('list-group-item-danger');
+                    feedback.textContent = `Incorrect. The correct answer was ${correctAnswer.toUpperCase()}.`;
+                    feedback.style.color = 'red';
+                        // Highlight correct answer
+                    questionItem.querySelector(`[data-option="${correctAnswer}"]`).classList.add('list-group-item-success');
+                }
+                // Disable all options after submission
+                questionItem.querySelectorAll('.mcq-option').forEach(option => option.disabled = true);
+                event.target.style.display = 'none'; // Hide submit button
+                } else {
+                feedback.textContent = 'Please select an answer.';
+                feedback.style.color = 'orange';
+            }
+        } else if (event.target.classList.contains('mcq-option')) {
+            const questionItem = event.target.closest('.mcq-question-item');
+            questionItem.querySelectorAll('.mcq-option').forEach(opt => opt.classList.remove('active'));
+            event.target.classList.add('active');
+            // Clear feedback when a new option is selected before submission
+            questionItem.querySelector('.feedback').textContent = '';
+        } else if (event.target.id === 'prevMcqBtnFA') {
+            if (currentMcqIndexFA > 0) {
+                resetQuestionFA(mcqQuestionsFA[currentMcqIndexFA]);
+                currentMcqIndexFA--;
+                updateMcqDisplayFA();
+            }
+        } else if (event.target.id === 'nextMcqBtnFA') {
+            if (currentMcqIndexFA < mcqQuestionsFA.length - 1) {
+                resetQuestionFA(mcqQuestionsFA[currentMcqIndexFA]);
+                currentMcqIndexFA++;
+                updateMcqDisplayFA();
+            }
+        }
+    });
+
+    // Initial display update
+    updateMcqDisplayFA();
 });
