@@ -50,6 +50,55 @@ function initializeApp() {
         renderAutomaton('introDfaVisualization', introDfaData);
     }
 
+    // Initialize Languages and Regular Expressions DFA graph if present
+    const languagesRegexDfaVisualizationContainer = document.getElementById('languagesRegexDfaVisualization');
+    if (languagesRegexDfaVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+        const languagesRegexDfaData = {
+            states: [
+                { id: 'q0', label: 'q0', isStart: true, isFinal: false },
+                { id: 'q1', label: 'q1', isStart: false, isFinal: false },
+                { id: 'q2', label: 'q2', isStart: false, isFinal: true }
+            ],
+            transitions: [
+                { from: 'q0', to: 'q1', symbol: 'a' },
+                { from: 'q0', to: 'q0', symbol: 'b' },
+                { from: 'q1', to: 'q1', symbol: 'a' },
+                { from: 'q1', to: 'q2', symbol: 'b' },
+                { from: 'q2', to: 'q1', symbol: 'a' },
+                { from: 'q2', to: 'q0', symbol: 'b' }
+            ]
+        };
+        console.log("Attempting to render Languages and Regular Expressions DFA graph...");
+        renderAutomaton('languagesRegexDfaVisualization', languagesRegexDfaData);
+    }
+
+    // Initialize Kleene Star diagram if present
+    const kleeneStarDiagramContainer = document.getElementById('kleeneStarDiagram');
+    if (kleeneStarDiagramContainer && typeof renderAutomaton !== 'undefined') {
+        // Calculate center for the single node
+        const containerWidth = kleeneStarDiagramContainer.offsetWidth;
+        const containerHeight = kleeneStarDiagramContainer.offsetHeight;
+        const centerX = containerWidth / 2;
+        const centerY = containerHeight / 2;
+
+        const kleeneStarAutomatonData = {
+            states: [
+                { id: 'q0', label: 'q0', isStart: true, isFinal: true, position: { x: centerX, y: centerY } }
+            ],
+            transitions: [
+                { from: 'q0', to: 'q0', symbol: 'a' }
+            ]
+        };
+        console.log("Attempting to render Kleene Star diagram...");
+        const cyKleeneStar = renderAutomaton('kleeneStarDiagram', kleeneStarAutomatonData);
+        if (cyKleeneStar) {
+            // Explicitly set node position and then center and fit the graph
+            cyKleeneStar.getElementById('q0').position({ x: centerX, y: centerY });
+            cyKleeneStar.center(); 
+            cyKleeneStar.fit(); 
+        }
+    }
+
     // Initialize CodeMirror for Python code input if present
     const pythonCodeEditorElement = document.getElementById('pythonCodeInput');
     if (pythonCodeEditorElement && typeof CodeMirror !== 'undefined') {
@@ -1485,3 +1534,99 @@ function runPythonCode() {
         pythonCodeOutput.textContent = `Network error: ${error.message}`;
     });
 }
+
+// Initialize CodeMirror for the Python code input on the Course Introduction page
+const courseIntroPythonCodeInput = document.getElementById('pythonCodeInput');
+if (courseIntroPythonCodeInput) {
+    codeMirrorInstances['course_intro'] = CodeMirror.fromTextArea(courseIntroPythonCodeInput, {
+        mode: 'python',
+        theme: 'dracula',
+        lineNumbers: true,
+    });
+}
+
+// Initialize CodeMirror for the Python code input on the Languages and Regular Expressions page
+const languagesRegexPythonCodeInput = document.getElementById('pythonCodeInput');
+if (languagesRegexPythonCodeInput) {
+    codeMirrorInstances['languages_regex'] = CodeMirror.fromTextArea(languagesRegexPythonCodeInput, {
+        mode: 'python',
+        theme: 'dracula',
+        lineNumbers: true,
+    });
+}
+
+// Handle MCQ display and navigation
+document.querySelectorAll('[id^="mcq-container"]').forEach(mcqContainer => {
+    const mcqItems = mcqContainer.querySelectorAll('.mcq-question-item');
+    const prevBtn = mcqContainer.querySelector('#prevMcqBtn');
+    const mcqProgress = mcqContainer.querySelector('.mcq-progress');
+    let currentMcqIndex = 0;
+
+    function updateMcqDisplay() {
+        mcqItems.forEach((item, index) => {
+            item.style.display = index === currentMcqIndex ? 'block' : 'none';
+        });
+
+        if (prevBtn) {
+            prevBtn.style.display = currentMcqIndex > 0 ? 'block' : 'none';
+        }
+
+        if (mcqProgress) {
+            mcqProgress.textContent = `Question ${currentMcqIndex + 1} of ${mcqItems.length}`;
+        }
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentMcqIndex > 0) {
+                currentMcqIndex--;
+                updateMcqDisplay();
+            }
+        });
+    }
+
+    mcqItems.forEach(item => {
+        const submitBtn = item.querySelector('.submit-mcq-btn');
+        const feedbackElement = item.querySelector('.feedback');
+        const options = item.querySelectorAll('.mcq-option');
+        const correctAnswer = item.dataset.correctAnswer;
+
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                options.forEach(opt => opt.classList.remove('active', 'list-group-item-success', 'list-group-item-danger'));
+                this.classList.add('active');
+            });
+        });
+
+        if (submitBtn) {
+            submitBtn.addEventListener('click', () => {
+                const selectedOption = item.querySelector('.mcq-option.active');
+                if (selectedOption) {
+                    if (selectedOption.dataset.option === correctAnswer) {
+                        feedbackElement.textContent = 'Correct!';
+                        feedbackElement.className = 'feedback mt-2 text-success';
+                        selectedOption.classList.add('list-group-item-success');
+                    } else {
+                        feedbackElement.textContent = `Incorrect. The correct answer was ${correctAnswer.toUpperCase()}.`;
+                        feedbackElement.className = 'feedback mt-2 text-danger';
+                        selectedOption.classList.add('list-group-item-danger');
+                        // Highlight correct answer
+                        options.forEach(option => {
+                            if (option.dataset.option === correctAnswer) {
+                                option.classList.add('list-group-item-success');
+                            }
+                        });
+                    }
+                    options.forEach(option => option.classList.add('disabled'));
+                    submitBtn.disabled = true;
+                    item.dataset.answered = 'true'; // Mark question as answered
+                } else {
+                    feedbackElement.textContent = 'Please select an answer.';
+                    feedbackElement.className = 'feedback mt-2 text-warning';
+                }
+            });
+        }
+    });
+
+    updateMcqDisplay(); // Initial display setup
+});

@@ -33,7 +33,7 @@ function renderAutomaton(containerId, automatonData, options = {}) {
         container: container,
         elements: elements,
         style: getAutomatonStyle(),
-        layout: getAutomatonLayout(automatonData.states.length),
+        layout: getAutomatonLayout(automatonData),
         minZoom: 0.3,
         maxZoom: 3,
         boxSelectionEnabled: false,
@@ -46,11 +46,15 @@ function renderAutomaton(containerId, automatonData, options = {}) {
     // Setup event handlers
     setupVisualizationEvents(cy, containerId);
     
-    // Apply custom positioning if available
-    applyStatePositions(cy, automatonData.states);
+    // Apply custom positioning if available (only for multi-node graphs)
+    if (automatonData.states.length > 1) {
+        applyStatePositions(cy, automatonData.states);
+    }
     
-    // Fit to container
-    cy.fit();
+    // Fit to container only for graphs with more than one node or if explicitly requested
+    if (automatonData.states.length > 1 || options.fit === true) {
+        cy.fit();
+    }
     
     return cy;
 }
@@ -271,52 +275,42 @@ function getAutomatonStyle() {
 }
 
 /**
- * Get layout configuration based on automaton size
- * @param {number} nodeCount - Number of states
- * @returns {Object} Cytoscape layout configuration
+ * Get Cytoscape layout configuration
+ * @param {Object} automatonData - Automaton data structure
+ * @returns {Object} Cytoscape layout options
  */
-function getAutomatonLayout(nodeCount) {
-    if (nodeCount <= 1) {
+function getAutomatonLayout(automatonData) {
+    const nodeCount = automatonData.states.length;
+
+    if (nodeCount === 1) {
+        const singleNodeId = automatonData.states[0].id;
+        const singleNodePosition = automatonData.states[0].position || { x: 0, y: 0 };
         return {
             name: 'preset',
-            positions: { 'node': { x: 200, y: 200 } }
+            positions: { [singleNodeId]: singleNodePosition },
+            fit: false, // Crucially, do not fit for single nodes
+            padding: 20,
+            animate: true,
+            animationDuration: 500,
+            animationEasing: 'ease-out'
         };
-    } else if (nodeCount <= 4) {
+    } else if (nodeCount <= 6) {
         return {
             name: 'circle',
-            radius: 80,
-            spacingFactor: 1.5,
+            fit: true,
+            padding: 20,
             animate: true,
-            animationDuration: 500
-        };
-    } else if (nodeCount <= 8) {
-        return {
-            name: 'circle',
-            radius: 120,
-            spacingFactor: 1.2,
-            animate: true,
-            animationDuration: 500
+            animationDuration: 500,
+            animationEasing: 'ease-out'
         };
     } else {
         return {
             name: 'cose',
-            idealEdgeLength: 100,
-            nodeOverlap: 20,
-            refresh: 20,
             fit: true,
             padding: 30,
-            randomize: false,
-            componentSpacing: 100,
-            nodeRepulsion: 400000,
-            edgeElasticity: 100,
-            nestingFactor: 5,
-            gravity: 80,
-            numIter: 1000,
-            initialTemp: 200,
-            coolingFactor: 0.95,
-            minTemp: 1.0,
             animate: true,
-            animationDuration: 1000
+            animationDuration: 1000,
+            animationEasing: 'ease-out'
         };
     }
 }
