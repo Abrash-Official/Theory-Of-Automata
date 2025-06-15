@@ -158,6 +158,46 @@ function initializeApp() {
         renderAutomaton('nfaEndingWithAVisualization', nfaEndingWithAData);
     }
 
+    // New: Initialize NFA for strings ending with 'ab'
+    const nfaEndingAbVisualizationContainer = document.getElementById('nfa_ending_ab_visualization');
+    if (nfaEndingAbVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+        const nfaEndingAbData = {
+            states: [
+                { id: 'q0', label: 'q0', isStart: true, isFinal: false },
+                { id: 'q1', label: 'q1', isStart: false, isFinal: false },
+                { id: 'q2', label: 'q2', isStart: false, isFinal: true }
+            ],
+            transitions: [
+                { from: 'q0', to: 'q0', symbol: 'a' },
+                { from: 'q0', to: 'q0', symbol: 'b' },
+                { from: 'q0', to: 'q1', symbol: 'a' },
+                { from: 'q1', to: 'q2', symbol: 'b' }
+            ]
+        };
+        console.log("Attempting to render NFA for strings ending with 'ab' graph...");
+        renderAutomaton('nfa_ending_ab_visualization', nfaEndingAbData);
+    }
+
+    // New: Initialize Transition Graph for L={a^n b^m | n,m >= 1}
+    const tgAnBmVisualizationContainer = document.getElementById('tg_an_bm_visualization');
+    if (tgAnBmVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+        const tgAnBmData = {
+            states: [
+                { id: 'q0', label: 'q0', isStart: true, isFinal: false },
+                { id: 'q1', label: 'q1', isStart: false, isFinal: false },
+                { id: 'q2', label: 'q2', isStart: false, isFinal: true }
+            ],
+            transitions: [
+                { from: 'q0', to: 'q1', symbol: 'a' },
+                { from: 'q1', to: 'q1', symbol: 'a' },
+                { from: 'q1', to: 'q2', symbol: 'b' },
+                { from: 'q2', to: 'q2', symbol: 'b' }
+            ]
+        };
+        console.log("Attempting to render TG for a^n b^m graph...");
+        renderAutomaton('tg_an_bm_visualization', tgAnBmData);
+    }
+
     // Initialize CodeMirror for Python code input if present
     const pythonCodeEditorElement = document.getElementById('pythonCodeInput');
     if (pythonCodeEditorElement && typeof CodeMirror !== 'undefined') {
@@ -171,6 +211,8 @@ function initializeApp() {
             lineWrapping: true,
             readOnly: false // Make it editable
         });
+        // Automatically run the code on initialization
+        runPythonCodeNFAConversion();
     }
 
     // Initialize CodeMirror for Python code input in Finite Automata page
@@ -178,6 +220,21 @@ function initializeApp() {
     if (pythonCodeEditorElementFA && typeof CodeMirror !== 'undefined') {
         console.log('Initializing CodeMirror for Python code editor in FA page...');
         window.AutomataEdu.codeEditorInstanceFA = CodeMirror.fromTextArea(pythonCodeEditorElementFA, {
+            mode: 'python',
+            theme: 'dracula',
+            lineNumbers: true,
+            indentUnit: 4,
+            tabSize: 4,
+            lineWrapping: true,
+            readOnly: false // Make it editable
+        });
+    }
+
+    // New: Initialize CodeMirror for NFA to DFA Conversion
+    const pythonCodeInputNFAConversionElement = document.getElementById('pythonCodeInputNFAConversion');
+    if (pythonCodeInputNFAConversionElement && typeof CodeMirror !== 'undefined') {
+        console.log('Initializing CodeMirror for NFA to DFA Conversion code editor...');
+        window.AutomataEdu.codeEditorInstanceNFAConversion = CodeMirror.fromTextArea(pythonCodeInputNFAConversionElement, {
             mode: 'python',
             theme: 'dracula',
             lineNumbers: true,
@@ -265,6 +322,12 @@ function setupEventListeners() {
     const runPythonCodeBtnFA = document.getElementById('runPythonCodeBtnFA');
     if (runPythonCodeBtnFA) {
         runPythonCodeBtnFA.addEventListener('click', runPythonCodeFA);
+    }
+    
+    // New: Run Code button for NFA to DFA Conversion
+    const runPythonCodeBtnNFAConversion = document.getElementById('runPythonCodeBtnNFAConversion');
+    if (runPythonCodeBtnNFAConversion) {
+        runPythonCodeBtnNFAConversion.addEventListener('click', runPythonCodeNFAConversion);
     }
     
     // RegEx to DFA
@@ -1573,67 +1636,97 @@ function displayNfaToRegexResults(result) {
 
 // Python Code Runner Function
 function runPythonCode() {
-    const codeEditor = window.AutomataEdu.codeEditorInstance;
-    if (!codeEditor) {
-        console.error("CodeMirror instance not found.");
-        return;
-    }
+    const pythonCodeInput = window.AutomataEdu.codeEditorInstance.getValue();
+    const pythonCodeOutput = document.getElementById('pythonCodeOutput');
 
-    const pythonCode = codeEditor.getValue();
-    const outputElement = document.getElementById('pythonCodeOutput');
-    if (!outputElement) {
-        console.error("Output element not found.");
-        return;
-    }
-
-    outputElement.textContent = 'Running code...';
     fetch('/run_python_code', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code: pythonCode })
+        body: JSON.stringify({ code: pythonCodeInput }),
     })
     .then(response => response.json())
     .then(data => {
-        outputElement.textContent = data.output;
+        pythonCodeOutput.textContent = data.output || 'No output.';
+        if (data.error) {
+            pythonCodeOutput.textContent += '\nError: ' + data.error;
+            pythonCodeOutput.style.color = 'red';
+        } else {
+            pythonCodeOutput.style.color = 'inherit'; // Reset color if no error
+        }
     })
     .catch(error => {
-        console.error('Error running Python code:', error);
-        outputElement.textContent = `Error: ${error.message}`;
+        console.error('Error:', error);
+        pythonCodeOutput.textContent = 'Failed to run code. Please try again.';
+        pythonCodeOutput.style.color = 'red';
+    })
+    .finally(() => {
+        // Removed: loadingModal.hide();
     });
 }
 
 // New function for Finite Automata page's Python code runner
 function runPythonCodeFA() {
-    const codeEditor = window.AutomataEdu.codeEditorInstanceFA;
-    if (!codeEditor) {
-        console.error("CodeMirror instance for FA not found.");
-        return;
-    }
+    const pythonCodeInputFA = window.AutomataEdu.codeEditorInstanceFA.getValue();
+    const pythonCodeOutputFA = document.getElementById('pythonCodeOutputFA');
 
-    const pythonCode = codeEditor.getValue();
-    const outputElement = document.getElementById('pythonCodeOutputFA');
-    if (!outputElement) {
-        console.error("Output element for FA not found.");
-        return;
-    }
-
-    outputElement.textContent = 'Running code...';
     fetch('/run_python_code', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code: pythonCode })
+        body: JSON.stringify({ code: pythonCodeInputFA }),
     })
     .then(response => response.json())
     .then(data => {
-        outputElement.textContent = data.output;
+        pythonCodeOutputFA.textContent = data.output || 'No output.';
+        if (data.error) {
+            pythonCodeOutputFA.textContent += '\nError: ' + data.error;
+            pythonCodeOutputFA.style.color = 'red';
+        } else {
+            pythonCodeOutputFA.style.color = 'inherit'; // Reset color if no error
+        }
     })
     .catch(error => {
-        console.error('Error running Python code in FA page:', error);
-        outputElement.textContent = `Error: ${error.message}`;
+        console.error('Error:', error);
+        pythonCodeOutputFA.textContent = 'Failed to run code. Please try again.';
+        pythonCodeOutputFA.style.color = 'red';
+    })
+    .finally(() => {
+        // Removed: loadingModal.hide();
+    });
+}
+
+// New: Function to run Python code for NFA to DFA Conversion
+function runPythonCodeNFAConversion() {
+    const pythonCodeInputNFAConversion = window.AutomataEdu.codeEditorInstanceNFAConversion.getValue();
+    const pythonCodeOutputNFAConversion = document.getElementById('pythonCodeOutputNFAConversion');
+
+    fetch('/run_python_code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: pythonCodeInputNFAConversion }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        pythonCodeOutputNFAConversion.textContent = data.output || 'No output.';
+        if (data.error) {
+            pythonCodeOutputNFAConversion.textContent += '\nError: ' + data.error;
+            pythonCodeOutputNFAConversion.style.color = 'red';
+        } else {
+            pythonCodeOutputNFAConversion.style.color = 'inherit'; // Reset color if no error
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        pythonCodeOutputNFAConversion.textContent = 'Failed to run code. Please try again.';
+        pythonCodeOutputNFAConversion.style.color = 'red';
+    })
+    .finally(() => {
+        // Removed: loadingModal.hide();
     });
 }
 
@@ -1645,6 +1738,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const mcqQuestions = Array.from(mcqContainer.querySelectorAll('.mcq-question-item'));
     let currentMcqIndex = 0;
     const mcqProgress = mcqContainer.querySelector('.mcq-progress');
+    const prevBtn = document.getElementById('prevMcqBtn'); // Declared here
+    const nextBtn = document.getElementById('nextMcqBtn'); // Declared here
 
     function updateMcqDisplay() {
         mcqQuestions.forEach((question, index) => {
@@ -1653,6 +1748,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (prevBtn) {
             prevBtn.style.display = currentMcqIndex > 0 ? 'inline-block' : 'none';
+        }
+        if (nextBtn) { // Added check for nextBtn
+            nextBtn.style.display = currentMcqIndex < mcqQuestions.length - 1 ? 'inline-block' : 'none';
         }
 
         if (mcqProgress) {
@@ -1731,22 +1829,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const mcqQuestionsFA = Array.from(mcqContainerFA.querySelectorAll('.mcq-question-item'));
     let currentMcqIndexFA = 0;
     const mcqProgressFA = mcqContainerFA.querySelector('.mcq-progress');
+    const prevBtnFA = document.getElementById('prevMcqBtnFA');
 
     function updateMcqDisplayFA() {
         mcqQuestionsFA.forEach((question, index) => {
             question.style.display = index === currentMcqIndexFA ? 'block' : 'none';
         });
-        mcqProgressFA.textContent = `Question ${currentMcqIndexFA + 1} of ${mcqQuestionsFA.length}`;
 
-        const prevBtnFA = mcqContainerFA.querySelector('#prevMcqBtnFA');
         if (prevBtnFA) {
             prevBtnFA.style.display = currentMcqIndexFA > 0 ? 'inline-block' : 'none';
         }
 
-        // Enable/disable next button based on current question
-        const nextBtnFA = mcqContainerFA.querySelector('#nextMcqBtnFA'); // Assuming a next button exists for navigation
-        if (nextBtnFA) {
-            nextBtnFA.style.display = currentMcqIndexFA < mcqQuestionsFA.length - 1 ? 'inline-block' : 'none';
+        if (mcqProgressFA) {
+            mcqProgressFA.textContent = `Question ${currentMcqIndexFA + 1} of ${mcqQuestionsFA.length}`;
         }
     }
 

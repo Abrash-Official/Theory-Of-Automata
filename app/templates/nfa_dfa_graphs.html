@@ -2,42 +2,230 @@
 {% block title %}NFA, DFA, Transition Graphs{% endblock %}
 {% block content %}
 <div class="card mb-4">
-    <div class="card-header bg-secondary text-white">
+    <div class="card-header">
         <h3 class="card-title mb-0">NFA, DFA, Transition Graphs</h3>
     </div>
     <div class="card-body">
-        <h4 class="mb-3">Deterministic Finite Automata (DFA)</h4>
-        <p>Deterministic finite automata are finite state machines that accept or reject strings of characters by parsing them through a sequence that is uniquely determined by each string. The term "deterministic" refers to the fact that each string, and thus each state sequence, is unique.</p>
-        <hr>
-        <h4 class="mb-3">Non-deterministic Finite Automata (NFA)</h4>
-        <p>In a nondeterministic finite automaton (NFA), for each state there can be zero, one, two, or more transitions corresponding to a particular symbol. If NFA gets to state with more than one possible transition corresponding to the input symbol, we say it branches.</p>
-        <h5 class="mt-4">NFA Acceptance</h5>
-        <p>An NFA accepts the input string if there exists some choice of transitions that leads to ending in an accept state. Thus, one accepting branch is enough for the overall NFA to accept, but every branch must reject for the overall NFA to reject.</p>
-        <hr>
-        <h4 class="mb-3">Transition Graphs</h4>
+        <h4 class="mt-4">Applications</h4>
         <ul>
-            <li>A finite set of states, one of which is designated as start state and some as final states</li>
-            <li>An alphabet Σ of possible input symbols from which input strings are formed</li>
-            <li>A finite set of transitions that show the change of state from the given state on a given input</li>
+            <li><b>NFA:</b> Regular expression matching, text search</li>
+            <li><b>DFA:</b> Lexical analysis in compilers, protocol validation</li>
+            <li><b>Transition Graphs:</b> Pattern recognition in bioinformatics</li>
         </ul>
-        <h5 class="mt-4">Transition Tables</h5>
-        <p>A transition table is a tabular representation of the transition function that takes two arguments and returns a state. The column contains the state in which the automaton will be on the input represented by that column.</p>
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm">
+
+        <hr>
+
+        <h4 class="mb-3">1. Non-Deterministic Finite Automaton (NFA)</h4>
+        <p>An NFA allows multiple transitions for the same input symbol and includes &epsilon; (empty string) moves. Formally defined as a 5-tuple:</p>
+        <pre><code class="language-mermaid">M = (Q, Σ, δ, q₀, F)</code></pre>
+        <h6 class="mt-4">Where:</h6>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <ul>
+                <li><b>Q:</b> Finite set of states</li>
+                <li><b>Σ:</b> Input alphabet</li>
+                <li><b>δ:</b> Transition function \(Q \times (\Sigma \cup \{\epsilon\}) \to 2^Q\)</li>
+                <li><b>q₀:</b> Initial state</li>
+                <li><b>F:</b> Set of final states</li>
+            </ul>
+        </div>
+
+        <h5 class="mt-4">Example: NFA accepting strings ending with 'ab' over &Sigma; = {a, b}</h5>
+        <div id="nfa_ending_ab_visualization" class="cytoscape-container bg-dark" style="min-height: 300px;"></div>
+        
+        <h6>Transition Table:</h6>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr><th>State</th><th>a</th><th>b</th><th>&epsilon;</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>q0</td><td>{q0,q1}</td><td>{q0}</td><td>&empty;</td></tr>
+                    <tr><td>q1</td><td>&empty;</td><td>{q2}</td><td>&empty;</td></tr>
+                    <tr><td>q2</td><td>&empty;</td><td>&empty;</td><td>&empty;</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <h5 class="mt-4">Key Features:</h5>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <ul>
+                <li>Allows &epsilon;-transitions</li>
+                <li>Multiple paths for input</li>
+                <li>Accepts if any path reaches a final state</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h4 class="mb-3">2. Deterministic Finite Automaton (DFA)</h4>
+        <p>A DFA has exactly one transition per input symbol per state. Formally:</p>
+        <pre><code class="language-mermaid">D = (Q, Σ, δ, q₀, F)</code></pre>
+
+        <h5 class="mt-4">Example: DFA accepting strings ending with 'ab'</h5>
+        <div id="dfaEndingWithAbVisualization" class="cytoscape-container bg-dark" style="min-height: 300px;"></div>
+
+        <h6>Transition Table:</h6>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
                 <thead class="table-light">
                     <tr><th>State</th><th>a</th><th>b</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>q0</td><td>q1</td><td>q2</td></tr>
-                    <tr><td>q1</td><td>q1</td><td>q3</td></tr>
-                    <tr><td>q2</td><td>q2</td><td>q3</td></tr>
-                    <tr><td>q3</td><td>q3</td><td>q3</td></tr>
+                    <tr><td>q0</td><td>q1</td><td>q0</td></tr>
+                    <tr><td>q1</td><td>q1</td><td>q2</td></tr>
+                    <tr><td>q2</td><td>q1</td><td>q0</td></tr>
                 </tbody>
             </table>
         </div>
-        <div class="alert alert-info mt-4">
-            <strong>Beginner Tip:</strong> Transition tables and graphs are visual and tabular ways to understand how automata process input!
+        <h5 class="mt-4">Key Features:</h5>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <ul>
+                <li>No &epsilon;-transitions</li>
+                <li>Unique computation path</li>
+                <li>Faster processing than NFA</li>
+        </ul>
         </div>
+
+        <hr>
+
+        <h4 class="mb-3">3. Transition Graphs (TG)</h4>
+        <p>Generalized automata where edges are labeled with strings (not just single symbols).</p>
+        <h5 class="mt-4">Example: TG for language \(L = \{a^n b^m \mid n,m \ge 1\}\)</h5>
+        <div id="tg_an_bm_visualization" class="cytoscape-container bg-dark" style="min-height: 300px;"></div>
+
+        <h6>Transition Table:</h6>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr><th>State</th><th>a</th><th>b</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>q0</td><td>q1</td><td>&empty;</td></tr>
+                    <tr><td>q1</td><td>q1</td><td>q2</td></tr>
+                    <tr><td>q2</td><td>&empty;</td><td>q2</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <h5 class="mt-4">Properties:</h5>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <ul>
+                <li>Can represent complex patterns (e.g., substring matching)</li>
+                <li>More flexible than standard FA</li>
+                <li>Requires backtracking for processing</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h4 class="mb-3">Operations on DFAs</h4>
+        <ul>
+            <li><b>Union (L₁ &cup; L₂)</b><br>Combine two DFAs to accept strings from either language.<br>Example: DFA1: Strings ending with 'a', DFA2: Strings ending with 'b'. Result: Accepts strings ending with 'a' or 'b'</li>
+            <li><b>Concatenation (L₁ &compfn; L₂)</b><br>New DFA accepts strings formed by concatenating L₁ and L₂.<br>Example: L₁ = {a, b}, L₂ = {c, d}. Result: L₁ &compfn; L₂ = {ac, ad, bc, bd}</li>
+            <li><b>Complement (\(L\bar{\;}\))</b><br>Accepts all strings not accepted by the original DFA.<br>Example: Original DFA: Strings with even length. Complement DFA: Strings with odd length</li>
+            <li><b>Intersection (L₁ &cap; L₂)</b><br>Accepts strings accepted by both DFAs.<br>Example: L₁ = Strings with 'aa', L₂ = Strings with 'bb'. Intersection: Strings containing both 'aa' and 'bb'</li>
+        </ul>
+
+        <hr>
+
+        <h4 class="mb-3">NFA to DFA Conversion (Subset Construction)</h4>
+        <h5 class="mt-4">Steps:</h5>
+        <ul>
+            <li>Compute &epsilon;-closure of NFA's start state.</li>
+            <li>For each state set and input symbol, compute transitions.</li>
+            <li>Add new state sets to DFA.</li>
+            <li>Mark final states containing NFA's final states.</li>
+        </ul>
+        <h5 class="mt-4">Example:</h5>
+        <p>NFA with states {A, B} converts to DFA with states {&empty;, {A}, {B}, {A,B}}.</p>
+
+        <h4 class="mt-4">Python Code Snippet:</h4>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <label for="pythonCodeInputNFAConversion" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInputNFAConversion" rows="10"># Example NFA to DFA conversion
+
+def nfa_to_dfa_example():
+    # Define NFA components
+    states = {'q0', 'q1', 'q2'}
+    alphabet = {'0', '1'}
+    transitions = {
+        'q0': {'0': {'q0'}, '1': {'q0', 'q1'}},
+        'q1': {'0': {'q2'}, '1': {'q2'}},
+        'q2': {'0': {'q2'}, '1': {'q2'}}
+    }
+    start_state = 'q0'
+    final_states = {'q2'}
+
+    print("--- NFA Definition ---")
+    print(f"States: {states}")
+    print(f"Alphabet: {alphabet}")
+    print(f"Transitions: {transitions}")
+    print(f"Start State: {start_state}")
+    print(f"Final States: {final_states}")
+
+    # In a real scenario, you would implement the subset construction algorithm here.
+    # For this example, we'll just show the input and a dummy result.
+    print("\n--- Simulating NFA to DFA Conversion ---")
+    print("This is a placeholder for the DFA generated from the NFA.")
+    print("A full NFA to DFA conversion algorithm would be implemented here.")
+
+# Run the example function
+nfa_to_dfa_example()</textarea>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtnNFAConversion">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutputNFAConversion"></code></pre>
+        </div>
+
+        <hr>
+
+        <h4 class="mt-4">Practice MCQs</h4>
+        <div id="mcq-container-nfa-dfa-tg">
+            <div class="mcq-progress text-end mb-2"></div>
+            <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                <li data-correct-answer="b" class="mcq-question-item">
+                    <p class="mb-3">Which automaton allows &epsilon;-transitions?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) DFA</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) NFA</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) Both</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="b" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">In DFA, &delta;: Q &times; &Sigma; &rarr; ______.</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) 2^Q</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) Q</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) &Sigma;</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="a" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">The complement of DFA accepting even-length strings recognizes ______.</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) Odd-length strings</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) Palindromes</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) Strings with 'a'</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="c" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">Transition graphs can label edges with ______.</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) Single symbols</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) Strings</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) Both</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+            </ol>
+            <div class="d-flex justify-content-between mt-3">
+                <button type="button" class="btn btn-secondary" id="prevMcqBtnNFAConversion" style="display: none;">Previous</button>
+            </div>
+        </div>
+
     </div>
 </div>
 {% endblock %} 
