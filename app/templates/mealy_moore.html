@@ -2,51 +2,480 @@
 {% block title %}Mealy and Moore Machines{% endblock %}
 {% block content %}
 <div class="card mb-4">
-    <div class="card-header bg-success text-white">
+    <div class="card-header bg-success" id="mealyMooreHeader">
         <h3 class="card-title mb-0">Mealy and Moore Machines</h3>
     </div>
     <div class="card-body">
-        <h4 class="mb-3">Mealy Machine</h4>
-        <p>In the theory of computation, a <strong>Mealy machine</strong> is a finite-state machine whose output values are determined both by its current state and the current inputs. This is in contrast to a Moore machine, whose output values are determined solely by its current state.</p>
-        <h5 class="mt-4">Formal Definition of Mealy Machine</h5>
-        <ul>
-            <li>S: a finite set of states</li>
-            <li>S₀: a start state (initial state) which is an element of S</li>
-            <li>Σ: a finite set called the input alphabet</li>
-            <li>Λ: a finite set called the output alphabet</li>
-            <li>T: a transition function T: S × Σ → S</li>
-            <li>G: an output function G: S × Σ → Λ</li>
-        </ul>
-        <hr>
-        <h4 class="mb-3">Moore Machine</h4>
-        <p>A <strong>Moore machine</strong> is a finite-state machine whose current output values are determined only by its current state. The input may indirectly influence subsequent outputs, but not the current or immediate output.</p>
-        <h5 class="mt-4">Formal Definition of Moore Machine</h5>
-        <ul>
-            <li>S: A finite set of states</li>
-            <li>s₀: A start state (initial state) which is an element of S</li>
-            <li>Σ: A finite set called the input alphabet</li>
-            <li>O: A finite set called the output alphabet</li>
-            <li>δ: A transition function δ: S × Σ → S</li>
-            <li>G: An output function G: S → O</li>
-        </ul>
-        <hr>
-        <h4 class="mb-3">Comparison</h4>
+        <h4 class="mb-3">Formal Definitions</h4>
+
+        <h5 class="mt-4">Moore Machine</h5>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <pre>
+A Moore Machine is defined as a 6-tuple:
+M = (Q, q₀, Σ, O, δ, λ)
+
+Q: Finite set of states
+
+q₀: Initial state
+
+Σ: Input alphabet
+
+O: Output alphabet
+
+δ: Transition function Q×Σ→Q
+
+λ: Output function Q→O
+
+Key Feature: Output depends only on the current state.
+</pre>
+        </div>
+
+        <h5 class="mt-4">Mealy Machine</h5>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <pre>
+A Mealy Machine is defined as a 6-tuple:
+M = (Q, q₀, Σ, O, δ, λ′)
+
+λ': Output function Q×Σ→O
+
+Key Feature: Output depends on both the current state and input.
+</pre>
+        </div>
+
+        <h4 class="mt-4">Key Differences</h4>
+        <div class="alert alert-info mt-2 p-3 rounded">
         <div class="table-responsive">
-            <table class="table table-bordered table-sm">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Moore Machine</th>
+                            <th>Mealy Machine</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Output Dependency</td>
+                            <td>Current state only</td>
+                            <td>Current state + input</td>
+                        </tr>
+                        <tr>
+                            <td>Output Placement</td>
+                            <td>Associated with states</td>
+                            <td>Associated with transitions</td>
+                        </tr>
+                        <tr>
+                            <td>State Count</td>
+                            <td>More states (outputs tied to states)</td>
+                            <td>Fewer states (outputs tied to transitions)</td>
+                        </tr>
+                        <tr>
+                            <td>Response Time</td>
+                            <td>Slower (output updates on state change)</td>
+                            <td>Faster (output updates immediately)</td>
+                        </tr>
+                        <tr>
+                            <td>Hardware Complexity</td>
+                            <td>Higher (separate output logic)</td>
+                            <td>Lower (combined state-input logic)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h4 class="mt-4">Conversion Methods</h4>
+        <h5 class="mt-4">Mealy → Moore Machine</h5>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <h6>Steps:</h6>
+            <p>Identify States with Multiple Outputs: Split states like <code class="text-nowrap">q₁</code> into <code class="text-nowrap">q₁₀</code> (output 0) and <code class="text-nowrap">q₁₁</code> (output 1).</p>
+            <p>Rebuild Transition Table: Redirect transitions to new states based on outputs.</p>
+
+            <h6>Example:</h6>
+            <p>Original Mealy Machine Transition Table:</p>
+            <div class="table-responsive bg-dark p-2 rounded">
+                <table class="table table-bordered table-sm text-white">
+                    <thead class="table-light">
+                        <tr>
+                            <th>State</th>
+                            <th>Input=0</th>
+                            <th>Input=1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>q0</td>
+                            <td>q1/0</td>
+                            <td>q2/0</td>
+                        </tr>
+                        <tr>
+                            <td>q1</td>
+                            <td>q1/0</td>
+                            <td>q2/1</td>
+                        </tr>
+                        <tr>
+                            <td>q2</td>
+                            <td>q1/1</td>
+                            <td>q2/0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>Converted Moore Machine Transition Table:</p>
+            <div class="table-responsive bg-dark p-2 rounded">
+                <table class="table table-bordered table-sm text-white">
+                    <thead class="table-light">
+                        <tr>
+                            <th>State</th>
+                            <th>Output</th>
+                            <th>Input=0</th>
+                            <th>Input=1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>q0</td>
+                            <td>0</td>
+                            <td>q10</td>
+                            <td>q20</td>
+                        </tr>
+                        <tr>
+                            <td>q10</td>
+                            <td>0</td>
+                            <td>q10</td>
+                            <td>q21</td>
+                        </tr>
+                        <tr>
+                            <td>q21</td>
+                            <td>1</td>
+                            <td>q10</td>
+                            <td>q21</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h5 class="mt-4">Moore → Mealy Machine</h5>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <h6>Steps:</h6>
+            <p>Attach Outputs to Transitions: For each transition <code class="text-nowrap">qᵢ →ᵃ qⱼ</code>, set output = <code class="text-nowrap">λ(qⱼ)</code>.</p>
+            <p>Simplify Redundant States: Merge states with identical transitions.</p>
+
+            <h6>Example:</h6>
+            <p>Original Moore Machine Outputs:</p>
+            <pre>
+q₀: 0, q₁: 1
+</pre>
+            <p>Converted Mealy Machine Transition Table:</p>
+            <div class="table-responsive bg-dark p-2 rounded">
+                <table class="table table-bordered table-sm text-white">
                 <thead class="table-light">
-                    <tr><th>Aspect</th><th>Mealy Machine</th><th>Moore Machine</th></tr>
+                        <tr>
+                            <th>State</th>
+                            <th>Input=0</th>
+                            <th>Input=1</th>
+                        </tr>
                 </thead>
                 <tbody>
-                    <tr><td>Output depends on</td><td>Current state + Input</td><td>Current state only</td></tr>
-                    <tr><td>Number of states</td><td>Tend to have fewer states</td><td>May require more states</td></tr>
-                    <tr><td>Output timing</td><td>Changes with input</td><td>Changes at clock edge</td></tr>
-                    <tr><td>Safety</td><td>Less safe for circuits</td><td>Safer for electronic circuits</td></tr>
+                        <tr>
+                            <td>q0</td>
+                            <td>q1/1</td>
+                            <td>q2/1</td>
+                        </tr>
                 </tbody>
             </table>
+            </div>
         </div>
-        <div class="alert alert-info mt-4">
-            <strong>Beginner Tip:</strong> Mealy and Moore machines are used in digital circuit design and help us understand how outputs can depend on states and/or inputs!
+
+        <h4 class="mt-4">Examples</h4>
+        <h6>Moore Machine for Even Parity Check</h6>
+        <div id="mooreParityVisualization" class="cytoscape-container mt-2" style="height: 300px; border: 1px solid #ccc;"></div>
+        <pre style="display:none;">
+stateDiagram-v2
+    [*] --> q0: 0
+    q0 --> q0: 0/0
+    q0 --> q1: 1/0
+    q1 --> q0: 1/1
+    q1 --> q1: 0/1
+        </pre>
+        <p>Outputs: 0 (even), 1 (odd)</p>
+        <p>Input: 1101 → Output: 0,0,1,0 (length = input +1)</p>
+
+        <h6>Mealy Machine for Binary Increment</h6>
+        <div id="mealyIncrementVisualization" class="cytoscape-container mt-2" style="height: 300px; border: 1px solid #ccc;"></div>
+        <pre style="display:none;">
+stateDiagram-v2
+    [*] --> q0
+    q0 --> q0: 0/0
+    q0 --> q1: 1/0
+    q1 --> q0: 0/1
+    q1 --> q1: 1/1
+        </pre>
+        <p>Input: 1011 → Output: 0001 (LSB first)</p>
+
+        <h4 class="mt-4">Code Example: Moore Machine Simulation</h4>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <label for="pythonCodeInputMooreMealy" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInputMooreMealy" rows="15">
+class MooreMachine:
+    def __init__(self):
+        self.state = 'q0'
+        self.output_map = {'q0': 0, 'q1': 1}
+    
+    def transition(self, input_bit):
+        if self.state == 'q0':
+            self.state = 'q1' if input_bit == '1' else 'q0'
+        elif self.state == 'q1':
+            self.state = 'q0' if input_bit == '1' else 'q1'
+        return self.output_map[self.state]
+
+# Test
+mm = MooreMachine()
+inputs = ['1', '1', '0']
+outputs = [mm.transition(bit) for bit in inputs]
+print(f"Outputs: {outputs}")  # Outputs: [1, 0, 1]
+</textarea>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtnMooreMealy">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutputMooreMealy"></code></pre>
         </div>
+
+        <h4 class="mb-3">Applications</h4>
+        <ul>
+            <li>Digital Circuit Design: Traffic light controllers, vending machines.</li>
+            <li>Protocol Verification: Network packet handling (TCP states).</li>
+            <li>Text Processing: Pattern matching in compilers (e.g., regex engines).</li>
+        </ul>
+
+        <h4 class="mt-4">Practice MCQs</h4>
+        <div id="mcq-container-moore-mealy">
+            <div class="mcq-progress text-end mb-2"></div>
+            <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                <li data-correct-answer="B" class="mcq-question-item">
+                    <p class="mb-3">In a Moore Machine, output length is always:</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">A) Equal to input length</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">B) One more than input length</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="C">C) One less than input length</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="B" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">Which machine reacts faster to input changes?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">A) Moore</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">B) Mealy</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="A" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">Convert the Mealy transition <code class="text-nowrap">q₀→ᵃ/¹q₁</code> to Moore:</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">A) Create <code class="text-nowrap">q₁₁</code></button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">B) Create <code class="text-nowrap">q₀₁</code></button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+            </ol>
+            <p class="mt-3">Master these concepts to design efficient state machines for real-world applications!</p>
+        </div>
+
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    #mealyMooreHeader {
+        background-color: transparent !important;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize CodeMirror for Python code input in Mealy/Moore page
+        const pythonCodeEditorElementMooreMealy = document.getElementById('pythonCodeInputMooreMealy');
+        if (pythonCodeEditorElementMooreMealy && typeof CodeMirror !== 'undefined') {
+            window.AutomataEdu.codeEditorInstanceMooreMealy = CodeMirror.fromTextArea(pythonCodeEditorElementMooreMealy, {
+                mode: 'python',
+                theme: 'dracula',
+                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
+                readOnly: false
+            });
+            document.getElementById('runPythonCodeBtnMooreMealy').addEventListener('click', runPythonCodeMooreMealy);
+        }
+
+        // Initialize Moore Machine for Even Parity Check visualization
+        const mooreParityVisualizationContainer = document.getElementById('mooreParityVisualization');
+        if (mooreParityVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+            const mooreParityData = {
+                states: [
+                    { id: 'q0', label: 'q0', isStart: true, isFinal: false, output: '0' }, // Output 0 for even parity
+                    { id: 'q1', label: 'q1', isStart: false, isFinal: false, output: '1' }  // Output 1 for odd parity
+                ],
+                transitions: [
+                    { from: 'q0', to: 'q0', symbol: '0', output: '0' }, // Output depends on q0 (0)
+                    { from: 'q0', to: 'q1', symbol: '1', output: '1' }, // Output depends on q1 (1)
+                    { from: 'q1', to: 'q0', symbol: '1', output: '0' }, // Output depends on q0 (0)
+                    { from: 'q1', to: 'q1', symbol: '0', output: '1' }  // Output depends on q1 (1)
+                ]
+            };
+            console.log("Attempting to render Moore Machine for Even Parity Check...");
+            renderAutomaton('mooreParityVisualization', mooreParityData);
+        }
+
+        // Initialize Mealy Machine for Binary Increment visualization
+        const mealyIncrementVisualizationContainer = document.getElementById('mealyIncrementVisualization');
+        if (mealyIncrementVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+            const mealyIncrementData = {
+                states: [
+                    { id: 'q0', label: 'q0', isStart: true, isFinal: false },
+                    { id: 'q1', label: 'q1', isStart: false, isFinal: false }
+                ],
+                transitions: [
+                    { from: 'q0', to: 'q0', symbol: '0', output: '0' },
+                    { from: 'q0', to: 'q1', symbol: '1', output: '0' },
+                    { from: 'q1', to: 'q0', symbol: '0', output: '1' },
+                    { from: 'q1', to: 'q1', symbol: '1', output: '1' }
+                ]
+            };
+            console.log("Attempting to render Mealy Machine for Binary Increment...");
+            renderAutomaton('mealyIncrementVisualization', mealyIncrementData);
+        }
+    });
+
+    async function runPythonCodeMooreMealy() {
+        const outputElement = document.getElementById('pythonCodeOutputMooreMealy');
+        const codeEditor = window.AutomataEdu.codeEditorInstanceMooreMealy;
+        const code = codeEditor.getValue();
+        outputElement.textContent = 'Running code...';
+
+        try {
+            const response = await fetch('/run_python_code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code: code }),
+            });
+            const data = await response.json();
+            if (data.output) {
+                outputElement.textContent = data.output;
+            } else if (data.error) {
+                outputElement.textContent = `Error: ${data.error}`;
+                console.error('Python code execution error:', data.error);
+            } else {
+                outputElement.textContent = 'An unexpected error occurred.';
+                console.error('Unexpected response from server:', data);
+            }
+        } catch (error) {
+            outputElement.textContent = `Request failed: ${error}`;
+            console.error('Fetch error:', error);
+        }
+    }
+
+    // Event listeners for MCQ questions
+    document.addEventListener('DOMContentLoaded', function() {
+        const mcqContainer = document.getElementById('mcq-container-moore-mealy');
+        if (mcqContainer) {
+            const questions = mcqContainer.querySelectorAll('.mcq-question-item');
+            let currentQuestionIndex = 0;
+
+            function updateMcqDisplay() {
+                questions.forEach((q, index) => {
+                    q.style.display = (index === currentQuestionIndex) ? 'block' : 'none';
+                });
+                updateMcqProgress();
+            }
+
+            function updateMcqProgress() {
+                const progressText = mcqContainer.querySelector('.mcq-progress');
+                if (progressText) {
+                    progressText.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+                }
+            }
+
+            function resetQuestion(questionItem) {
+                const options = questionItem.querySelectorAll('.mcq-option');
+                options.forEach(option => {
+                    option.classList.remove('selected-option', 'correct', 'incorrect');
+                    option.disabled = false;
+                });
+                const feedback = questionItem.querySelector('.feedback');
+                if (feedback) {
+                    feedback.textContent = '';
+                    feedback.classList.remove('text-success', 'text-danger');
+                }
+                const submitBtn = questionItem.querySelector('.submit-mcq-btn');
+                if (submitBtn) {
+                    submitBtn.style.display = 'block';
+                }
+            }
+
+            questions.forEach(resetQuestion);
+            updateMcqDisplay();
+
+            mcqContainer.addEventListener('click', function(event) {
+                const target = event.target;
+
+                if (target.classList.contains('mcq-option')) {
+                    const questionItem = target.closest('.mcq-question-item');
+                    const options = questionItem.querySelectorAll('.mcq-option');
+                    options.forEach(option => option.classList.remove('selected-option'));
+                    target.classList.add('selected-option');
+                } else if (target.classList.contains('submit-mcq-btn')) {
+                    const questionItem = target.closest('.mcq-question-item');
+                    const selectedOption = questionItem.querySelector('.mcq-option.selected-option');
+                    const feedback = questionItem.querySelector('.feedback');
+                    const submitBtn = questionItem.querySelector('.submit-mcq-btn');
+                    const correctAnswer = questionItem.dataset.correctAnswer;
+
+                    if (selectedOption) {
+                        if (selectedOption.dataset.option === correctAnswer) {
+                            feedback.textContent = 'Correct!';
+                            feedback.classList.remove('text-danger');
+                            feedback.classList.add('text-success');
+                            selectedOption.classList.add('correct');
+                        } else {
+                            feedback.textContent = `Incorrect. The correct answer was ${correctAnswer}.`;
+                            feedback.classList.remove('text-success');
+                            feedback.classList.add('text-danger');
+                            selectedOption.classList.add('incorrect');
+                            // Highlight correct answer
+                            questionItem.querySelector(`.mcq-option[data-option="${correctAnswer}"]`).classList.add('correct');
+                        }
+                        // Disable all options after submission
+                        questionItem.querySelectorAll('.mcq-option').forEach(option => option.disabled = true);
+                        submitBtn.style.display = 'none';
+
+                        // Show next question or prompt to restart after a delay
+                        setTimeout(() => {
+                            currentQuestionIndex++;
+                            if (currentQuestionIndex < questions.length) {
+                                updateMcqDisplay();
+                            } else {
+                                alert('You have completed all MCQ questions!');
+                                currentQuestionIndex = 0;
+                                questions.forEach(resetQuestion);
+                                updateMcqDisplay();
+                            }
+                        }, 2000); // 2-second delay
+
+                    } else {
+                        feedback.textContent = 'Please select an answer.';
+                        feedback.classList.remove('text-success', 'text-danger');
+                        feedback.classList.add('text-warning');
+                    }
+                }
+            });
+        }
+    });
+</script>
 {% endblock %} 
