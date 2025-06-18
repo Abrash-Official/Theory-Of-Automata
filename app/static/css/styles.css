@@ -303,7 +303,6 @@
 html,
 body {
     height: 100%;
-    overflow: hidden; /* Prevent main page scrolling */
     margin: 0;
     padding: 0;
 }
@@ -323,11 +322,10 @@ body {
 }
 
 main.container-fluid {
-    flex-grow: 1; /* Allow main to take up remaining vertical space */
-    margin-top: 100px; /* This will create the space below the navbar */
-    display: flex; /* Enable flexbox for side-by-side layout of sidebar and content */
-    overflow: hidden; /* Prevent main from scrolling, its children will */
-    height: calc(100% - 100px); /* Adjust height to account for the new margin-top */
+    flex-grow: 1;
+    margin-top: 100px;
+    display: flex;
+    height: calc(100% - 100px);
 }
 
 .row.h-100 {
@@ -335,7 +333,8 @@ main.container-fluid {
 }
 
 /* Sidebar styling */
-.col-lg-3.col-md-4.h-100 {
+.col-lg-3.col-md-4.h-100, #sidebarCard {
+    max-width: 340px; /* Prevent sidebar from growing too wide on large screens */
     height: 100%; /* Ensure column takes full height of row */
     display: flex; /* Make column a flex container for its card */
     flex-direction: column;
@@ -354,16 +353,17 @@ main.container-fluid {
 }
 
 .sidebar-scroll {
-    flex-grow: 1; /* Allow content to take remaining space */
-    overflow-y: auto; /* Enable vertical scrolling for the sidebar content */
-    padding-right: 15px; /* Add padding for scrollbar */
-    /* Hide scrollbar for various browsers */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    flex-grow: 1;
+    overflow-y: auto; /* Always show vertical scrollbar if needed */
+    overflow-x: auto; /* Allow horizontal scroll if needed */
+    padding-right: 15px;
+    /* Remove scrollbar hiding for all browsers */
+    -ms-overflow-style: auto;  /* IE and Edge */
+    scrollbar-width: auto;  /* Firefox */
 }
 
 .sidebar-scroll::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: block; /* Show scrollbar for Chrome, Safari, Opera */
 }
 
 /* Main content area styling */
@@ -374,13 +374,14 @@ main.container-fluid {
 }
 
 .main-content-scroll {
-    flex-grow: 1; /* Allow main content to take up remaining space */
-    overflow-y: auto; /* Enable vertical scrolling for the main content */
-    height: 100%; /* Take full height of its flex parent */
-    padding-bottom: 20px; /* Add some padding at the bottom */
+    flex-grow: 1;
+    overflow-y: auto; /* Always show vertical scrollbar if needed */
+    overflow-x: auto; /* Allow horizontal scroll if needed */
+    height: 100%;
+    padding-bottom: 20px;
     padding-left: 15px;
     padding-right: 15px;
-    min-height: 450px; /* Ensure a minimum height for the scrollable content area */
+    min-height: 450px;
 }
 
 /* Remove or adjust conflicting Bootstrap padding */
