@@ -349,16 +349,20 @@ def run_python_code():
     os.close(fd) # Close the file descriptor immediately
 
     try:
-        with open(path, 'w') as f:
+        with open(path, 'w', encoding='utf-8') as f:  # Force UTF-8 encoding
             f.write(code)
         
+        # Set environment variable to force UTF-8 output in subprocess
+        env = os.environ.copy()
+        env['PYTHONIOENCODING'] = 'utf-8'
         # Execute the Python code using subprocess
         result = subprocess.run(
             ['python', path],
             capture_output=True,
             text=True,
             encoding='utf-8',
-            check=False  # Do not raise an exception for non-zero exit codes
+            check=False,  # Do not raise an exception for non-zero exit codes
+            env=env       # Force UTF-8 output
         )
 
         if result.returncode == 0:
