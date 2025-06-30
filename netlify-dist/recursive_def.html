@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% block title %}Recursive Definitions & Regular Expressions{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="card-title mb-0">Recursive Definitions & Regular Expressions</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Recursion in Theory of Automata (TOA)</h4>
+        <p>
+            Recursion is a fundamental concept in computer science and the Theory of Automata (TOA). In simple terms, recursion means defining something in terms of itself. In TOA, recursion is used to define languages, grammars, and patterns in a compact and powerful way.
+        </p>
+
+        <h5 class="mt-4">1. Recursion Explained (TOA Perspective)</h5>
+        <p>
+            In TOA, recursion helps us describe infinite sets or languages using a few simple rules.
+        </p>
+        <pre class="alert alert-info mt-2 p-3 rounded">
+            <code>
+For example, a language L can be defined recursively:
+
+<strong>Base case:</strong> The empty string ε is in L.
+
+<strong>Recursive case:</strong> If x is in L, then so is axb (for some symbol a, b).
+
+This way, we can generate infinitely many strings by repeatedly applying the rule.
+            </code>
+        </pre>
+
+        <h5 class="mt-4">2. Classic Example: Fibonacci Sequence</h5>
+        <p>
+            The Fibonacci sequence is a famous example of recursion, both in mathematics and programming.
+        </p>
+        <h6>Recursive Formula:</h6>
+        <p>
+            $$F(0) = 0$$
+            $$F(1) = 1$$
+            $$F(n) = F(n-1) + F(n-2) \text{ for } n > 1$$
+        </p>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <h6>Python Example:</h6>
+            <div class="mb-3">
+                <label for="pythonCodeInput" class="form-label">Enter Python Code:</label>
+                <textarea class="form-control" id="pythonCodeInput" rows="10">def fibonacci(n):
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return fibonacci(n-1) + fibonacci(n-2)
+
+print(fibonacci(5))
+</textarea>
+            </div>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtn">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutput">5</code></pre>
+            <p class="text-center"><strong>The function calls itself to solve smaller subproblems, just like recursion in TOA definitions.</strong></p>
+        </div>
+        <h6>Fibonacci in TOA</h6>
+        <p>Fibonacci can be described using recursive definitions, similar to how we define languages in automata theory.</p>
+
+        <h5 class="mt-4">3. Regular Expressions and Recursion</h5>
+        <p>
+            A regular expression (regex) describes a set of strings (a language) using patterns. Recursion can appear in regular expressions when defining patterns that repeat or nest.
+        </p>
+        <h6>Recursive Definition of Regular Expressions:</h6>
+        <pre class="alert alert-info mt-2 p-3 rounded">
+            <code>
+Recursive Definition of Regular Expressions:
+Base cases:
+
+ε (empty string) is a regular expression.
+Any symbol (like 'a') is a regular expression.
+Recursive cases:
+
+If r and s are regular expressions, so are:
+
+(r)|(s) (union)
+(r)(s) (concatenation)
+(r)* (Kleene star, meaning repeat r zero or more times)
+            </code>
+        </pre>
+        <p>This means we can build complex patterns from simple ones by applying these rules repeatedly.</p>
+
+        <h5 class="mt-4">4. Recursion in Regular Expressions: Examples</h5>
+        <h6>Example 1: Matching Balanced Parentheses</h6>
+        <p><b>What does this mean?</b><br>
+Balanced parentheses are strings like (), (()), or ((())), where every opening bracket ( has a matching closing bracket ).</p>
+<p><b>How does recursion help?</b><br>
+Instead of writing a separate rule for every possible number of nested brackets, recursion lets us write one rule that works for any number.</p>
+<p><b>Simple Explanation:</b></p>
+<ul>
+    <li>The pattern looks for an opening bracket (.</li>
+    <li>Then it tries to find more balanced parentheses inside (by calling itself).</li>
+    <li>Then it looks for a closing bracket ).</li>
+</ul>
+<p><b>Easy Recursive Regex Example:</b></p>
+<pre class="alert alert-info mt-2 p-3 rounded">
+    <code>
+Pattern: (?R)*
+    </code>
+</pre>
+<p><b>This means:</b></p>
+<ul>
+    <li>Start with (</li>
+    <li>Then zero or more balanced parentheses inside (that's (?R)*)</li>
+    <li>Then end with )</li>
+</ul>
+<p><b>Matches:</b></p>
+<ul>
+    <li>()</li>
+    <li>(())</li>
+    <li>((()))</li>
+    <li>and so on.</li>
+</ul>
+
+<h6>Example 2: Palindromes</h6>
+<p><b>What is a palindrome?</b><br>
+A palindrome is a word or phrase that reads the same backward as forward, like level or noon.</p>
+<p><b>How does recursion help?</b><br>
+Recursion checks the first and last letter are the same, then checks the inside part in the same way.</p>
+<p><b>Simple Recursive Regex Example:</b></p>
+<pre class="alert alert-info mt-2 p-3 rounded">
+    <code>
+Pattern: (\w)(?:(?R)|\w?)\1
+    </code>
+</pre>
+<p><b>This means:</b></p>
+<ul>
+    <li>Match a letter (let's call it A)</li>
+    <li>Then match the same pattern inside (or nothing, for the middle of odd-length words)</li>
+    <li>Then match the same letter A at the end</li>
+</ul>
+<p><b>Matches:</b></p>
+<ul>
+    <li>aa</li>
+    <li>aba</li>
+    <li>level</li>
+    <li>noon</li>
+    <li>and other palindromes.</li>
+</ul>
+
+<h6>Example 3: Regular Language Recursion (Equal a's and b's)</h6>
+<p><b>What is the language?</b><br>
+All strings with the same number of as followed by the same number of bs, like ab, aabb, aaabbb, etc.</p>
+<p><b>How does recursion help?</b><br>
+We can define this language in two steps:</p>
+<ul>
+    <li><b>Base case:</b> The empty string "" is in the language.</li>
+    <li><b>Recursive case:</b> If a word w is in the language, then so is a + w + b (put an a at the start and a b at the end).</li>
+</ul>
+<p><b>In grammar form:</b></p>
+<pre class="alert alert-info mt-2 p-3 rounded">
+    <code>
+S → ε
+S → a S b
+    </code>
+</pre>
+<p><b>How does this work?</b></p>
+<ul>
+    <li>Start with the empty string: ""</li>
+    <li>Add an a at the start and a b at the end: "ab"</li>
+    <li>Do it again: "aabb"</li>
+    <li>Again: "aaabbb"</li>
+    <li>And so on.</li>
+</ul>
+
+        <h5 class="mt-4">5. Visualizing Recursion</h5>
+        <p>Recursion can be visualized as a tree, where each call creates branches for subproblems until reaching the base case.</p>
+        <div class="text-center">
+            <img src="{{ url_for('static', filename='assets/img_recursive_example.png') }}" alt="Recursion Tree Example" class="img-fluid my-3 image-glow">
+        </div>
+
+        <h5 class="mt-4">Summary Table</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Example</th>
+                    <th>What It Does</th>
+                    <th>Easy Explanation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Balanced Parentheses</td>
+                    <td>Matches (), (()), ((())), etc.</td>
+                    <td>Each ( must have a matching )</td>
+                </tr>
+                <tr>
+                    <td>Palindromes</td>
+                    <td>Matches level, noon, aba, etc.</td>
+                    <td>Reads the same forwards and back</td>
+                </tr>
+                <tr>
+                    <td>Equal a's and b's (aⁿbⁿ)</td>
+                    <td>Matches ab, aabb, aaabbb, etc.</td>
+                    <td>Same number of as and bs</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h5 class="mt-4">Key Point:</h5>
+        <p>
+Recursion in regular expressions lets us solve problems that repeat or nest, like matching pairs or mirrored patterns, using simple rules that call themselves.
+        </p>
+
+    </div>
+</div>
+{% endblock %} 

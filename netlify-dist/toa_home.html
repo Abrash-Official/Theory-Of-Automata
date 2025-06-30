@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}TOA Home{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h4 class="mb-3">Welcome to the Theory of Automata!</h4>
+        <p>
+            <strong>Automata Theory</strong> is a branch of the <strong>Theory of Computation</strong>. It deals with the study of abstract machines and their capacities for computation. An abstract machine is called the automata. It includes the design and analysis of automata, which are mathematical models that can perform computations on strings of symbols according to a set of rules.
+        </p>
+        <hr>
+        <h4 class="mb-3">Why we study Theory of Computation?</h4>
+        <ul>
+            <li><strong>Regular Expressions (RE) :</strong> Used for pattern matching in Linux/Unix command prompt, programming languages and XML/DTD to describe structure.</li>
+            <li><strong>Finite Automata in Modeling Systems :</strong> Used in designing and checking models and electronic circuits that operate based on certain rules.</li>
+            <li><strong>Context-Free Grammars (CFG) :</strong> Used in Compiler / Programming Language design to describe syntax and natural language processing to describe structure.</li>
+            <li><strong>Mathematical Models :</strong> Mathematical understanding of computing devices by mathematically modeling them.</li>
+            <li><strong>Building Block for Quantum Computing:</strong> Turing Machines (we study in this subject) are considered a fundamental building block for understanding quantum computation models.</li>
+            <li><strong>Optimizing Algorithm Efficiency :</strong> Helps classify problems based (e.g., P, NP, NP-complete, and NP-hard), proving that some problems have no efficient solutions.</li>
+            <li><strong>Understanding Computability :</strong> Study of which problems can be solved using algorithms, essentially defining the boundaries of what a computer can calculate. Problems like the "Halting Problem" which are demonstrably impossible to solve with a general algorithm.</li>
+        </ul>
+        <p class="text-muted mt-4"><em>Please check <a href="{{ url_for('theory_of_computation') }}" style="color: var(--bs-primary);">Theory of Computing</a> for more details.</em></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        feather.replace();
+    });
+</script>
+{% endblock %} 

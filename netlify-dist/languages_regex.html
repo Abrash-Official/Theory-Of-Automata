@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block title %}Languages and Regular Expressions{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="card-title mb-0">Languages and Regular Expressions</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">What is a Language in Automata?</h4>
+        <p>A language is a set of strings (words) made from an alphabet (a finite set of symbols).</p>
+        <p>Example: If the alphabet &Sigma; = {a, b}, then some strings are "a", "ab", "bba", etc.</p>
+        <p>A language can be finite (e.g., L = {ab, ba}) or infinite (e.g., all strings of any length over {a, b}).</p>
+
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <h4 class="mt-0">Key Terms</h4>
+            <ul>
+                <li><b>Alphabet (&Sigma;)</b>: Set of symbols, e.g., {a, b}.</li>
+                <li><b>String</b>: Sequence of symbols, e.g., "abba".</li>
+                <li><b>Language (L)</b>: Set of strings over &Sigma;, e.g., L = {ab, aabb, b}.</li>
+                <li><b>Empty String (&epsilon;)</b>: String of length 0.</li>
+            </ul>
+        </div>
+
+        <h4 class="mt-4">Operations on Languages</h4>
+        <ul>
+            <li><b>Union (L₁ &cup; L₂)</b>: All strings in L₁ or L₂.</li>
+            <li><b>Concatenation (L₁L₂)</b>: All strings formed by joining a string from L₁ with one from L₂.</li>
+            <li><b>Kleene Star (L)</b>: All strings made by concatenating zero or more strings from L (includes &epsilon;).</li>
+            <li><b>Kleene Plus (L+)</b>: Like L*, but excludes &epsilon; (at least one string from L).</li>
+        </ul>
+
+        <h4 class="mt-4">Example Table: Language Operations</h4>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr>
+                        <th>Operation</th>
+                        <th>Example (&Sigma; = {a, b})</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Union</td><td>L₁ = {a}, L₂ = {b}</td><td>L₁ &cup; L₂ = {a, b}</td></tr>
+                    <tr><td>Concatenation</td><td>L₁ = {a}, L₂ = {b, bb}</td><td>L₁L₂ = {ab, abb}</td></tr>
+                    <tr><td>Kleene Star</td><td>L = {ab}</td><td>L* = {&epsilon;, ab, abab, ababab, ...}</td></tr>
+                    <tr><td>Kleene Plus</td><td>L = {ab}</td><td>L+ = {ab, abab, ababab, ...}</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4 class="mb-3">What is a Regular Expression?</h4>
+        <p>A regular expression is a formula that describes a regular language using symbols and operators. It is a way to write patterns for matching strings.</p>
+
+        <h4 class="mt-4">Basic Regular Expression Syntax</h4>
+        <ul>
+            <li><b>&epsilon;</b>: Represents the language containing only the empty string.</li>
+            <li><b>&empty;</b>: Represents the empty language (no strings).</li>
+            <li><b>a</b>: Represents the language {a}.</li>
+            <li><b>r + s</b>: Union (either r or s).</li>
+            <li><b>rs</b>: Concatenation (r followed by s).</li>
+            <li><b>r*</b>: Kleene star (zero or more repetitions of r).</li>
+            <li><b>r+</b>: One or more repetitions of r.</li>
+        </ul>
+
+        <h4 class="mt-4">Examples</h4>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr>
+                        <th>Regular Expression</th>
+                        <th>Language Description</th>
+                        <th>Example Strings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>a*</code></td><td>Any number of a's (including none)</td><td>&epsilon;, a, aa, aaa, ...</td></tr>
+                    <tr><td><code>(a+b)*</code></td><td>All strings over {a, b}</td><td>&epsilon;, a, b, ab, ba, ...</td></tr>
+                    <tr><td><code>ab*</code></td><td>'a' followed by any number of 'b's</td><td>a, ab, abb, abbb, ...</td></tr>
+                    <tr><td><code>(ab)+</code></td><td>One or more repetitions of "ab"</td><td>ab, abab, ababab, ...</td></tr>
+                    <tr><td><code>a(a+b)*b</code></td><td>Strings starting with 'a' and ending with 'b'</td><td>ab, aab, abb, aab, ...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4 class="mt-4">Regular Expressions and Languages: The Connection</h4>
+        <ul>
+            <li>Every regular expression defines a regular language.</li>
+            <li>Every regular language can be described by a regular expression.</li>
+            <li>Regular expressions and finite automata are equivalent in power.</li>
+        </ul>
+
+        <h4 class="mt-4">Visuals & Graphs</h4>
+
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <h6>1. DFA for Language L = {strings ending with 'ab'} (&Sigma; = {a, b})</h6>
+            <div id="languagesRegexDfaVisualization" class="mt-2" style="height: 300px; border: 1px solid #ccc;"></div>
+            <p>q2 is the accepting state (if the string ends with 'ab').</p>
+        </div>
+
+        <div class="alert alert-info mt-4 p-3 rounded">
+            <h6>2. Example: Kleene Star</h6>
+            <p>If L = {a}, then L* = {&epsilon;, a, aa, aaa, ...}.</p>
+            <p>Graphically:</p>
+            <div id="kleeneStarDiagram" class="mt-2 mx-auto" style="height: 200px; border: 1px solid #ccc;"></div>
+        </div>
+
+        <h4 class="mt-4">Common Regular Expressions for Typical Languages</h4>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr>
+                        <th>Language Description</th>
+                        <th>Regular Expression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>All strings over {a, b}</td><td><code>(a+b)*</code></td></tr>
+                    <tr><td>Strings that start with 'a'</td><td><code>a(a+b)*</code></td></tr>
+                    <tr><td>Strings that end with 'b'</td><td><code>(a+b)*b</code></td></tr>
+                    <tr><td>Strings with even number of a's</td><td><code>(bb + (ab + ba)(bb)(ab + ba))</code></td></tr>
+                    <tr><td>Strings with exactly two b's</td><td><code>ababa*</code></td></tr>
+                    <tr><td>Binary strings with odd number of 1's</td><td><code>(0101)0</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4 class="mt-4">Practice Examples</h4>
+        <ul>
+            <li>1. List all strings in &Sigma; for &Sigma; = {a}, length up to 3:<br>&epsilon;, a, aa, aaa.</li>
+            <li>2. If L = {ab}, what is L up to length 4?<br>&epsilon;, ab, abab, ababab, abababab.</li>
+            <li>3. Regular Expression for all binary strings (&Sigma; = {0, 1}):<br><code>(0+1)*</code>.</li>
+            <li>4. Is "ababab" in {ab}*?<br>Yes, because it is "ab" repeated three times.</li>
+        </ul>
+
+        <h4 class="mt-4">Code Example: Python Regex</h4>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <label for="pythonCodeInput" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInput" rows="15">
+import re
+
+# Check if a string starts with 'a' and ends with 'b'
+pattern = r'^a[a|b]*b$'
+
+test_strings = ['ab', 'aab', 'abb', 'aabb', 'a', 'b']
+for s in test_strings:
+    if re.match(pattern, s):
+        print(f"{s}: MATCH")
+    else:
+        print(f"{s}: NO MATCH")</textarea>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtn">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutput">ab: MATCH
+aab: MATCH
+abb: MATCH
+aabb: MATCH
+a: NO MATCH
+b: NO MATCH</code></pre>
+        </div>
+
+        <h4 class="mt-4">Quick MCQs</h4>
+        <div id="mcq-container">
+            <div class="mcq-progress text-end mb-2"></div>
+            <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                <li data-correct-answer="b" class="mcq-question-item">
+                    <p class="mb-3">What does the regular expression (a+b) represent?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) All strings of a's only</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) All strings over {a, b}</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) All strings starting with a</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="d">d) All strings ending with b</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="c" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">Which operation does the symbol * represent in regular expressions?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) Union</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) Concatenation</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) Kleene Star (zero or more repetitions)</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="d">d) Plus (one or more repetitions)</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="b" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">Is the language L = {a&supn;b&supn; | n &ge; 0} regular?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) Yes</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) No</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="b" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">What is the regular expression for all strings ending with 'ab' over {a, b}?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) ab*</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) (a+b)ab</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) ab</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="d">d) (ab)*</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="b" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">Which of the following is NOT a regular language?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) All strings with even number of a's</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) All palindromic strings over {a, b}</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) All strings over {a, b}</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="d">d) All strings ending with b</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+            </ol>
+            <div class="d-flex justify-content-between mt-3">
+                <button type="button" class="btn btn-secondary" id="prevMcqBtn" style="display: none;">Previous</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %} 

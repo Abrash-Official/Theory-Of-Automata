@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% block title %}Parse Trees, Ambiguity, Chomsky Normal Form{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-primary" id="parseTreesHeader">
+        <h3 class="card-title mb-0">Parse Trees, Ambiguity, Chomsky Normal Form</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Parse Trees</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+A parse tree (or derivation tree) is a hierarchical representation of how a string is generated from a context-free grammar (CFG). It visualizes the sequence of production rules applied during derivation.
+
+Structure:
+- Root: Labeled with the start symbol (e.g., S).
+- Internal nodes: Non-terminal symbols (e.g., A, B).
+- Leaves: Terminal symbols (e.g., a, b) or ε.
+            </pre>
+        </div>
+        <h5 class="mt-4">Example</h5>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+For the grammar:
+S → aSb | bSa | SS | ε
+The string abab has two parse trees:
+
+Leftmost Derivation:
+S ⇒ aSb ⇒ abSa b ⇒ abaSb b ⇒ abab
+
+Rightmost Derivation:
+S ⇒ SS ⇒ SaSb ⇒ Sab ⇒ aSbab ⇒ abab
+            </pre>
+        </div>
+        <ul>
+            <li>Each node represents a production rule application.</li>
+            <li>Multiple trees for the same string indicate ambiguity.</li>
+        </ul>
+        <h4 class="mt-4">Ambiguity in CFGs</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+A CFG is ambiguous if a string has:
+- Multiple leftmost/rightmost derivations.
+- More than one parse tree.
+
+Example:
+Grammar: S → SS | ab | ba | ε
+String abab has two derivations:
+S ⇒ SS ⇒ abS ⇒ abab
+S ⇒ ab ⇒ abS ⇒ abab
+
+Inherent Ambiguity:
+Some languages (e.g., {aⁿbᵐcᵐdⁿ | n,m≥1} ∪ {aⁿbᵐcⁿdᵐ | n,m≥1}) have no unambiguous CFG.
+            </pre>
+        </div>
+        <h4 class="mt-4">MCQ</h4>
+        <div id="mcq-container-parse-trees">
+            <div class="mcq-progress text-end mb-2"></div>
+            <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                <li data-correct-answer="B" class="mcq-question-item">
+                    <p class="mb-3">Which statements are true for the grammar G={S→SS, S→ab, S→ba, S→ε}?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">A) I and II only</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">B) I and III only (G cannot generate aabb)</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="C">C) II and III only</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="D">D) All of the above</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+            </ol>
+        </div>
+        <h4 class="mt-4">Chomsky Normal Form (CNF)</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+A CFG is in CNF if all productions are:
+- A → BC (two non-terminals)
+- A → a (one terminal)
+- S → ε (if ε is in the language)
+
+Conversion Steps:
+- Remove ε-productions: Replace nullable non-terminals.
+- Eliminate unit productions: Replace A→B with B's productions.
+- Replace mixed terminals: Convert A→aB to A→XB, X→a.
+- Break long productions: Split A→BCD into A→BE, E→CD.
+
+Example:
+Original grammar: S→ASB|ε, A→a, B→b
+Converted to CNF: S→AE, E→SB, A→a, B→b
+            </pre>
+        </div>
+        <h4 class="mt-4">Applications</h4>
+        <ul>
+            <li>Enables efficient parsing (e.g., CYK algorithm).</li>
+            <li>Simplifies proofs in automata theory.</li>
+        </ul>
+        <h4 class="mt-4">Key Comparisons</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <table class="table table-bordered table-striped mb-0" style="min-width: 350px;">
+                <thead>
+                    <tr><th>Concept</th><th>Definition</th><th>Example</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Parse Tree</td><td>Hierarchical derivation visualization</td><td>S → aSb → ab for ab.</td></tr>
+                    <tr><td>Ambiguous Grammar</td><td>Multiple derivations for the same string</td><td>S → SS</td></tr>
+                    <tr><td>CNF</td><td>Restricted production rules for parsing efficiency</td><td>A → BC or A → a.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <h4 class="mt-4">Conclusion</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+Parse trees and CNF are foundational in parsing and compiler design. Ambiguity complicates parsing but is unavoidable for some languages. Mastery of these concepts is critical for automata theory and language processing.
+            </pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    #parseTreesHeader {
+        background-color: transparent !important;
+    }
+    .overflow-x-auto {
+        overflow-x: auto !important;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // MCQ logic for Parse Trees page
+        const mcqContainer = document.getElementById('mcq-container-parse-trees');
+        if (mcqContainer) {
+            const questions = mcqContainer.querySelectorAll('.mcq-question-item');
+            let currentQuestionIndex = 0;
+
+            function updateMcqDisplay() {
+                questions.forEach((q, index) => {
+                    q.style.display = (index === currentQuestionIndex) ? 'block' : 'none';
+                });
+                updateMcqProgress();
+            }
+
+            function updateMcqProgress() {
+                const progressText = mcqContainer.querySelector('.mcq-progress');
+                if (progressText) {
+                    progressText.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+                }
+            }
+
+            function resetQuestion(questionItem) {
+                const options = questionItem.querySelectorAll('.mcq-option');
+                options.forEach(option => {
+                    option.classList.remove('selected-option', 'correct', 'incorrect');
+                    option.disabled = false;
+                });
+                const feedback = questionItem.querySelector('.feedback');
+                if (feedback) {
+                    feedback.textContent = '';
+                    feedback.classList.remove('text-success', 'text-danger');
+                }
+                const submitBtn = questionItem.querySelector('.submit-mcq-btn');
+                if (submitBtn) {
+                    submitBtn.style.display = 'block';
+                }
+            }
+
+            questions.forEach(resetQuestion);
+            updateMcqDisplay();
+
+            mcqContainer.addEventListener('click', function(event) {
+                const target = event.target;
+
+                if (target.classList.contains('mcq-option')) {
+                    const questionItem = target.closest('.mcq-question-item');
+                    const options = questionItem.querySelectorAll('.mcq-option');
+                    options.forEach(option => option.classList.remove('selected-option'));
+                    target.classList.add('selected-option');
+                } else if (target.classList.contains('submit-mcq-btn')) {
+                    const questionItem = target.closest('.mcq-question-item');
+                    const selectedOption = questionItem.querySelector('.mcq-option.selected-option');
+                    const feedback = questionItem.querySelector('.feedback');
+                    const submitBtn = questionItem.querySelector('.submit-mcq-btn');
+                    const correctAnswer = questionItem.dataset.correctAnswer;
+
+                    if (selectedOption) {
+                        if (selectedOption.dataset.option === correctAnswer) {
+                            feedback.textContent = 'Correct!';
+                            feedback.classList.remove('text-danger');
+                            feedback.classList.add('text-success');
+                            selectedOption.classList.add('correct');
+                        } else {
+                            feedback.textContent = `Incorrect. The correct answer was ${correctAnswer}.`;
+                            feedback.classList.remove('text-success');
+                            feedback.classList.add('text-danger');
+                            selectedOption.classList.add('incorrect');
+                            // Highlight correct answer
+                            questionItem.querySelector(`.mcq-option[data-option="${correctAnswer}"]`).classList.add('correct');
+                        }
+                        // Disable all options after submission
+                        questionItem.querySelectorAll('.mcq-option').forEach(option => option.disabled = true);
+                        submitBtn.style.display = 'none';
+
+                        // Show next question or prompt to restart after a delay
+                        setTimeout(() => {
+                            currentQuestionIndex++;
+                            if (currentQuestionIndex < questions.length) {
+                                updateMcqDisplay();
+                            } else {
+                                alert('You have completed all MCQ questions!');
+                                currentQuestionIndex = 0;
+                                questions.forEach(resetQuestion);
+                                updateMcqDisplay();
+                            }
+                        }, 2000); // 2-second delay
+
+                    } else {
+                        feedback.textContent = 'Please select an answer.';
+                        feedback.classList.remove('text-success', 'text-danger');
+                        feedback.classList.add('text-warning');
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Theory of Computation{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h4 class="mb-3">Theory of Computation</h4>
+        <p>
+            <strong>Theory of Computation</strong> is a field in computer science that helps us understand how computers solve problems, what they can do, and what they cannot do. Here's a simple breakdown so anyone can understand—even if you're new to the topic!
+        </p>
+
+        <hr>
+
+        <h5 class="mb-3">1. Automata Theory</h5>
+        <p>
+            Imagine automata as simple robots or machines that follow rules to recognize patterns, like finding certain words in a document.
+        </p>
+        <h6>Types of automata:</h6>
+        <ul>
+            <li><strong>Finite Automata:</strong> Like basic pattern detectors (e.g., searching for a word in text).</li>
+            <li><strong>Pushdown Automata:</strong> These have a little memory (like a notepad) to handle more complex patterns, such as checking if parentheses are balanced in code.</li>
+            <li><strong>Turing Machines:</strong> The most powerful type—can do any calculation that a computer can do.</li>
+        </ul>
+        <p>Why it matters: Automata are used in making compilers (which turn your code into something computers understand) and in language processing.</p>
+
+        <hr>
+
+        <h5 class="mb-3">2. Computability Theory</h5>
+        <p>
+            This area asks: "Can a computer solve this problem at all?"
+        </p>
+        <ul>
+            <li>Some problems are <strong>decidable</strong> (there's always a solution), while others are <strong>undecidable</strong> (no computer can ever solve them, like predicting if any given program will run forever or stop).</li>
+            <li>Turing Machines help us figure out these limits.</li>
+        </ul>
+
+        <hr>
+
+        <h5 class="mb-3">3. Complexity Theory</h5>
+        <p>
+            Here, we ask: "How much time or memory does it take for a computer to solve a problem?"
+        </p>
+        <ul>
+            <li><strong>Easy problems:</strong> Can be solved quickly (called "P" problems).</li>
+            <li><strong>Harder problems:</strong> Solutions can be checked quickly but are hard to find (called "NP" problems).</li>
+            <li><strong>Very hard problems:</strong> NP-Complete problems—if you solve one, you can solve them all, but no one knows how to do this quickly yet.</li>
+        </ul>
+        <p>This helps us make software that runs faster and uses less memory.</p>
+
+        <hr>
+
+        <h5 class="mb-3">Summary Table</h5>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr><th>Area</th><th>What it Studies</th><th>Why it Matters</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Automata Theory</td><td>Simple machines & pattern recognition</td><td>Compilers, language processing, pattern matching</td></tr>
+                    <tr><td>Computability Theory</td><td>What computers can/can't solve</td><td>Knowing limits, avoiding unsolvable problems</td></tr>
+                    <tr><td>Complexity Theory</td><td>How much resources problems need</td><td>Making efficient, fast software</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="mt-3">
+            In short: Theory of Computation helps us build better software and understand what computers can and cannot do.
+        </p>
+        <p>
+            This infographic shows how these three areas fit together to explain what computers can do, what they can't, and how efficiently they can do it.
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        feather.replace();
+    });
+</script>
+{% endblock %} 

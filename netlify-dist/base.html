@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AutomataEdu - Interactive Automata Theory Learning Tool{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/icons/Favicon.png') }}">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- KaTeX for mathematical notation -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">
+                <i data-feather="cpu" class="me-2"></i>
+                AutomataEdu
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                <button type="button" class="btn btn-outline-light btn-sm me-2" id="darkModeToggle">
+                    <i data-feather="moon" id="themeIcon"></i>
+                </button>
+                
+                <button type="button" class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#helpModal">
+                    <i data-feather="help-circle"></i>
+                    Help
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container-fluid">
+        <div class="row h-100">
+            <!-- Sidebar with Course Topics and Conversion Tools -->
+            <div class="col-lg-3 col-md-4 h-100">
+                <div class="card h-100" id="sidebarCard">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i data-feather="book-open" class="me-2"></i>
+                            Automata Course Topics
+                        </h5>
+                    </div>
+                    <div class="card-body p-0 sidebar-scroll">
+                        <div class="nav flex-column nav-pills" id="course-sidebar" role="tablist" aria-orientation="vertical" style="text-align: left;">
+                            <a class="nav-link text-start ms-2 {% if active_page == 'toa_home' %}active{% endif %}" href="{{ url_for('toa_home') }}">1 TOA Home</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'course_intro' %}active{% endif %}" href="{{ url_for('course_intro') }}">2 Course Introduction, Fundamentals of Automata</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'recursive_def' %}active{% endif %}" href="{{ url_for('recursive_def') }}">3 Recursive Definitions, Regular Expressions</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'languages_regex' %}active{% endif %}" href="{{ url_for('languages_regex') }}">4 Languages and Regular Expressions</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'finite_automata' %}active{% endif %}" href="{{ url_for('finite_automata') }}">5 Finite Automata (FA)</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'nfa_dfa_graphs' %}active{% endif %}" href="{{ url_for('nfa_dfa_graphs') }}">6 NFA, DFA, Transition Graphs</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'kleene_closure' %}active{% endif %}" href="{{ url_for('kleene_closure') }}">7 Kleene's Theorem, Closure Properties</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'mealy_moore' %}active{% endif %}" href="{{ url_for('mealy_moore') }}">8 Mealy and Moore Machines</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'cfg' %}active{% endif %}" href="{{ url_for('cfg') }}">9 Context-Free Grammars (CFG)</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'pda' %}active{% endif %}" href="{{ url_for('pda') }}">10 Pushdown Automata (PDA)</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'parse_trees' %}active{% endif %}" href="{{ url_for('parse_trees') }}">11 Parse Trees, Ambiguity, Chomsky Normal Form</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'pumping_lemma' %}active{% endif %}" href="{{ url_for('pumping_lemma') }}">12 Pumping Lemma for CFLs</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'turing_machines' %}active{% endif %}" href="{{ url_for('turing_machines') }}">13 Turing Machines, Variants</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'decidability' %}active{% endif %}" href="{{ url_for('decidability') }}">14 Decidability, Computability Theory</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'context_sensitive' %}active{% endif %}" href="{{ url_for('context_sensitive') }}">15 Context-Sensitive Languages, LBA, Chomsky Hierarchy</a>
+                            <a class="nav-link text-start ms-2 {% if active_page == 'conversion' %}active{% endif %}" href="{{ url_for('conversion') }}"><i data-feather="layers" class="me-2"></i>16 Conversion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-8 h-100">
+                <div class="main-content-scroll">
+                    <div class="d-flex justify-content-between mt-4 mb-4">
+                        {% if previous_page %}
+                        <a href="{{ previous_page }}" class="btn btn-primary"><i data-feather="arrow-left" class="me-2"></i> Previous Topic</a>
+                        {% else %}
+                        <span></span> {# Spacer to maintain layout #}
+                        {% endif %}
+
+                        {% if next_page %}
+                        <a href="{{ next_page }}" class="btn btn-primary">Next Topic <i data-feather="arrow-right" class="ms-2"></i></a>
+                        {% else %}
+                        <span></span> {# Spacer to maintain layout #}
+                        {% endif %}
+                    </div>
+                    {% block content %}{% endblock %}
+                    <div class="d-flex justify-content-between mt-4 mb-4">
+                        {% if previous_page %}
+                        <a href="{{ previous_page }}" class="btn btn-primary"><i data-feather="arrow-left" class="me-2"></i> Previous Topic</a>
+                        {% else %}
+                        <span></span> {# Spacer to maintain layout #}
+                        {% endif %}
+
+                        {% if next_page %}
+                        <a href="{{ next_page }}" class="btn btn-primary">Next Topic <i data-feather="arrow-right" class="ms-2"></i></a>
+                        {% else %}
+                        <span></span> {# Spacer to maintain layout #}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpModalLabel">
+                        <i data-feather="help-circle" class="me-2"></i>
+                        AutomataEdu Help
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="accordion" id="helpAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#help1">
+                                    Regular Expression to DFA
+                                </button>
+                            </h2>
+                            <div id="help1" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <p>Convert regular expressions to deterministic finite automata using direct construction.</p>
+                                    <ul>
+                                        <li><strong>Supported operators:</strong> * (Kleene star), | (union), () (grouping), ε (epsilon), ∅ (empty set)</li>
+                                        <li><strong>Examples:</strong> a*, a|b, (a|b)*abb</li>
+                                        <li>Use the quick insert buttons for special symbols</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help2">
+                                    NFA to DFA
+                                </button>
+                            </h2>
+                            <div id="help2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <p>Convert nondeterministic finite automata to deterministic using subset construction.</p>
+                                    <ul>
+                                        <li>Define states, alphabet, transitions, start states, and final states</li>
+                                        <li>Supports epsilon (ε) transitions</li>
+                                        <li>Shows epsilon closure calculations and state subset construction</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help3">
+                                    DFA to Regular Expression
+                                </button>
+                            </h2>
+                            <div id="help3" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <p>Extract regular expressions from deterministic finite automata using state elimination.</p>
+                                    <ul>
+                                        <li>Define DFA with states, alphabet, transitions, and final states</li>
+                                        <li>Shows step-by-step state elimination process</li>
+                                        <li>Demonstrates generalized NFA intermediate steps</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (bundle includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+        feather.replace();
+    </script>
+
+    <!-- KaTeX -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Cytoscape.js for visualizations -->
+    <script src="https://unpkg.com/cytoscape@3.29.2/dist/cytoscape.min.js"></script>
+    
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/visualization.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cytoscape-utils.js') }}"></script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>
