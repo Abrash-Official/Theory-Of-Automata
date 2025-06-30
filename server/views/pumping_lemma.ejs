@@ -1,0 +1,127 @@
+<div class="card mb-4">
+    <div class="card-header" id="pumpingLemmaHeader" style="background-color: transparent !important;">
+        <h3 class="card-title mb-0">Pumping Lemma for Context-Free Languages (CFLs)</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Introduction</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">The Pumping Lemma for Context-Free Languages (CFLs) is a property that all context-free languages satisfy. It is used to prove that certain languages are not context-free by showing that they do not satisfy this property. The lemma is a fundamental tool in formal language theory and automata.</pre>
+        </div>
+        <h4 class="mt-4">Formal Statement</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">If L is a context-free language, then there exists a constant p (the pumping length) such that for any string s in L with |s| ≥ p, s can be written as s = uvwxy, with substrings u, v, w, x, y, satisfying:
+1. |vx| ≥ 1
+2. |vwx| ≤ p
+3. For all i ≥ 0, the string u(v^i)w(x^i)y is in L
+
+This means that parts of the string can be "pumped" (repeated) and the resulting string will still be in the language.</pre>
+        </div>
+        <h4 class="mt-4">How to Use the Pumping Lemma</h4>
+        <ol>
+            <li>Assume L is a CFL and the lemma holds.</li>
+            <li>Let s be a string in L with |s| ≥ p.</li>
+            <li>Show that for all possible decompositions s = uvwxy, pumping v and x (i.e., repeating or removing them) produces a string not in L.</li>
+            <li>Conclude that L is not a CFL if the lemma fails.</li>
+        </ol>
+        <h4 class="mt-4">Example: Prove L = {aⁿbⁿcⁿ | n ≥ 1} is not a CFL</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">Suppose L is a CFL. Let p be the pumping length. Choose s = a^p b^p c^p.
+For any decomposition s = uvwxy with |vx| ≥ 1 and |vwx| ≤ p, v and x can only contain a's and b's or b's and c's, but not all three.
+Pumping v and x will unbalance the number of a's, b's, and c's, so the resulting string is not in L. Thus, L is not a CFL.</pre>
+        </div>
+        <h4 class="mt-4">Pumping Lemma Flowchart</h4>
+        <div id="pumpingLemmaFlowchart" class="cytoscape-container mt-2" style="height: 300px; border: 1px solid #ccc;"></div>
+        <h4 class="mt-4">Code Example: Pumping Lemma Simulation in Python</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <label for="pythonCodeInputPumpingLemma" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInputPumpingLemma" rows="15" style="max-width: 100%; white-space: pre; overflow-x: auto;">def pumping_lemma_cfl(s, p):
+    # Simulate all possible decompositions s = uvwxy
+    n = len(s)
+    for i in range(n):
+        for j in range(i+1, min(i+p+1, n+1)):
+            for k in range(j, n+1):
+                u = s[:i]
+                v = s[i:j]
+                w = s[j:k]
+                x = s[k:k+1]
+                y = s[k+1:]
+                if len(v + x) >= 1 and len(v + w + x) <= p:
+                    # Try pumping i = 0, 2
+                    for pump in [0, 2]:
+                        pumped = u + v * pump + w + x * pump + y
+                        print(f"Pumped string (i={pump}): {pumped}")
+
+# Example usage
+pumping_lemma_cfl('aaabbbccc', 3)</textarea>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtnPumpingLemma">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded overflow-x-auto" id="pythonCodeOutputPumpingLemma" style="max-width: 100%; white-space: pre-wrap; word-break: break-word;"></pre>
+        </div>
+        <h4 class="mt-4">MCQs on Pumping Lemma for CFLs</h4>
+        <div id="mcq-container-pumping-lemma">
+            <div class="mcq-progress text-end mb-2"></div>
+            <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                <li data-correct-answer="C" class="mcq-question-item">
+                    <p class="mb-3">The pumping lemma for CFLs is mainly used to:</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">a) Prove a language is context-free</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">b) Construct a PDA</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="C">c) Prove a language is not context-free</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="D">d) Find the pumping length</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <!-- More MCQs can be added here -->
+            </ol>
+            <p class="mt-3">Master the pumping lemma to understand the limitations of context-free languages!</p>
+        </div>
+        <h4 class="mt-4">Key Notes</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">- The pumping lemma is a necessary condition for CFLs, not sufficient.
+- Some non-CFLs may still satisfy the lemma.
+- The lemma is mainly a tool for disproving context-freeness.
+- The proof often involves clever choices of s and analysis of all decompositions.</pre>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize CodeMirror for Python code input in Pumping Lemma page
+        const pythonCodeEditorElementPumpingLemma = document.getElementById('pythonCodeInputPumpingLemma');
+        if (pythonCodeEditorElementPumpingLemma && typeof CodeMirror !== 'undefined') {
+            window.AutomataEdu.codeEditorInstancePumpingLemma = CodeMirror.fromTextArea(pythonCodeEditorElementPumpingLemma, {
+                mode: 'python',
+                theme: 'dracula',
+                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
+                readOnly: false
+            });
+            document.getElementById('runPythonCodeBtnPumpingLemma').addEventListener('click', runPythonCodePumpingLemma);
+        }
+        // Pumping Lemma Flowchart visualization
+        const pumpingLemmaFlowchartContainer = document.getElementById('pumpingLemmaFlowchart');
+        if (pumpingLemmaFlowchartContainer && typeof renderAutomaton !== 'undefined') {
+            const flowchartData = {
+                states: [
+                    { id: 'A', label: 'Start', isStart: true, color: '#48bb78' },
+                    { id: 'B', label: 'Language Type?', isFinal: false, color: '#4299e1' },
+                    { id: 'C', label: 'Use Regular Pumping Lemma', isFinal: false, color: '#ed8936' },
+                    { id: 'D', label: 'Use CFL Pumping Lemma', isFinal: false, color: '#ed64a6' },
+                    { id: 'E', label: 'Check 3-part division', isFinal: false, color: '#38b2ac' },
+                    { id: 'F', label: 'Check 5-part division', isFinal: false, color: '#ecc94b' }
+                ],
+                transitions: [
+                    { from: 'A', to: 'B', symbol: '' },
+                    { from: 'B', to: 'C', symbol: 'Regular' },
+                    { from: 'B', to: 'D', symbol: 'CFL' },
+                    { from: 'C', to: 'E', symbol: '' },
+                    { from: 'D', to: 'F', symbol: '' }
+                ]
+            };
+            renderAutomaton('pumpingLemmaFlowchart', flowchartData);
+        }
+    });
+</script> 

@@ -1,0 +1,113 @@
+<div class="card mb-4">
+    <div class="card-header" id="decidabilityHeader" style="background-color: transparent !important;">
+        <h3 class="card-title mb-0">Decidability and Computability Theory</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Introduction</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">Decidability and computability theory study what problems can be solved by algorithms (Turing machines) and which cannot. These concepts are fundamental to theoretical computer science and have deep implications for logic, mathematics, and computer science.</pre>
+        </div>
+        <h4 class="mt-4">Decidable and Undecidable Languages</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">A language is <b>decidable</b> if there exists a Turing machine that always halts and correctly decides membership for every input string.
+A language is <b>undecidable</b> if no such Turing machine exists.
+
+Examples:
+- Decidable: Regular languages, context-free languages, some context-sensitive languages.
+- Undecidable: The Halting Problem, Post Correspondence Problem, some context-sensitive languages.</pre>
+        </div>
+        <h4 class="mt-4">The Halting Problem</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">The Halting Problem asks: Given a Turing machine M and input w, does M halt on w?
+Alan Turing proved that this problem is undecidable: there is no algorithm that can solve it for all possible M and w.</pre>
+        </div>
+        <h4 class="mt-4">Code Example: Simulating the Halting Problem</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <label for="pythonCodeInputDecidability" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInputDecidability" rows="12" style="max-width: 100%; white-space: pre; overflow-x: auto;">def halting_problem_simulation(tm, input_str, max_steps=100):
+    # Simulate a Turing machine for a limited number of steps
+    steps = 0
+    state = tm['start']
+    tape = list(input_str)
+    head = 0
+    while steps < max_steps:
+        symbol = tape[head] if 0 <= head < len(tape) else '_'
+        key = (state, symbol)
+        if key in tm['transitions']:
+            new_state, write_symbol, direction = tm['transitions'][key]
+            tape[head] = write_symbol
+            state = new_state
+            head += 1 if direction == 'R' else -1
+            steps += 1
+        else:
+            break
+    if state == tm['accept']:
+        print("TM accepted the input.")
+    elif state == tm['reject']:
+        print("TM rejected the input.")
+    else:
+        print("TM did not halt within the step limit (may not halt).")
+
+# Example TM (accepts '00')
+tm = {
+    'start': 'q0',
+    'accept': 'q_accept',
+    'reject': 'q_reject',
+    'transitions': {
+        ('q0', '0'): ('q1', '0', 'R'),
+        ('q1', '0'): ('q_accept', '0', 'R'),
+        ('q0', '1'): ('q_reject', '1', 'R'),
+        ('q1', '1'): ('q_reject', '1', 'R'),
+    }
+}
+halting_problem_simulation(tm, '00')</textarea>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtnDecidability">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded overflow-x-auto" id="pythonCodeOutputDecidability" style="max-width: 100%; white-space: pre-wrap; word-break: break-word;"></pre>
+        </div>
+        <h4 class="mt-4">MCQs on Decidability & Computability</h4>
+        <div id="mcq-container-decidability">
+            <div class="mcq-progress text-end mb-2"></div>
+            <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                <li data-correct-answer="B" class="mcq-question-item">
+                    <p class="mb-3">Which of the following is undecidable?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">a) Membership problem for regular languages</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">b) The Halting Problem</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="C">c) Membership problem for context-free languages</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="D">d) Emptiness problem for regular languages</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <!-- More MCQs can be added here -->
+            </ol>
+            <p class="mt-3">Understanding decidability is key to theoretical computer science!</p>
+        </div>
+        <h4 class="mt-4">Key Notes</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">- Decidable problems can be solved by an algorithm (TM that always halts).
+- Undecidable problems cannot be solved by any algorithm.
+- The Halting Problem is the most famous undecidable problem.
+- Computability theory explores the limits of what can be computed.</pre>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize CodeMirror for Python code input in Decidability page
+        const pythonCodeEditorElementDecidability = document.getElementById('pythonCodeInputDecidability');
+        if (pythonCodeEditorElementDecidability && typeof CodeMirror !== 'undefined') {
+            window.AutomataEdu.codeEditorInstanceDecidability = CodeMirror.fromTextArea(pythonCodeEditorElementDecidability, {
+                mode: 'python',
+                theme: 'dracula',
+                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
+                readOnly: false
+            });
+            document.getElementById('runPythonCodeBtnDecidability').addEventListener('click', runPythonCodeDecidability);
+        }
+    });
+</script> 

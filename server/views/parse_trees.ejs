@@ -1,0 +1,168 @@
+<div class="card mb-4">
+    <div class="card-header" id="parseTreesHeader" style="background-color: transparent !important;">
+        <h3 class="card-title mb-0">Parse Trees, Ambiguity, and Chomsky Normal Form</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Parse Trees</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">A parse tree is a tree representation that shows how a string can be derived from a context-free grammar (CFG). Each internal node is a non-terminal, and each leaf is a terminal or ε. Parse trees are fundamental in syntax analysis and compiler design.</pre>
+        </div>
+        <h4 class="mt-4">Example: Parse Tree for the String "a + a * a"</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">Grammar:
+E → E + T | T
+T → T * F | F
+F → a
+
+Parse tree for "a + a * a":
+
+        E
+      / | \
+     E  +  T
+     |     /|\
+     F    T * F
+     |    |   |
+     a    F   a
+          |
+          a
+</pre>
+        </div>
+        <div id="parseTreeVisualization" class="cytoscape-container mt-2" style="height: 300px; border: 1px solid #ccc;"></div>
+        <h4 class="mt-4">Ambiguity in Grammars</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">A grammar is ambiguous if there exists at least one string that can have more than one distinct parse tree (or leftmost derivation). Ambiguity is undesirable in programming languages as it leads to multiple interpretations.</pre>
+        </div>
+        <h4 class="mt-4">Example: Ambiguous Grammar</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">Grammar:
+S → S + S | S * S | a
+
+String: a + a * a
+
+This string can be parsed in two ways:
+1. (a + a) * a
+2. a + (a * a)
+
+Each yields a different parse tree.</pre>
+        </div>
+        <h4 class="mt-4">Chomsky Normal Form (CNF)</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">A context-free grammar is in Chomsky Normal Form if all production rules are of the form:
+A → BC
+A → a
+A → ε (only for the start symbol, if ε is in the language)
+Where A, B, C are non-terminals and a is a terminal.
+
+CNF is useful for simplifying parsing algorithms and proving properties about context-free languages.</pre>
+        </div>
+        <h4 class="mt-4">Code Example: Parse Tree Construction in Python</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <label for="pythonCodeInputParseTree" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInputParseTree" rows="15" style="max-width: 100%; white-space: pre; overflow-x: auto;">class Node:
+    def __init__(self, value, children=None):
+        self.value = value
+        self.children = children or []
+
+    def print_tree(self, level=0):
+        print('  ' * level + str(self.value))
+        for child in self.children:
+            child.print_tree(level + 1)
+
+def example_parse_tree():
+    # Parse tree for E → E + T → F + T → a + T → a + T * F → a + F * F → a + a * a
+    root = Node('E', [
+        Node('E', [Node('F', [Node('a')])]),
+        Node('+'),
+        Node('T', [
+            Node('T', [Node('F', [Node('a')])]),
+            Node('*'),
+            Node('F', [Node('a')])
+        ])
+    ])
+    root.print_tree()
+
+example_parse_tree()</textarea>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtnParseTree">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded overflow-x-auto" id="pythonCodeOutputParseTree" style="max-width: 100%; white-space: pre-wrap; word-break: break-word;"></pre>
+        </div>
+        <h4 class="mt-4">MCQs on Parse Trees & Ambiguity</h4>
+        <div id="mcq-container-parse-trees">
+            <div class="mcq-progress text-end mb-2"></div>
+            <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                <li data-correct-answer="B" class="mcq-question-item">
+                    <p class="mb-3">A grammar is ambiguous if:</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">a) It has left recursion</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">b) There exists a string with more than one parse tree</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="C">c) It has more than one production for a non-terminal</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="D">d) None of the above</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <!-- More MCQs can be added here -->
+            </ol>
+            <p class="mt-3">Understanding parse trees and ambiguity is essential for syntax analysis!</p>
+        </div>
+        <h4 class="mt-4">Key Notes</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">- Every string derivable from a CFG has at least one parse tree.
+- Ambiguity is a property of the grammar, not the language.
+- Some languages are inherently ambiguous (no unambiguous grammar exists).
+- CNF is not unique; a grammar can have multiple CNF forms.</pre>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize CodeMirror for Python code input in Parse Trees page
+        const pythonCodeEditorElementParseTree = document.getElementById('pythonCodeInputParseTree');
+        if (pythonCodeEditorElementParseTree && typeof CodeMirror !== 'undefined') {
+            window.AutomataEdu.codeEditorInstanceParseTree = CodeMirror.fromTextArea(pythonCodeEditorElementParseTree, {
+                mode: 'python',
+                theme: 'dracula',
+                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
+                readOnly: false
+            });
+            document.getElementById('runPythonCodeBtnParseTree').addEventListener('click', runPythonCodeParseTree);
+        }
+        // Example parse tree visualization (static for now)
+        const parseTreeVisualizationContainer = document.getElementById('parseTreeVisualization');
+        if (parseTreeVisualizationContainer && typeof renderParseTree !== 'undefined') {
+            const parseTreeData = {
+                states: [
+                    { id: 'E1', label: 'E' },
+                    { id: 'E2', label: 'E' },
+                    { id: 'F1', label: 'F' },
+                    { id: 'a1', label: 'a' },
+                    { id: '+', label: '+' },
+                    { id: 'T', label: 'T' },
+                    { id: 'T2', label: 'T' },
+                    { id: 'F2', label: 'F' },
+                    { id: 'a2', label: 'a' },
+                    { id: '*', label: '*' },
+                    { id: 'F3', label: 'F' },
+                    { id: 'a3', label: 'a' }
+                ],
+                transitions: [
+                    { from: 'E1', to: 'E2', symbol: '' },
+                    { from: 'E1', to: '+', symbol: '' },
+                    { from: 'E1', to: 'T', symbol: '' },
+                    { from: 'E2', to: 'F1', symbol: '' },
+                    { from: 'F1', to: 'a1', symbol: '' },
+                    { from: 'T', to: 'T2', symbol: '' },
+                    { from: 'T', to: '*', symbol: '' },
+                    { from: 'T', to: 'F3', symbol: '' },
+                    { from: 'T2', to: 'F2', symbol: '' },
+                    { from: 'F2', to: 'a2', symbol: '' },
+                    { from: 'F3', to: 'a3', symbol: '' }
+                ]
+            };
+            renderParseTree('parseTreeVisualization', parseTreeData);
+        }
+    });
+</script> 

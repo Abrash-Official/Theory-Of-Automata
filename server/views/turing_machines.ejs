@@ -1,0 +1,163 @@
+<div class="card mb-4">
+    <div class="card-header" id="turingMachinesHeader" style="background-color: transparent !important;">
+        <h3 class="card-title mb-0">Turing Machines and Their Variants</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Introduction</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">A Turing Machine (TM) is a mathematical model of computation that defines an abstract machine. It manipulates symbols on a tape according to a set of rules. TMs are more powerful than finite automata and pushdown automata, and can simulate any algorithm.</pre>
+        </div>
+        <h4 class="mt-4">Formal Definition</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">A Turing Machine is a 7-tuple:
+(Q, Σ, Γ, δ, q₀, q_accept, q_reject)
+Where:
+Q: Set of states
+Σ: Input alphabet
+Γ: Tape alphabet (Σ ⊆ Γ)
+δ: Transition function (Q × Γ → Q × Γ × {L, R})
+q₀: Start state
+q_accept: Accept state
+q_reject: Reject state (q_reject ≠ q_accept)</pre>
+        </div>
+        <h4 class="mt-4">How a Turing Machine Works</h4>
+        <ul>
+            <li><b>Tape:</b> Infinite in both directions, divided into cells.</li>
+            <li><b>Head:</b> Reads and writes symbols, moves left (L) or right (R).</li>
+            <li><b>Finite Control:</b> Determines the next action based on the current state and tape symbol.</li>
+            <li><b>Transitions:</b> Change state, write a symbol, and move the head.</li>
+        </ul>
+        <h4 class="mt-4">Graph Example: TM for L = {w#w | w ∈ {0,1}*}</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">States: q₀ (start), q₁, q₂, q_accept, q_reject
+Transitions (simplified):
+(q₀, 0) → (q₁, X, R)
+(q₀, 1) → (q₂, X, R)
+(q₀, #) → (q_accept, #, R)
+(q₁, 0) → (q₁, 0, R)
+(q₁, 1) → (q₁, 1, R)
+(q₁, #) → (q₂, #, L)
+(q₂, X) → (q₀, X, R)
+...
+Explanation: The TM marks and matches symbols before and after the # to check if the two substrings are equal.</pre>
+        </div>
+        <div id="tmVisualization" class="cytoscape-container mt-2" style="height: 300px; border: 1px solid #ccc;"></div>
+        <h4 class="mt-4">Code Example: Turing Machine Simulation in Python</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <label for="pythonCodeInputTM" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInputTM" rows="15" style="max-width: 100%; white-space: pre; overflow-x: auto;">class TuringMachine:
+    def __init__(self, tape, transitions, start_state, accept_state, reject_state):
+        self.tape = list(tape)
+        self.head = 0
+        self.state = start_state
+        self.transitions = transitions
+        self.accept_state = accept_state
+        self.reject_state = reject_state
+
+    def step(self):
+        symbol = self.tape[self.head] if 0 <= self.head < len(self.tape) else '_'
+        key = (self.state, symbol)
+        if key in self.transitions:
+            new_state, write_symbol, direction = self.transitions[key]
+            self.tape[self.head] = write_symbol
+            self.state = new_state
+            self.head += 1 if direction == 'R' else -1
+        else:
+            self.state = self.reject_state
+
+    def run(self, max_steps=100):
+        steps = 0
+        while self.state != self.accept_state and self.state != self.reject_state and steps < max_steps:
+            print(f"State: {self.state}, Tape: {''.join(self.tape)}, Head: {self.head}")
+            self.step()
+            steps += 1
+        print(f"Final State: {self.state}, Tape: {''.join(self.tape)}, Head: {self.head}")
+
+# Example transitions for a simple TM
+transitions = {
+    ('q0', '0'): ('q1', 'X', 'R'),
+    ('q1', '0'): ('q1', '0', 'R'),
+    ('q1', '#'): ('q2', '#', 'L'),
+    ('q2', 'X'): ('q0', 'X', 'R'),
+    ('q0', '#'): ('q_accept', '#', 'R'),
+}
+TuringMachine('00#00', transitions, 'q0', 'q_accept', 'q_reject').run()</textarea>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtnTM">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded overflow-x-auto" id="pythonCodeOutputTM" style="max-width: 100%; white-space: pre-wrap; word-break: break-word;"></pre>
+        </div>
+        <h4 class="mt-4">MCQs on Turing Machines</h4>
+        <div id="mcq-container-tm">
+            <div class="mcq-progress text-end mb-2"></div>
+            <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                <li data-correct-answer="A" class="mcq-question-item">
+                    <p class="mb-3">Which of the following is true about Turing Machines?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">a) They can simulate any algorithm</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">b) They are less powerful than PDAs</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="C">c) They have finite memory</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="D">d) They cannot recognize regular languages</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <!-- More MCQs can be added here -->
+            </ol>
+            <p class="mt-3">Turing Machines are the foundation of computability theory!</p>
+        </div>
+        <h4 class="mt-4">Variants of Turing Machines</h4>
+        <ul>
+            <li>Multi-tape Turing Machines</li>
+            <li>Non-deterministic Turing Machines</li>
+            <li>Universal Turing Machines</li>
+            <li>Enumerators</li>
+            <li>Linear Bounded Automata (LBA)</li>
+        </ul>
+        <h4 class="mt-4">Key Notes</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">- Turing Machines are more powerful than FAs and PDAs.
+- Every algorithm can be simulated by a TM.
+- Variants of TMs are equivalent in power to the standard TM.
+- TMs are used to define computability and decidability.</pre>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize CodeMirror for Python code input in TM page
+        const pythonCodeEditorElementTM = document.getElementById('pythonCodeInputTM');
+        if (pythonCodeEditorElementTM && typeof CodeMirror !== 'undefined') {
+            window.AutomataEdu.codeEditorInstanceTM = CodeMirror.fromTextArea(pythonCodeEditorElementTM, {
+                mode: 'python',
+                theme: 'dracula',
+                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
+                readOnly: false
+            });
+            document.getElementById('runPythonCodeBtnTM').addEventListener('click', runPythonCodeTM);
+        }
+        // Turing Machine visualization
+        const tmVisualizationContainer = document.getElementById('tmVisualization');
+        if (tmVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+            const tmData = {
+                states: [
+                    { id: 'q0', label: 'q₀', isStart: true, color: '#48bb78' },
+                    { id: 'q1', label: 'q₁', isFinal: false, color: '#4299e1' },
+                    { id: 'q2', label: 'q₂', isFinal: false, color: '#ed8936' },
+                    { id: 'q_accept', label: 'q_accept', isFinal: true, color: '#38b2ac' },
+                    { id: 'q_reject', label: 'q_reject', isFinal: false, color: '#ed64a6' }
+                ],
+                transitions: [
+                    { from: 'q0', to: 'q1', symbol: '0/X,R' },
+                    { from: 'q1', to: 'q1', symbol: '0/0,R' },
+                    { from: 'q1', to: 'q2', symbol: '#/#,L' },
+                    { from: 'q2', to: 'q0', symbol: 'X/X,R' },
+                    { from: 'q0', to: 'q_accept', symbol: '#/#,R' }
+                ]
+            };
+            renderAutomaton('tmVisualization', tmData);
+        }
+    });
+</script> 

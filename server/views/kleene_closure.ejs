@@ -1,0 +1,258 @@
+<div class="card mb-4">
+    <div class="card-header" id="kleeneTheoremHeader" style="background-color: transparent !important;">
+        <h3 class="card-title mb-0">Kleene's Theorem and Closure Properties of Regular Languages</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">Kleene's Theorem</h4>
+        <p>Kleene's Theorem establishes the equivalence between three fundamental models in automata theory:</p>
+        <ol>
+            <li>Regular expressions (RE)</li>
+            <li>Finite automata (FA)</li>
+            <li>Transition graphs (TG)</li>
+        </ol>
+        <h5 class="mt-4">Theorem Statement:</h5>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <pre>
+Theorem Statement:
+A language is regular if and only if it can be recognized by a finite automaton, described by a regular expression, or represented by a transition graph.
+
+Part 1: Every Regular Expression Has a Corresponding FA
+For any regular expression r, there exists a finite automaton (FA) that accepts exactly L(r).
+
+Proof Sketch:
+Base Cases:
+
+r = ∅: FA with no accepting states.
+r = ε: FA with a single accept state and no transitions.
+r = a: FA with two states, transitioning on input a.
+Inductive Steps:
+
+Union: Combine two FAs using ε-transitions from a new start state.
+Concatenation: Link the accept state of the first FA to the start state of the second.
+Kleene Star: Add ε-transitions for looping and a new accept state.
+</pre>
+        </div>
+
+        <h6>Example:</h6>
+        <p>For <code class="text-nowrap">(ab+a)*</code>:</p>
+        <p>Construct FA for <code class="text-nowrap">ab</code>:</p>
+        <div id="kleeneFaAbVisualization" class="cytoscape-container mt-2" style="height: 300px; border: 1px solid #ccc;"></div>
+        <p>Construct FA for <code class="text-nowrap">a</code>:</p>
+        <div id="kleeneFaAVisualization" class="cytoscape-container mt-2" style="height: 300px; border: 1px solid #ccc;"></div>
+        <p>Combine using union, then apply Kleene star:</p>
+        <div id="kleeneCombinedFaVisualization" class="cytoscape-container mt-2" style="height: 300px; border: 1px solid #ccc;"></div>
+
+        <h5 class="mt-4">Part 2: Every FA Can Be Expressed as a Regular Expression</h5>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <p>For any FA, there exists a regular expression that describes its language.</p>
+            <p><strong>Algorithm:</strong> Use state elimination to derive the RE from the FA's transition table.</p>
+
+            <hr>
+
+            <h4 class="mb-3">Closure Properties of Regular Languages</h4>
+            <p>Regular languages are closed under the following operations:</p>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Proof Method</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Union</td>
+                            <td>Combine FAs with ε-transitions</td>
+                            <td><code class="text-nowrap">L₁={a}, L₂={b} → L₁∪L₂={a,b}</code></td>
+                        </tr>
+                        <tr>
+                            <td>Concatenation</td>
+                            <td>Link FAs with ε-transitions</td>
+                            <td><code class="text-nowrap">L₁={a}, L₂={b} → L₁L₂={ab}</code></td>
+                        </tr>
+                        <tr>
+                            <td>Kleene Star</td>
+                            <td>Add loops and ε-transitions</td>
+                            <td><code class="text-nowrap">L={a} → L*={ε,a,aa,…}</code></td>
+                        </tr>
+                        <tr>
+                            <td>Complement</td>
+                            <td>Swap accept/non-accept states in DFA</td>
+                            <td>If <code class="text-nowrap">L</code> is defined by DFA <code class="text-nowrap">M</code>, <code class="text-nowrap">L̄</code> uses <code class="text-nowrap">M'</code>.</td>
+                        </tr>
+                        <tr>
+                            <td>Intersection</td>
+                            <td>Product automaton construction</td>
+                            <td><code class="text-nowrap">L₁∩L₂</code> uses states <code class="text-nowrap">(qᵢ,qⱼ)</code> from <code class="text-nowrap">L₁</code> and <code class="text-nowrap">L₂</code>.</td>
+                        </tr>
+                        <tr>
+                            <td>Reversal</td>
+                            <td>Reverse all transitions in FA</td>
+                            <td><code class="text-nowrap">L={ab} → Lᴿ={ba}</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h5 class="mt-4">Key Proofs</h5>
+        <h6>Complement:</h6>
+        <p>Let <code class="text-nowrap">M=(Q,Σ,δ,q₀,F)</code> accept <code class="text-nowrap">L</code>.</p>
+        <p>Then <code class="text-nowrap">M̄=(Q,Σ,δ,q₀,Q∖F)</code> accepts <code class="text-nowrap">L̄</code>.</p>
+
+        <h6>Intersection:</h6>
+        <p>For DFAs <code class="text-nowrap">M₁</code> and <code class="text-nowrap">M₂</code>, construct <code class="text-nowrap">M'</code> with states <code class="text-nowrap">Q₁×Q₂</code>.</p>
+        <p><code class="text-nowrap">δ'((q₁,q₂),a)=(δ₁(q₁,a),δ₂(q₂,a))</code>.</p>
+        <p>Accept if both components are in their respective accept states.</p>
+        <h6>Example:</h6>
+        <ul>
+            <li><code class="text-nowrap">L₁</code>: Strings with even 0s.</li>
+            <li><code class="text-nowrap">L₂</code>: Strings with even 1s.</li>
+            <li><code class="text-nowrap">L₁∩L₂</code>: Strings with even 0s and even 1s.</li>
+        </ul>
+
+        <h4 class="mb-3">Applications</h4>
+        <h6>Algorithm for NFA to DFA Conversion:</h6>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <label for="pythonCodeInputKleeneTheorem" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInputKleeneTheorem" rows="15">
+def nfa_to_dfa(nfa_states, nfa_transitions):  
+    dfa_states = []  
+    initial = epsilon_closure(nfa_start)  
+    dfa_states.append(initial)  
+    for state in dfa_states:  
+        for symbol in alphabet:  
+            next_states = move(state, symbol)  
+            if next_states not in dfa_states:  
+                dfa_states.append(next_states)  
+    return dfa_states  
+</textarea>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtnKleeneTheorem">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutputKleeneTheorem"></code></pre>
+        </div>
+        <h6>Regular Expression to FA:</h6>
+        <p>Use Thompson's construction to build an NFA with ε-transitions, then convert to DFA.</p>
+
+        <h4 class="mb-3">Summary</h4>
+        <ul>
+            <li>Kleene's Theorem bridges REs, FAs, and TGs, showing their equivalence.</li>
+            <li>Closure properties enable combining regular languages while preserving regularity.</li>
+            <li>These principles underpin lexical analysis in compilers and pattern-matching algorithms.</li>
+        </ul>
+
+        <div class="alert alert-info mt-4">
+            <strong>Beginner Tip:</strong> Closure properties help us understand how regular languages behave under different operations!
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize CodeMirror for Python code input in Kleene's Theorem page
+        const pythonCodeEditorElementKleeneTheorem = document.getElementById('pythonCodeInputKleeneTheorem');
+        if (pythonCodeEditorElementKleeneTheorem && typeof CodeMirror !== 'undefined') {
+            window.AutomataEdu = window.AutomataEdu || {};
+            window.AutomataEdu.codeEditorInstanceKleeneTheorem = CodeMirror.fromTextArea(pythonCodeEditorElementKleeneTheorem, {
+                mode: 'python',
+                theme: 'dracula',
+                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
+                readOnly: false
+            });
+            // Attach event listener for the run button
+            document.getElementById('runPythonCodeBtnKleeneTheorem').addEventListener('click', runPythonCodeKleeneTheorem);
+        }
+
+        // Initialize FA for ab visualization
+        const kleeneFaAbVisualizationContainer = document.getElementById('kleeneFaAbVisualization');
+        if (kleeneFaAbVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+            const kleeneFaAbData = {
+                states: [
+                    { id: 'q0', label: 'q0', isStart: true, isFinal: false, color: '#48bb78' }, // green
+                    { id: 'q1', label: 'q1', isStart: false, isFinal: false, color: '#718096' }, // gray
+                    { id: 'q2', label: 'q2', isStart: false, isFinal: true, color: '#ed64a6' } // pink
+                ],
+                transitions: [
+                    { from: 'q0', to: 'q1', symbol: 'a' },
+                    { from: 'q1', to: 'q2', symbol: 'b' }
+                ]
+            };
+            renderAutomaton('kleeneFaAbVisualization', kleeneFaAbData);
+        }
+
+        // Initialize FA for a visualization
+        const kleeneFaAVisualizationContainer = document.getElementById('kleeneFaAVisualization');
+        if (kleeneFaAVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+            const kleeneFaAData = {
+                states: [
+                    { id: 'q3', label: 'q3', isStart: true, isFinal: false, color: '#4299e1' }, // blue
+                    { id: 'q4', label: 'q4', isStart: false, isFinal: true, color: '#ed64a6' } // pink
+                ],
+                transitions: [
+                    { from: 'q3', to: 'q4', symbol: 'a' }
+                ]
+            };
+            renderAutomaton('kleeneFaAVisualization', kleeneFaAData);
+        }
+
+        // Initialize Combined FA for (ab+a)* visualization
+        const kleeneCombinedFaVisualizationContainer = document.getElementById('kleeneCombinedFaVisualization');
+        if (kleeneCombinedFaVisualizationContainer && typeof renderAutomaton !== 'undefined') {
+            const kleeneCombinedFaData = {
+                states: [
+                    { id: 'q0', label: 'q0', isStart: false, isFinal: false, color: '#718096' }, // gray
+                    { id: 'q1', label: 'q1', isStart: false, isFinal: false, color: '#4299e1' }, // blue
+                    { id: 'q2', label: 'q2', isStart: false, isFinal: false, color: '#ed64a6' }, // pink
+                    { id: 'q3', label: 'q3', isStart: false, isFinal: false, color: '#f6ad55' }, // orange
+                    { id: 'q4', label: 'q4', isStart: false, isFinal: false, color: '#38b2ac' }, // teal
+                    { id: 'q5', label: 'q5', isStart: true, isFinal: true, color: '#ed8936' } // orange (start+final)
+                ],
+                transitions: [
+                    { from: 'q0', to: 'q1', symbol: 'a' },
+                    { from: 'q1', to: 'q2', symbol: 'b' },
+                    { from: 'q3', to: 'q4', symbol: 'a' },
+
+                    { from: 'q5', to: 'q0', symbol: 'ε' },
+                    { from: 'q5', to: 'q3', symbol: 'ε' },
+                    { from: 'q2', to: 'q5', symbol: 'ε' },
+                    { from: 'q4', to: 'q5', symbol: 'ε' }
+                ]
+            };
+            renderAutomaton('kleeneCombinedFaVisualization', kleeneCombinedFaData);
+        }
+    });
+
+    // Function to run Python code for Kleene's Theorem page
+    async function runPythonCodeKleeneTheorem() {
+        const outputElement = document.getElementById('pythonCodeOutputKleeneTheorem');
+        const codeEditor = window.AutomataEdu.codeEditorInstanceKleeneTheorem;
+        const code = codeEditor.getValue();
+        outputElement.textContent = 'Running code...';
+
+        try {
+            const response = await fetch('/run_python_code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code: code }),
+            });
+            const data = await response.json();
+            if (data.output) {
+                outputElement.textContent = data.output;
+            } else if (data.error) {
+                outputElement.textContent = `Error: ${data.error}`;
+                console.error('Python code execution error:', data.error);
+            } else {
+                outputElement.textContent = 'An unexpected error occurred.';
+                console.error('Unexpected response from server:', data);
+            }
+        } catch (error) {
+            outputElement.textContent = `Request failed: ${error}`;
+            console.error('Fetch error:', error);
+        }
+    }
+</script> 

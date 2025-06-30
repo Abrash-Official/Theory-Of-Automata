@@ -1,0 +1,203 @@
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="card-title mb-0">Course Introduction & Fundamentals of Automata</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="mb-3">What is Automata Theory?</h4>
+        <h6>Definition:</h6>
+        <p>
+            Automata Theory is the study of abstract machines (called automata) and the computational problems they can solve. These machines help us understand what computers can and cannot do.
+        </p>
+        <h6>Importance:</h6>
+        <p>
+            Automata Theory is a foundation of computer science. It's especially important in areas like compilers (which turn code into something computers understand), parsing, and formal language theory.
+        </p>
+        <h6>Applications:</h6>
+        <ul>
+            <li>Compiler design</li>
+            <li>Text processing (like spell checkers)</li>
+            <li>Hardware design (circuits)</li>
+            <li>Artificial intelligence</li>
+            <li>Many more areas</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Key Concepts</h4>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr><th>Term</th><th>Meaning</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Alphabet (Σ)</td><td>A set of symbols. Example: Σ = {a, b}</td></tr>
+                    <tr><td>String</td><td>A sequence of symbols from an alphabet. Example: "abba"</td></tr>
+                    <tr><td>Language</td><td>A set of strings over an alphabet. Example: L = {ab, aab, aaab, ...}</td></tr>
+                    <tr><td>Grammar</td><td>Rules that define how strings in a language are structured</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <h4 class="mb-3">Formal Languages</h4>
+        <h6>Definition:</h6>
+        <p>
+            A formal language is a set of strings made from an alphabet, following specific rules.
+        </p>
+        <h6>Types of Languages:</h6>
+        <ul>
+            <li><strong>Regular Languages:</strong> Simple patterns, described by regular expressions or finite automata.<br>Example: All strings with any number of a (like "", "a", "aa", ...).</li>
+            <li><strong>Context-Free Languages:</strong> More complex, described by context-free grammars or pushdown automata.<br>Example: All strings with equal numbers of a and b in the form "aa...bb...".</li>
+            <li><strong>Context-Sensitive Languages:</strong> Even more complex, need more powerful rules.</li>
+            <li><strong>Recursive & Recursively Enumerable Languages:</strong> The most complex, handled by Turing machines.</li>
+        </ul>
+        <hr>
+        <div class="alert alert-info mt-4">
+            <h4 class="mb-3">Simple Examples</h4>
+            <h6>Alphabet: &Sigma; = {a, b}</h6>
+            <p>Strings of length 2: "aa", "ab", "ba", "bb"</p>
+            <h6>Language Example:</h6>
+            <ul>
+                <li>Finite: L = {"xy", "yx", "xx", "yy"}</li>
+                <li>Infinite: L = {all strings starting with "b"} = {"b", "ba", "bb", "baa", ...}</li>
+            </ul>
+        </div>
+        <hr>
+        <h4 class="mb-3">Automata (Types of Machines)</h4>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr><th>Type of Automaton</th><th>What It Recognizes</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Finite Automata (FA)</td><td>Regular languages</td></tr>
+                    <tr><td>Pushdown Automata (PDA)</td><td>Context-free languages</td></tr>
+                    <tr><td>Turing Machines (TM)</td><td>Recursively enumerable languages</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <h6>Automaton:</h6>
+        <p>
+            An abstract machine that can read or generate strings in a language. It changes states based on the input and rules.
+        </p>
+        <hr>
+        <h4 class="mb-3">Why Study Automata Theory?</h4>
+        <ul>
+            <li>Helps design efficient compilers and text processors.</li>
+            <li>Used in hardware design for circuits and digital systems.</li>
+            <li>Explains what computers can and cannot do.</li>
+            <li>Forms the basis for advanced topics like artificial intelligence and language processing.</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Historical Perspective</h4>
+        <ul>
+            <li>1930s: Alan Turing introduces Turing machines and the concept of computability.</li>
+            <li>1940s-1950s: Finite automata are studied.</li>
+            <li>1950s: Noam Chomsky introduces the Chomsky Hierarchy for classifying languages and automata.</li>
+            <li>1969: The concept of "NP-hard" problems is introduced, highlighting very difficult computational problems.</li>
+            <li>1970s-Present: Automata Theory continues to influence modern computer science, especially in areas like compilers and complexity theory.</li>
+        </ul>
+        <hr>
+        <h4 class="mb-3">Central Concepts</h4>
+        <ul>
+            <li><strong>Automaton:</strong> Developing a model which takes input and processing and gives output</li>
+            <li><strong>Computability:</strong> Whether the process or machine can accept the input or not</li>
+            <li><strong>Complexity:</strong> Accepting the optimal solution with low complexity.</li>
+        </ul>
+        <div class="alert alert-info mt-4">
+            <strong>Tip for Beginners:</strong> Automata theory is the foundation for understanding how computers process languages and solve problems. Don't worry if it feels abstract at first—visualizing automata as simple machines that read and process input step by step can make the concepts much clearer!
+        </div>
+        <hr>
+        <h4 class="mb-3">Graph/State Diagram Example</h4>
+        <p>
+            Automata are often visualized as graphs, where <strong>circles represent states</strong> and <strong>arrows represent transitions</strong> between states based on input symbols. Final (accepting) states are typically denoted by double circles.
+        </p>
+        <h6>DFA Example: Accepts all binary strings ending with '1'</h6>
+        <div id="introDfaVisualization" class="cytoscape-container bg-dark" style="min-height: 300px;"></div>
+        <h6 class="mt-3">DFA Transition Table:</h6>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr><th>Current State</th><th>Input '0'</th><th>Input '1'</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>q0</td><td>q0</td><td>q1</td></tr>
+                    <tr><td>q1</td><td>q0</td><td>q1</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <h4 class="mb-3">Code Example</h4>
+        <p>Here's a simple Python function that simulates the DFA described above. You can modify the code and test it live:</p>
+        <div class="alert alert-info mt-2 p-3 rounded">
+            <label for="pythonCodeInput" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInput" rows="10">
+def ends_with_one(s):
+    state = 'q0'  # Initial state
+    for char in s:
+        if state == 'q0':
+            if char == '0':
+                state = 'q0'
+            elif char == '1':
+                state = 'q1'
+        elif state == 'q1':
+            if char == '0':
+                state = 'q0'
+            elif char == '1':
+                state = 'q1'
+    return state == 'q1'
+
+# Example usage:
+# print(ends_with_one('101'))
+# print(ends_with_one('100'))
+# print(ends_with_one('0'))
+# print(ends_with_one('1'))</textarea>
+            <button type="button" class="btn btn-primary mb-3" id="runPythonCodeBtn">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutput"></code></pre>
+        </div>
+        <hr>
+        <div class="card bg-dark text-white p-4">
+            <h4 class="card-title mb-3">
+                <i data-feather="help-circle" class="me-2"></i>
+                Exercise
+            </h4>
+            <p>Test your understanding with these basic questions:</p>
+            <div id="mcq-container">
+                <div class="mcq-progress text-end mb-2"></div>
+                <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                    <li data-correct-answer="b" class="mcq-question-item">
+                        <p class="mb-3">Which of the following best describes an <strong>automaton</strong>?</p>
+                        <div class="list-group mb-3">
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) A type of programming language</button>
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) An abstract model of a machine that performs computations</button>
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) A complex data structure</button>
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="d">d) A software development methodology</button>
+                        </div>
+                        <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                        <p class="feedback mt-2"></p>
+                    </li>
+                    <li data-correct-answer="c" class="mcq-question-item" style="display: none;">
+                        <p class="mb-3">In automata theory, what is the primary role of a <strong>Finite Automaton (FA)</strong>?</p>
+                        <div class="list-group mb-3">
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) To perform complex arithmetic calculations</button>
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) To manage large databases</button>
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) To recognize patterns within input strings</button>
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="d">d) To render graphics in real-time</button>
+                        </div>
+                        <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                        <p class="feedback mt-2"></p>
+                    </li>
+                    <li data-correct-answer="b" class="mcq-question-item" style="display: none;">
+                        <p class="mb-3">Which of these is a key application area for automata theory?</p>
+                        <div class="list-group mb-3">
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="a">a) Game Development</button>
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="b">b) Compiler Design</button>
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="c">c) Network Security</button>
+                            <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="d">d) Digital Marketing</button>
+                        </div>
+                        <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                        <p class="feedback mt-2"></p>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div> 
