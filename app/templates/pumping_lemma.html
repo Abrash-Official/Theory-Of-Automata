@@ -2,35 +2,343 @@
 {% block title %}Pumping Lemma for CFLs{% endblock %}
 {% block content %}
 <div class="card mb-4">
-    <div class="card-header bg-success text-white">
+    <div class="card-header bg-success" id="pumpingLemmaHeader">
         <h3 class="card-title mb-0">Pumping Lemma for CFLs</h3>
     </div>
     <div class="card-body">
-        <h4 class="mb-3">Formal Statement</h4>
-        <p>If a language L is context-free, then there exists some integer p ≥ 1 (called a "pumping length") such that every string s in L that has a length of p or more symbols can be written as s = uvwxy with substrings u, v, w, x and y, such that:</p>
+        <h4 class="mb-3">Introduction</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+The Pumping Lemma for CFLs is a tool to prove that a language is not context-free. It states that for sufficiently long strings in a CFL, there exist substrings that can be "pumped" (repeated or removed) while keeping the resultant string in the language. This lemma is crucial for analyzing the limitations of context-free grammars (CFGs) and pushdown automata (PDAs).
+            </pre>
+        </div>
+        <h4 class="mt-4">Formal Statement</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+For any CFL L, there exists a pumping length p such that every string s∈L with |s|≥p can be divided into five parts s=uvxyz satisfying:
+- |vwx| ≤ p
+- |vx| ≥ 1
+- uv^i x y^i z ∈ L for all i≥0.
+            </pre>
+        </div>
+        <h5 class="mt-4">Graphical Representation</h5>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+graph LR
+    A[String s = uvxyz] --> B[|vwx| ≤ p]
+    A --> C[|vx| ≥ 1]
+    A --> D[Pump v & y]
+            </pre>
+        </div>
+        <h4 class="mt-4">Key Applications</h4>
         <ul>
-            <li>|vx| ≥ 1 (v and x cannot both be empty)</li>
-            <li>|vwx| ≤ p (the middle portion has bounded length)</li>
-            <li>uv^n wx^n y ∈ L for all n ≥ 0 (pumping property)</li>
+            <li>Proving non-context-free languages: If a language violates the lemma, it is not context-free.</li>
+            <li>Analyzing language structure: Identifies constraints on nested patterns in CFLs.</li>
         </ul>
-        <hr>
-        <h4 class="mb-3">Informal Explanation</h4>
-        <p>The pumping lemma describes a property that all context-free languages are guaranteed to have. The property applies to all strings in the language that are of length at least p, where p is a constant called the pumping length.</p>
-        <hr>
-        <h4 class="mb-3">Using the Pumping Lemma</h4>
+        <h4 class="mt-4">Proof Strategy for Non-CFLs</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+To prove L is not context-free:
+1. Assume L is context-free.
+2. Choose a string s∈L with |s|≥p.
+3. Divide s into uvxyz, ensuring |vwx|≤p and |vx|≥1.
+4. Show that pumping v and y produces a string uv^i x y^i z ∉ L.
+            </pre>
+        </div>
+        <h5 class="mt-4">Example: Proving L = {aⁿbⁿcⁿ | n≥0} is Not Context-Free</h5>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+Assume L is context-free with pumping length p.
+Choose s = a^p b^p c^p.
+Divide s = uvxyz. By the lemma:
+- vwx cannot span all three symbols (since |vwx|≤p).
+Case 1: vwx contains only a's and b's. Pumping v and y increases a's or b's, breaking aⁿbⁿcⁿ.
+Case 2: vwx contains only b's and c's. Pumping disrupts the balance between b's and c's.
+            </pre>
+        </div>
+        <h5 class="mt-4">Flowchart</h5>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <div id="pumpingLemmaFlowchart" class="cytoscape-container bg-dark my-2" style="min-height: 300px; border: 1px solid #ccc;"></div>
+        </div>
+        <h5 class="mt-4">Parse Tree Visualization</h5>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <div id="pumpingLemmaParseTree" class="cytoscape-container bg-dark my-2" style="min-height: 300px; border: 1px solid #ccc;"></div>
+        </div>
+        <h4 class="mt-4">Code Example: Python Simulation</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <label for="pythonCodeInputPumpingLemma" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInputPumpingLemma" rows="15" style="max-width: 100%; white-space: pre; overflow-x: auto;">def pumping_lemma_cfl(s, p):
+    n = len(s)
+    if n < p:
+        return True  # Not applicable
+    for i in range(n):
+        for j in range(i+1, min(i+p, n)):
+            u, vwx, y = s[:i], s[i:j], s[j:]
+            for k in range(1, len(vwx)+1):
+                v = vwx[:k]
+                x = vwx[k:]
+                if not all(c in 'a' for c in v) or not all(c in 'b' for c in x):
+                    continue
+                pumped = u + v*2 + x*2 + y  # i=2
+                if pumped.count('a') != pumped.count('b') or pumped.count('b') != pumped.count('c'):
+                    return False
+    return True
+
+s = 'aaabbbccc'
+print(pumping_lemma_cfl(s, 5))  # Output: False (violates the lemma)
+</textarea>
+            <button type="button" class="btn btn-primary my-2" id="runPythonCodeBtnPumpingLemma">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutputPumpingLemma"></code></pre>
+        </div>
+        <h4 class="mt-4">Comparison with Regular Pumping Lemma</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <table class="table table-bordered table-striped mb-0" style="min-width: 350px;">
+                <thead>
+                    <tr><th>Aspect</th><th>Regular Pumping Lemma</th><th>CFL Pumping Lemma</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>String Division</td><td>3 parts: u v w</td><td>5 parts: u v x y z</td></tr>
+                    <tr><td>Pumping Substrings</td><td>v (single substring)</td><td>v and y (two substrings)</td></tr>
+                    <tr><td>Length Constraints</td><td>|v| ≥ 1, |uv| ≤ p</td><td>|vx| ≥ 1, |vwx| ≤ p</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <h4 class="mt-4">Closure Properties Involving CFLs</h4>
         <ul>
-            <li>Assume L is context-free</li>
-            <li>Let p be the pumping length</li>
-            <li>Choose a string s ∈ L with |s| ≥ p</li>
-            <li>Consider all ways to write s = uvwxy satisfying conditions 1 and 2</li>
-            <li>For each decomposition, find an n such that uv^n wx^n y ∉ L</li>
-            <li>This contradicts condition 3, so L is not context-free</li>
+            <li>Union: CFLs are closed under union.<br><b>Example:</b> {aⁿbⁿ}∪{cⁿdⁿ} is context-free.</li>
         </ul>
-        <h5 class="mt-4">Example Application</h5>
-        <p>The language L = {a^n b^n c^n : n ≥ 1} can be proven not context-free using the pumping lemma, since any attempt to pump will create unequal numbers of a's, b's, and c's.</p>
-        <div class="alert alert-info mt-4">
-            <strong>Beginner Tip:</strong> The pumping lemma is a powerful tool for proving that certain languages are not context-free!
+        <ul>
+            <li>Intersection with Regular Languages: If L is CFL and R is regular, L∩R is CFL.<br><b>Example:</b> {aⁿbⁿ}∩a*b* = {aⁿbⁿ}.</li>
+        </ul>
+        <h4 class="mt-4">MCQs on Pumping Lemma</h4>
+        <div id="mcq-container-pumping-lemma">
+            <div class="mcq-progress text-end mb-2"></div>
+            <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                <li data-correct-answer="C" class="mcq-question-item">
+                    <p class="mb-3">Which condition is NOT required by the Pumping Lemma for CFLs?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">A. |vwx| ≤ p</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">B. |vx| ≥ 1</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="C">C. uv<sup>2</sup>xy<sup>2</sup>z ∈ L</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="D">D. uv<sup>0</sup>x y<sup>0</sup>z ∈ L</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="B" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">The language L={ww | w∈{a,b}*} is:</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">A. Context-free</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">B. Not context-free</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+            </ol>
+        </div>
+        <h4 class="mt-4">Limitations</h4>
+        <ul>
+            <li>Not a characterization: Satisfying the lemma does not guarantee a language is context-free.</li>
+            <li>Complex case analysis: Requires exhaustive examination of all possible string divisions.</li>
+        </ul>
+        <h4 class="mt-4">Conclusion</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto" style="max-width: 100%;">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+The Pumping Lemma for CFLs is indispensable for disproving context-freeness. Mastery of its application, combined with closure properties, enables rigorous analysis of formal language classes.
+            </pre>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    #pumpingLemmaHeader {
+        background-color: transparent !important;
+    }
+    .overflow-x-auto {
+        overflow-x: auto !important;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // MCQ logic for Pumping Lemma page
+        const mcqContainer = document.getElementById('mcq-container-pumping-lemma');
+        if (mcqContainer) {
+            const questions = mcqContainer.querySelectorAll('.mcq-question-item');
+            let currentQuestionIndex = 0;
+
+            function updateMcqDisplay() {
+                questions.forEach((q, index) => {
+                    q.style.display = (index === currentQuestionIndex) ? 'block' : 'none';
+                });
+                updateMcqProgress();
+            }
+            function updateMcqProgress() {
+                const progressText = mcqContainer.querySelector('.mcq-progress');
+                if (progressText) {
+                    progressText.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+                }
+            }
+            function resetQuestion(questionItem) {
+                const options = questionItem.querySelectorAll('.mcq-option');
+                options.forEach(option => {
+                    option.classList.remove('selected-option', 'correct', 'incorrect');
+                    option.disabled = false;
+                });
+                const feedback = questionItem.querySelector('.feedback');
+                if (feedback) {
+                    feedback.textContent = '';
+                    feedback.classList.remove('text-success', 'text-danger');
+                }
+                const submitBtn = questionItem.querySelector('.submit-mcq-btn');
+                if (submitBtn) {
+                    submitBtn.style.display = 'block';
+                }
+            }
+            questions.forEach(resetQuestion);
+            updateMcqDisplay();
+            mcqContainer.addEventListener('click', function(event) {
+                const target = event.target;
+                if (target.classList.contains('mcq-option')) {
+                    const questionItem = target.closest('.mcq-question-item');
+                    const options = questionItem.querySelectorAll('.mcq-option');
+                    options.forEach(option => option.classList.remove('selected-option'));
+                    target.classList.add('selected-option');
+                } else if (target.classList.contains('submit-mcq-btn')) {
+                    const questionItem = target.closest('.mcq-question-item');
+                    const selectedOption = questionItem.querySelector('.mcq-option.selected-option');
+                    const feedback = questionItem.querySelector('.feedback');
+                    const submitBtn = questionItem.querySelector('.submit-mcq-btn');
+                    const correctAnswer = questionItem.dataset.correctAnswer;
+                    if (selectedOption) {
+                        if (selectedOption.dataset.option === correctAnswer) {
+                            feedback.textContent = 'Correct!';
+                            feedback.classList.remove('text-danger');
+                            feedback.classList.add('text-success');
+                            selectedOption.classList.add('correct');
+                        } else {
+                            feedback.textContent = `Incorrect. The correct answer was ${correctAnswer}.`;
+                            feedback.classList.remove('text-success');
+                            feedback.classList.add('text-danger');
+                            selectedOption.classList.add('incorrect');
+                            // Highlight correct answer
+                            questionItem.querySelector(`.mcq-option[data-option="${correctAnswer}"]`).classList.add('correct');
+                        }
+                        // Disable all options after submission
+                        questionItem.querySelectorAll('.mcq-option').forEach(option => option.disabled = true);
+                        submitBtn.style.display = 'none';
+                        // Show next question or prompt to restart after a delay
+                        setTimeout(() => {
+                            currentQuestionIndex++;
+                            if (currentQuestionIndex < questions.length) {
+                                updateMcqDisplay();
+                            } else {
+                                alert('You have completed all MCQ questions!');
+                                currentQuestionIndex = 0;
+                                questions.forEach(resetQuestion);
+                                updateMcqDisplay();
+                            }
+                        }, 2000); // 2-second delay
+                    } else {
+                        feedback.textContent = 'Please select an answer.';
+                        feedback.classList.remove('text-success', 'text-danger');
+                        feedback.classList.add('text-warning');
+                    }
+                }
+            });
+        }
+
+        // CodeMirror and Run Code logic for Pumping Lemma page
+        const pythonCodeEditorElement = document.getElementById('pythonCodeInputPumpingLemma');
+        if (pythonCodeEditorElement && typeof CodeMirror !== 'undefined') {
+            window.AutomataEdu = window.AutomataEdu || {};
+            window.AutomataEdu.codeEditorInstancePumpingLemma = CodeMirror.fromTextArea(pythonCodeEditorElement, {
+                mode: 'python',
+                theme: 'dracula',
+                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
+                readOnly: false
+            });
+            document.getElementById('runPythonCodeBtnPumpingLemma').addEventListener('click', runPythonCodePumpingLemma);
+        }
+        async function runPythonCodePumpingLemma() {
+            const outputElement = document.getElementById('pythonCodeOutputPumpingLemma');
+            const codeEditor = window.AutomataEdu.codeEditorInstancePumpingLemma;
+            const code = codeEditor.getValue();
+            outputElement.textContent = 'Running code...';
+            try {
+                const response = await fetch('/run_python_code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code: code }),
+                });
+                const data = await response.json();
+                if (data.output) {
+                    outputElement.textContent = data.output;
+                } else if (data.error) {
+                    outputElement.textContent = `Error: ${data.error}`;
+                    console.error('Python code execution error:', data.error);
+                } else {
+                    outputElement.textContent = 'An unexpected error occurred.';
+                    console.error('Unexpected response from server:', data);
+                }
+            } catch (error) {
+                outputElement.textContent = `Request failed: ${error}`;
+                console.error('Fetch error:', error);
+            }
+        }
+
+        // Cytoscape.js visualizations for Flowchart and Parse Tree
+        const flowchartContainer = document.getElementById('pumpingLemmaFlowchart');
+        if (flowchartContainer && typeof renderAutomaton !== 'undefined') {
+            const flowchartData = {
+                states: [
+                    { id: 'A', label: 'Start', isStart: true },
+                    { id: 'B', label: 'Language Type?', isFinal: false },
+                    { id: 'C', label: 'Use Regular Pumping Lemma', isFinal: false },
+                    { id: 'D', label: 'Use CFL Pumping Lemma', isFinal: false },
+                    { id: 'E', label: 'Check 3-part division', isFinal: false },
+                    { id: 'F', label: 'Check 5-part division', isFinal: false }
+                ],
+                transitions: [
+                    { from: 'A', to: 'B', symbol: '' },
+                    { from: 'B', to: 'C', symbol: 'Regular' },
+                    { from: 'B', to: 'D', symbol: 'CFL' },
+                    { from: 'C', to: 'E', symbol: '' },
+                    { from: 'D', to: 'F', symbol: '' }
+                ]
+            };
+            renderAutomaton('pumpingLemmaFlowchart', flowchartData);
+        }
+        const parseTreeContainer = document.getElementById('pumpingLemmaParseTree');
+        if (parseTreeContainer && typeof renderAutomaton !== 'undefined') {
+            const parseTreeData = {
+                states: [
+                    { id: 'S', label: 'S', isStart: true },
+                    { id: 'A1', label: 'a...a' },
+                    { id: 'B1', label: 'b...b' },
+                    { id: 'C1', label: 'c...c' },
+                    { id: 'A2', label: 'a...a' },
+                    { id: 'B2', label: 'b...b' },
+                    { id: 'C2', label: 'c...c' }
+                ],
+                transitions: [
+                    { from: 'S', to: 'A1', symbol: '' },
+                    { from: 'S', to: 'B1', symbol: '' },
+                    { from: 'S', to: 'C1', symbol: '' },
+                    { from: 'A1', to: 'A2', symbol: '|vwx|' },
+                    { from: 'B1', to: 'B2', symbol: '|vwx|' },
+                    { from: 'C1', to: 'C2', symbol: '|vwx|' }
+                ]
+            };
+            renderAutomaton('pumpingLemmaParseTree', parseTreeData);
+        }
+    });
+</script>
 {% endblock %} 

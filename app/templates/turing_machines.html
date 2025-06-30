@@ -1,58 +1,306 @@
 {% extends "base.html" %}
-{% block title %}Turing Machines, Variants{% endblock %}
+{% block title %}Turing Machines (TM), Variants{% endblock %}
 {% block content %}
 <div class="card mb-4">
-    <div class="card-header bg-info text-white">
-        <h3 class="card-title mb-0">Turing Machines, Variants</h3>
+    <div class="card-header" id="turingMachineHeader">
+        <h3 class="card-title mb-0">Turing Machines (TM), Variants</h3>
     </div>
     <div class="card-body">
-        <h4 class="mb-3">Definition</h4>
-        <p>A <strong>Turing machine</strong> is a mathematical model of computation describing an abstract machine that manipulates symbols on a strip of tape according to a table of rules. Despite the model's simplicity, it is capable of implementing any computer algorithm.</p>
-        <hr>
-        <h4 class="mb-3">Components</h4>
+        <h4 class="mb-3">Introduction</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+A Turing Machine (TM) is a theoretical computational model that simulates any algorithm. Introduced by Alan Turing in 1936, it consists of an infinite tape, a read/write head, and a set of rules to manipulate symbols. TMs are foundational in automata theory, capable of solving all problems computable by modern computers.
+            </pre>
+        </div>
+        <h4 class="mt-4">Formal Definition</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+A TM is a 7-tuple:
+(Q, Σ, Γ, δ, q₀, B, F)
+Where:
+Q: Finite set of states
+Σ: Input alphabet (e.g., {0, 1})
+Γ: Tape alphabet (includes Σ∪{B}, where B is the blank symbol)
+δ: Transition function (Q×Γ→Q×Γ×{L,R})
+q₀: Initial state
+F: Set of accepting states
+            </pre>
+        </div>
+        <h4 class="mt-4">Key Components</h4>
         <ul>
-            <li>An infinite memory tape divided into discrete cells</li>
-            <li>Each cell can hold a single symbol from a finite alphabet</li>
-            <li>A head positioned over one cell at any time</li>
-            <li>A state selected from a finite set of states</li>
+            <li><b>Infinite Tape:</b> Divided into cells, each holding a symbol from Γ.</li>
+            <li><b>Read/Write Head:</b> Moves left (L) or right (R) to read/write symbols.</li>
+            <li><b>Control Unit:</b> Executes transitions based on the current state and tape symbol.</li>
         </ul>
-        <h5 class="mt-4">Operation</h5>
+        <h5 class="mt-4">State Diagram Example (TM for L = {0ⁿ1ⁿ | n≥1})</h5>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto">
+            <div id="tmExampleDiagram" class="cytoscape-container bg-dark my-2" style="min-height: 300px; border: 1px solid #ccc;"></div>
+        </div>
+        <h4 class="mt-4">Variants of Turing Machines</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto">
+            <ul>
+                <li><b>Multi-tape Turing Machine:</b> Uses multiple tapes, each with an independent read/write head.<br><b>Example:</b> Checking palindromes using two tapes (one for input, another for reversed string).<br><b>Transition Function:</b> δ(q<sub>i</sub>, a₁, a₂) = (q<sub>j</sub>, b₁, D₁, b₂, D₂)</li>
+                <li><b>Non-deterministic Turing Machine (NTM):</b> Allows multiple possible transitions for a state-symbol pair. Equivalent in power to deterministic TMs but useful for modeling parallel computations.</li>
+                <li><b>Universal Turing Machine (UTM):</b> Simulates any TM by reading its description from the tape. Basis for modern stored-program computers.</li>
+                <li><b>Enumerator:</b> Outputs all strings in a language sequentially. Used for generating recursively enumerable languages.</li>
+            </ul>
+        </div>
+        <h4 class="mt-4">Code Example: TM Simulator in Python</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto">
+            <label for="pythonCodeInputTM" class="form-label">Enter Python Code:</label>
+            <textarea class="form-control" id="pythonCodeInputTM" rows="15" style="max-width: 100%; white-space: pre; overflow-x: auto;">class TuringMachine:
+    def __init__(self, tape, transitions, initial_state, accept_state):
+        self.tape = dict(enumerate(tape))
+        self.head = 0
+        self.state = initial_state
+        self.transitions = transitions
+        self.accept_state = accept_state
+
+    def step(self):
+        current_symbol = self.tape.get(self.head, 'B')
+        if (self.state, current_symbol) not in self.transitions:
+            return False
+        new_state, write_symbol, move = self.transitions[(self.state, current_symbol)]
+        self.tape[self.head] = write_symbol
+        self.head += 1 if move == 'R' else -1
+        self.state = new_state
+        return self.state != self.accept_state
+
+    def run(self):
+        while self.step():
+            pass
+        return self.state == self.accept_state
+
+# Example: TM for 0ⁿ1ⁿ
+transitions = {
+    ('q0', '0'): ('q1', 'X', 'R'),
+    ('q1', '0'): ('q1', '0', 'R'),
+    ('q1', '1'): ('q2', 'Y', 'L'),
+    ('q2', 'Y'): ('q2', 'Y', 'L'),
+    ('q2', '0'): ('q2', '0', 'L'),
+    ('q2', 'X'): ('q0', 'X', 'R'),
+    ('q0', 'Y'): ('q3', 'Y', 'R')
+}
+tm = TuringMachine(['0','0','1','1'], transitions, 'q0', 'q3')
+print(tm.run())  # Output: True
+</textarea>
+            <button type="button" class="btn btn-primary my-2" id="runPythonCodeBtnTM">Run Code</button>
+            <h6>Output:</h6>
+            <pre class="alert alert-info mt-2 p-3 rounded"><code id="pythonCodeOutputTM"></code></pre>
+        </div>
+        <h4 class="mt-4">Applications of Turing Machines</h4>
         <ul>
-            <li>The head reads the symbol in its cell</li>
-            <li>Based on the symbol and machine's current state, the machine:
-                <ul>
-                    <li>Writes a symbol into the same cell</li>
-                    <li>Moves the head left, right, or stays</li>
-                    <li>Changes to a new state, or halts</li>
-                </ul>
-            </li>
+            <li><b>Complexity Theory:</b> Classifies problems into P, NP, and undecidable categories.</li>
+            <li><b>Compiler Design:</b> Models parsing and code optimization.</li>
+            <li><b>Artificial Intelligence:</b> Simulates decision-making processes.</li>
+            <li><b>Quantum Computing:</b> Bridges classical and quantum computation models.</li>
         </ul>
-        <hr>
-        <h4 class="mb-3">Formal Definition</h4>
-        <ul>
-            <li>Σ: finite alphabet</li>
-            <li>K: finite set of states with special start state s</li>
-            <li>δ: transition function δ: K × Σ → (K ∪ {halt, yes, no}) × Σ × {←, →, −}</li>
-        </ul>
-        <hr>
-        <h4 class="mb-3">Key Features</h4>
-        <ul>
-            <li>A finite amount of internal state</li>
-            <li>An infinite amount of external data storage</li>
-            <li>A program specified by finite instructions</li>
-            <li>Self-reference: can write an interpreter for its own programs</li>
-        </ul>
-        <hr>
-        <h4 class="mb-3">Variants</h4>
-        <ul>
-            <li>Multi-tape Turing machines: Multiple tapes for increased efficiency</li>
-            <li>Non-deterministic Turing machines: Multiple possible transitions</li>
-            <li>Universal Turing machines: Can simulate any other Turing machine</li>
-            <li>Linear bounded automata: Restricted to linear space</li>
-        </ul>
-        <div class="alert alert-info mt-4">
-            <strong>Beginner Tip:</strong> Turing machines are the most powerful model of computation and can simulate any algorithm!
+        <h4 class="mt-4">MCQs on Turing Machines</h4>
+        <div id="mcq-container-tm">
+            <div class="mcq-progress text-end mb-2"></div>
+            <ol class="mcq-list" style="list-style: none; padding-left: 0;">
+                <li data-correct-answer="B" class="mcq-question-item">
+                    <p class="mb-3">Which TM variant uses multiple tapes?</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">A. Non-deterministic TM</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">B. Multi-tape TM</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="C">C. Enumerator</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+                <li data-correct-answer="B" class="mcq-question-item" style="display: none;">
+                    <p class="mb-3">A TM for L={aⁿbⁿcⁿ | n≥1} is:</p>
+                    <div class="list-group mb-3">
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="A">A. Decidable</button>
+                        <button type="button" class="list-group-item list-group-item-action mcq-option" data-option="B">B. Undecidable</button>
+                    </div>
+                    <button type="button" class="btn btn-primary submit-mcq-btn">Submit Answer</button>
+                    <p class="feedback mt-2"></p>
+                </li>
+            </ol>
+        </div>
+        <h4 class="mt-4">Key Comparisons</h4>
+        <div class="table-responsive bg-dark p-2 rounded">
+            <table class="table table-bordered table-sm text-white">
+                <thead class="table-light">
+                    <tr><th>Variant</th><th>Key Feature</th><th>Example Use Case</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Multi-tape TM</td><td>Parallel processing with multiple tapes</td><td>Palindrome checking</td></tr>
+                    <tr><td>Non-deterministic TM</td><td>Multiple possible transitions</td><td>Solving NP problems</td></tr>
+                    <tr><td>Universal TM</td><td>Simulates other TMs</td><td>General-purpose computing</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <h4 class="mt-4">Conclusion</h4>
+        <div class="alert alert-info mt-2 p-3 rounded overflow-x-auto">
+            <pre style="white-space: pre-wrap; word-break: break-word;">
+Turing Machines, despite their simplicity, remain central to computational theory. Variants like multi-tape and non-deterministic TMs extend their utility without increasing computational power, underscoring their foundational role in computer science.
+            </pre>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    #turingMachineHeader {
+        background-color: transparent !important;
+    }
+    .overflow-x-auto {
+        overflow-x: auto !important;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // MCQ logic for TM page
+        const mcqContainer = document.getElementById('mcq-container-tm');
+        if (mcqContainer) {
+            const questions = mcqContainer.querySelectorAll('.mcq-question-item');
+            let currentQuestionIndex = 0;
+            function updateMcqDisplay() {
+                questions.forEach((q, index) => {
+                    q.style.display = (index === currentQuestionIndex) ? 'block' : 'none';
+                });
+                updateMcqProgress();
+            }
+            function updateMcqProgress() {
+                const progressText = mcqContainer.querySelector('.mcq-progress');
+                if (progressText) {
+                    progressText.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+                }
+            }
+            function resetQuestion(questionItem) {
+                const options = questionItem.querySelectorAll('.mcq-option');
+                options.forEach(option => {
+                    option.classList.remove('selected-option', 'correct', 'incorrect');
+                    option.disabled = false;
+                });
+                const feedback = questionItem.querySelector('.feedback');
+                if (feedback) {
+                    feedback.textContent = '';
+                    feedback.classList.remove('text-success', 'text-danger');
+                }
+                const submitBtn = questionItem.querySelector('.submit-mcq-btn');
+                if (submitBtn) {
+                    submitBtn.style.display = 'block';
+                }
+            }
+            questions.forEach(resetQuestion);
+            updateMcqDisplay();
+            mcqContainer.addEventListener('click', function(event) {
+                const target = event.target;
+                if (target.classList.contains('mcq-option')) {
+                    const questionItem = target.closest('.mcq-question-item');
+                    const options = questionItem.querySelectorAll('.mcq-option');
+                    options.forEach(option => option.classList.remove('selected-option'));
+                    target.classList.add('selected-option');
+                } else if (target.classList.contains('submit-mcq-btn')) {
+                    const questionItem = target.closest('.mcq-question-item');
+                    const selectedOption = questionItem.querySelector('.mcq-option.selected-option');
+                    const feedback = questionItem.querySelector('.feedback');
+                    const submitBtn = questionItem.querySelector('.submit-mcq-btn');
+                    const correctAnswer = questionItem.dataset.correctAnswer;
+                    if (selectedOption) {
+                        if (selectedOption.dataset.option === correctAnswer) {
+                            feedback.textContent = 'Correct!';
+                            feedback.classList.remove('text-danger');
+                            feedback.classList.add('text-success');
+                            selectedOption.classList.add('correct');
+                        } else {
+                            feedback.textContent = `Incorrect. The correct answer was ${correctAnswer}.`;
+                            feedback.classList.remove('text-success');
+                            feedback.classList.add('text-danger');
+                            selectedOption.classList.add('incorrect');
+                            questionItem.querySelector(`.mcq-option[data-option="${correctAnswer}"]`).classList.add('correct');
+                        }
+                        questionItem.querySelectorAll('.mcq-option').forEach(option => option.disabled = true);
+                        submitBtn.style.display = 'none';
+                        setTimeout(() => {
+                            currentQuestionIndex++;
+                            if (currentQuestionIndex < questions.length) {
+                                updateMcqDisplay();
+                            } else {
+                                alert('You have completed all MCQ questions!');
+                                currentQuestionIndex = 0;
+                                questions.forEach(resetQuestion);
+                                updateMcqDisplay();
+                            }
+                        }, 2000);
+                    } else {
+                        feedback.textContent = 'Please select an answer.';
+                        feedback.classList.remove('text-success', 'text-danger');
+                        feedback.classList.add('text-warning');
+                    }
+                }
+            });
+        }
+        // CodeMirror and Run Code logic for TM page
+        const pythonCodeEditorElement = document.getElementById('pythonCodeInputTM');
+        if (pythonCodeEditorElement && typeof CodeMirror !== 'undefined') {
+            window.AutomataEdu = window.AutomataEdu || {};
+            window.AutomataEdu.codeEditorInstanceTM = CodeMirror.fromTextArea(pythonCodeEditorElement, {
+                mode: 'python',
+                theme: 'dracula',
+                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
+                readOnly: false
+            });
+            document.getElementById('runPythonCodeBtnTM').addEventListener('click', runPythonCodeTM);
+        }
+        async function runPythonCodeTM() {
+            const outputElement = document.getElementById('pythonCodeOutputTM');
+            const codeEditor = window.AutomataEdu.codeEditorInstanceTM;
+            const code = codeEditor.getValue();
+            outputElement.textContent = 'Running code...';
+            try {
+                const response = await fetch('/run_python_code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code: code }),
+                });
+                const data = await response.json();
+                if (data.output) {
+                    outputElement.textContent = data.output;
+                } else if (data.error) {
+                    outputElement.textContent = `Error: ${data.error}`;
+                    console.error('Python code execution error:', data.error);
+                } else {
+                    outputElement.textContent = 'An unexpected error occurred.';
+                    console.error('Unexpected response from server:', data);
+                }
+            } catch (error) {
+                outputElement.textContent = `Request failed: ${error}`;
+                console.error('Fetch error:', error);
+            }
+        }
+        // Cytoscape.js visualization for TM state diagram
+        const tmExampleDiagramContainer = document.getElementById('tmExampleDiagram');
+        if (tmExampleDiagramContainer && typeof renderAutomaton !== 'undefined') {
+            const tmExampleData = {
+                states: [
+                    { id: 'q0', label: 'q0', isStart: true },
+                    { id: 'q1', label: 'q1' },
+                    { id: 'q2', label: 'q2' },
+                    { id: 'q3', label: 'q3', isFinal: true }
+                ],
+                transitions: [
+                    { from: 'q0', to: 'q1', symbol: '0/X,R' },
+                    { from: 'q1', to: 'q1', symbol: '0/0,R' },
+                    { from: 'q1', to: 'q2', symbol: '1/Y,L' },
+                    { from: 'q2', to: 'q2', symbol: 'Y/Y,L' },
+                    { from: 'q2', to: 'q2', symbol: '0/0,L' },
+                    { from: 'q2', to: 'q0', symbol: 'X/X,R' },
+                    { from: 'q0', to: 'q3', symbol: 'Y/Y,R' }
+                ]
+            };
+            renderAutomaton('tmExampleDiagram', tmExampleData);
+        }
+    });
+</script>
 {% endblock %} 
