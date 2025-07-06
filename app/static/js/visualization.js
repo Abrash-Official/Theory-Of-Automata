@@ -76,8 +76,7 @@ function prepareAutomatonElements(automatonData) {
                     label: state.label || state.id,
                     isStart: state.isStart || false,
                     isFinal: state.isFinal || false,
-                    type: 'state',
-                    color: state.color || undefined
+                    type: 'state'
                 },
                 position: state.position || { x: 0, y: 0 },
                 classes: getStateClasses(state)
@@ -152,7 +151,7 @@ function getAutomatonStyle() {
     const isDark = window.AutomataEdu.isDarkMode;
     
     return [
-        // Default node styles
+        // Node styles
         {
             selector: 'node',
             style: {
@@ -172,13 +171,6 @@ function getAutomatonStyle() {
                 'overlay-opacity': 0,
                 'transition-property': 'background-color, border-color',
                 'transition-duration': '0.2s'
-            }
-        },
-        // Node styles for nodes with a color property (comes after default)
-        {
-            selector: 'node[color]',
-            style: {
-                'background-color': 'data(color)'
             }
         },
         
@@ -628,81 +620,3 @@ window.exportVisualization = exportVisualization;
 window.animateStep = animateStep;
 window.resizeVisualization = resizeVisualization;
 window.destroyVisualization = destroyVisualization;
-
-// Alias for parse tree rendering (for parse tree visualizations)
-function renderParseTree(containerId, treeData, options = {}) {
-    const container = document.getElementById(containerId);
-    if (!container || !treeData) {
-        console.error('Invalid container or tree data');
-        return null;
-    }
-    // Destroy existing instance
-    if (window.AutomataVisualization.instances[containerId]) {
-        window.AutomataVisualization.instances[containerId].destroy();
-    }
-    // Prepare elements (reuse prepareAutomatonElements for now)
-    const elements = prepareAutomatonElements(treeData);
-    // Custom style for parse trees
-    const isDark = window.AutomataEdu && window.AutomataEdu.isDarkMode;
-    const parseTreeStyle = [
-        {
-            selector: 'node',
-            style: {
-                'background-color': isDark ? '#2d3748' : '#f7fafc',
-                'border-width': 1,
-                'border-color': isDark ? '#a0aec0' : '#4a5568',
-                'label': 'data(label)',
-                'text-valign': 'center',
-                'text-halign': 'center',
-                'font-size': '16px',
-                'font-weight': 'bold',
-                'color': isDark ? '#f7fafc' : '#2d3748',
-                'text-outline-width': 0,
-                'width': '32px',
-                'height': '32px',
-                'shape': 'rectangle',
-                'border-radius': '6px',
-                'box-shadow': 'none',
-                'overlay-opacity': 0
-            }
-        },
-        {
-            selector: 'edge',
-            style: {
-                'width': 2,
-                'line-color': isDark ? '#a0aec0' : '#4a5568',
-                'target-arrow-shape': 'none',
-                'curve-style': 'bezier',
-                'label': '',
-                'arrow-scale': 1
-            }
-        }
-    ];
-    // Use a hierarchical layout for parse trees
-    const layout = {
-        name: 'breadthfirst',
-        fit: true,
-        padding: 30,
-        directed: true,
-        spacingFactor: 1.3,
-        animate: true,
-        animationDuration: 600,
-        animationEasing: 'ease-out',
-        roots: treeData.states && treeData.states.length > 0 ? [treeData.states[0].id] : undefined
-    };
-    // Create Cytoscape instance
-    const cy = cytoscape({
-        container: container,
-        elements: elements,
-        style: parseTreeStyle,
-        layout: layout,
-        minZoom: 0.3,
-        maxZoom: 3,
-        boxSelectionEnabled: false,
-        selectionType: 'single'
-    });
-    window.AutomataVisualization.instances[containerId] = cy;
-    // No automata event handlers for parse trees
-    return cy;
-}
-window.renderParseTree = renderParseTree;

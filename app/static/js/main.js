@@ -1907,3 +1907,50 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial display update
     updateMcqDisplayFA();
 });
+
+// Pumping Lemma Flowchart
+const pumpingLemmaFlowchartContainer = document.getElementById('pumpingLemmaFlowchart');
+if (pumpingLemmaFlowchartContainer && typeof renderAutomaton !== 'undefined') {
+    const flowchartData = {
+        states: [
+            { id: 'A', label: 'Start', isStart: true },
+            { id: 'B', label: 'Language Type?', isFinal: false },
+            { id: 'C', label: 'Use Regular Pumping Lemma', isFinal: false },
+            { id: 'D', label: 'Use CFL Pumping Lemma', isFinal: false },
+            { id: 'E', label: 'Check 3-part division', isFinal: false },
+            { id: 'F', label: 'Check 5-part division', isFinal: false }
+        ],
+        transitions: [
+            { from: 'A', to: 'B', symbol: '' },
+            { from: 'B', to: 'C', symbol: 'Regular' },
+            { from: 'B', to: 'D', symbol: 'CFL' },
+            { from: 'C', to: 'E', symbol: '' },
+            { from: 'D', to: 'F', symbol: '' }
+        ]
+    };
+    renderAutomaton('pumpingLemmaFlowchart', flowchartData);
+}
+// Pumping Lemma Parse Tree
+const pumpingLemmaParseTreeContainer = document.getElementById('pumpingLemmaParseTree');
+if (pumpingLemmaParseTreeContainer && typeof renderAutomaton !== 'undefined') {
+    const parseTreeData = {
+        states: [
+            { id: 'S', label: 'S', isStart: true },
+            { id: 'A1', label: 'a...a' },
+            { id: 'B1', label: 'b...b' },
+            { id: 'C1', label: 'c...c' },
+            { id: 'A2', label: 'a...a' },
+            { id: 'B2', label: 'b...b' },
+            { id: 'C2', label: 'c...c' }
+        ],
+        transitions: [
+            { from: 'S', to: 'A1', symbol: '' },
+            { from: 'S', to: 'B1', symbol: '' },
+            { from: 'S', to: 'C1', symbol: '' },
+            { from: 'A1', to: 'A2', symbol: '|vwx|' },
+            { from: 'B1', to: 'B2', symbol: '|vwx|' },
+            { from: 'C1', to: 'C2', symbol: '|vwx|' }
+        ]
+    };
+    renderAutomaton('pumpingLemmaParseTree', parseTreeData);
+}
